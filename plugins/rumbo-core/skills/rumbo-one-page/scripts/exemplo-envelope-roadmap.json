@@ -1,0 +1,86 @@
+{
+  "_leia": "Envelope do artefato de ROADMAP. Publique este PRIMEIRO, depois aponte o one page para a versao dele por meta.roadmapVersao. O one page projeta o roadmap, nunca o copia: redigitar a grade e o erro mais caro do fluxo, porque na terceira semana os dois divergem e ninguem sabe qual esta certo.",
+
+  "squad": "produto",
+  "kind": "roadmap",
+  "year": 2026,
+  "quarter": 3,
+
+  "insight": "Primeira versao do roadmap do trimestre, com as faixas saindo dos objetivos do time.",
+
+  "body_md": "## Roadmap do trimestre\n\nA grade e desenhada a partir de `meta` e dos itens. Este corpo e texto livre para o que a grade nao diz.\n",
+
+  "meta": {
+    "_leia": "modo 'timeline' desenha faixa x coluna de tempo. O outro modo e 'now_next_later', em que cada item leva payload.estadoNnl com now, next, later ou parking, e faixas/colunas nao se aplicam.",
+    "modo": "timeline",
+    "granularidade": "quinzena",
+
+    "faixas": [
+      {
+        "slug": "cases-visibilidade",
+        "titulo": "Construir cases de visibilidade",
+        "tipo": "objetivo",
+        "aposta": "Prova de valor com redes reais destrava a segunda campanha"
+      },
+      {
+        "slug": "mvp-360",
+        "titulo": "MVP de 360",
+        "tipo": "objetivo"
+      },
+      {
+        "_leia": "A faixa 'outros' aparece em 100% dos roadmaps da evidencia real. E o que foi feito sem relacao com os objetivos das outras faixas. Ela existe para nao precisar encher as demais: e honestidade, nao sobra. O dossie alimenta esta faixa por movimento.features_sem_faixa.",
+        "slug": "outros",
+        "titulo": "Outros",
+        "tipo": "outros"
+      }
+    ],
+
+    "colunas": [
+      { "slug": "1a-jul", "rotulo": "1a jul", "inicio": "2026-07-01", "fim": "2026-07-15" },
+      { "slug": "2a-jul", "rotulo": "2a jul", "inicio": "2026-07-16", "fim": "2026-07-31" },
+      { "slug": "1a-set", "rotulo": "1a set", "inicio": "2026-09-01", "fim": "2026-09-15", "atual": true }
+    ]
+  },
+
+  "itens": [
+    {
+      "_leia": "ATENCAO: faixa e coluna moram dentro de payload, nao no nivel do item. Fora dele o servidor recusa com 422 dizendo isso. Os valores tem que casar com os slugs declarados em meta.faixas e meta.colunas.",
+      "kind": "roadmap_item",
+      "slug": "seed-demo",
+      "texto": "Configuracao e seed de demo",
+      "payload": {
+        "faixa": "cases-visibilidade",
+        "coluna": "1a-jul"
+      }
+    },
+    {
+      "_leia": "payload.issues anexa as issues daquela celula. Aparecem como chips clicaveis SO na pagina do roadmap (o corte detalhado, para a discussao com stakeholders), nunca na projecao dentro do one page, que tem que continuar enxuta. Os candidatos vem de movimento.issues_relevantes no dossie.",
+      "kind": "roadmap_item",
+      "slug": "pilotos-e2e",
+      "texto": "Executar pilotos E2E em clientes",
+      "payload": {
+        "faixa": "cases-visibilidade",
+        "coluna": "1a-set",
+        "destaque": "risco",
+        "issues": [
+          { "id": 812, "titulo": "Liberacao de pagamento trava no aceite", "prioridade": "P0", "url": "/issues/812" },
+          { "id": 833, "titulo": "Limite de envio de fotos por fase", "prioridade": "P1", "url": "/issues/833" }
+        ]
+      }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "construir-ressuprimento",
+      "texto": "Construir ressuprimento",
+      "payload": {
+        "faixa": "mvp-360",
+        "coluna": "2a-jul"
+      }
+    }
+  ],
+
+  "_congelamento": "O CONJUNTO de issues fica congelado nesta versao; o LINK aponta para o estado vivo delas. Uma issue listada como P0 aqui pode estar fechada quando alguem clicar, e isso e o comportamento certo: ninguem quer link para um retrato. Diga isso a quem le, senao soa como roadmap desatualizado.",
+
+  "leituras": [],
+  "canais": []
+}

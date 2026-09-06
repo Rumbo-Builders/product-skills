@@ -24,10 +24,17 @@ Leia, nesta ordem:
    géneros de decisão, os dois modos de roadmap e o contrato do dossiê
 3. `${CLAUDE_PLUGIN_ROOT}/metodo/escrita.md`, para a redação
 
-**Você não calcula número.** O dossiê traz tudo apurado. Se um número que você
-precisa não está lá, ele não existe: pergunte ou declare a ausência. Escrever um
-número plausível neste documento é o pior defeito possível, porque ele circula e
-alguém decide com base nele.
+**Você não calcula número.** Escrever um número plausível neste documento é o
+pior defeito possível, porque ele circula e alguém decide com base nele.
+
+**Mas quem conduz o produto é uma fonte.** Número que não está no dossiê não é
+número inexistente: é número que você ainda não perguntou. Métrica apurada à mão
+é o caso comum, e entra registrada com `fonte: "manual"` — isso é procedência
+declarada, e o método a aceita. Diante de um número sem origem, a ordem é
+**perguntar, registrar, e só então recusar** se não vier resposta. Recusar de
+saída transforma a ferramenta em obstáculo, e já transformou: uma sessão inteira
+se recusou a escrever o documento com números que a pessoa tinha acabado de
+informar. Leia "Procedência" no método antes de recusar qualquer número.
 
 **Você não escreve tabela.** Nem a grade do roadmap, nem a tabela de
 indicadores. As duas são montadas dos dados: a grade vem do artefato de roadmap
@@ -40,6 +47,22 @@ seguinte.
 explicar o que a tabela não diz, use `{{identificador}}` e
 `{{identificador.delta_pct}}`. Quem substitui é o renderizador, a partir da
 leitura congelada na versão.
+
+## Antes de ler qualquer arquivo, saiba de quem é o documento
+
+**Sem time nomeado, pergunte. É a primeira coisa, antes de abrir arquivo.** Ler
+método e binding para depois descobrir que não se sabe o time gasta o tempo de
+quem está esperando.
+
+**Se receberem um artefato pronto colado na conversa, pergunte de qual time e de
+qual ambiente ele veio, antes de comparar com o dossiê.** Não presuma que é do
+time que você está montando. Isso já custou uma sessão inteira: um documento de
+outro time, vindo de outro ambiente, foi comparado contra o dossiê da produção, e
+a divergência inteira foi interpretada como dado faltando. Duas perguntas de uma
+linha teriam evitado.
+
+O conteúdo colado costuma ser bom insumo. O que não se herda dele são os números
+e a grade, que pertencem ao time de onde vieram.
 
 ## Binding
 
@@ -67,6 +90,12 @@ da API que fala o contrato do dossiê) e `RUMBO_ONEPAGE_TOKEN`.
    respondeu. Faça-as antes de escrever. Este é o passo que separa um documento
    honesto de um bonito.
 
+   **A resposta vira registro, não só texto.** Número que vier na resposta entra
+   como leitura com `fonte: "manual"`; contexto que vier vira nota de método ou
+   item de ação e decisão. Perguntar e depois usar a resposta apenas na prosa
+   desperdiça a apuração: na semana seguinte ela não existe mais, e você pergunta
+   de novo.
+
 3. **Confirmar o roadmap, e publicá-lo primeiro.** Carregue o anterior e pergunte
    o que mudou, em vez de pedir para descrever de novo. Se o modo ou a
    granularidade mudarem, é escolha de quem conduz, e vale da versão em diante.
@@ -74,6 +103,17 @@ da API que fala o contrato do dossiê) e `RUMBO_ONEPAGE_TOKEN`.
    O roadmap é **artefato próprio**: publique-o antes, e depois faça o one page
    **apontar a versão** publicada. Se nada mudou nele, aponte a mesma versão de
    novo. Nunca redigite a grade dentro do one page.
+
+   **O apontamento é obrigatório quando já existe roadmap publicado**, e a origem
+   recusa sem ele. Não é formalidade: sem apontar, a leitura cai no roadmap mais
+   recente, e publicar um roadmap novo mudaria a grade de um one page já
+   publicado sem ninguém ter editado nada. Sem roadmap nenhum ainda, siga: a
+   página declara a ausência.
+
+   **Use `scripts/exemplo-envelope-roadmap.json` como forma.** Ele mostra o que
+   não se adivinha: `faixa` e `coluna` moram dentro de `payload`, a faixa
+   "outros" é declarada como as demais, e `payload.issues` anexa as ocorrências
+   de cada célula. Adivinhar essa forma já custou quatro tentativas às cegas.
 
 4. **Escrever.** A narrativa é sua; os números não. Envie cada leitura com o
    rótulo legível e, quando houver julgamento, a observação: é ela que vira a
@@ -112,6 +152,12 @@ da API que fala o contrato do dossiê) e `RUMBO_ONEPAGE_TOKEN`.
    Rascunho não comunica nada. A publicação comunica, e **quem escolhe canal e
    destinatários é quem publica**, item por item.
 
+   **Leia o `gravado` da resposta.** Ele diz quantas alças entraram por tipo,
+   quais marcadores foram congelados com que rótulo e observação, e — em
+   `ignorados` — os campos que você mandou e o servidor não guarda. `ignorados`
+   vazio é a resposta boa; qualquer coisa ali é campo com nome errado sumindo em
+   silêncio.
+
 ## Recusas
 
 Não publique, e diga por quê:
@@ -120,10 +166,16 @@ Não publique, e diga por quê:
 - Sem nenhuma decisão, e sem declarar que não houve nenhuma.
 - Com métrica que aparece na tabela, não se moveu, e não tem explicação.
 - Com pergunta sem destinatário nomeado.
-- Com número que você não conseguiu rastrear até uma fonte.
+- Com número que você não conseguiu rastrear até uma fonte **depois de ter
+  perguntado**. Antes de perguntar não é recusa, é pergunta pendente.
 
 Recusar é o trabalho. Um one page com um número inventado destrói mais confiança
 do que dez semanas sem publicar.
+
+**E recusar demais também é defeito.** Recusa que devolve à pessoa uma informação
+que ela mesma acabou de dar não protege ninguém: gasta o tempo dela e ensina que
+a ferramenta atrapalha. Antes de recusar um número, confira se a pergunta foi
+feita e ficou sem resposta. Se não foi feita, faça.
 
 ## Limites
 

@@ -1,5 +1,7 @@
 {
-  "_leia": "Envelope de exemplo, para conferir a ligacao ponta a ponta antes de escrever de verdade. Troque 'squad' pelo identificador do seu time. Note que o corpo usa MARCADOR no bloco de indicadores, nunca digito: quem substitui e o renderizador, a partir da leitura congelada na versao.",
+  "_leia": "Envelope de exemplo do ONE PAGE. Para o artefato de roadmap, veja exemplo-envelope-roadmap.json. Troque 'squad' pelo identificador do seu time. Este arquivo e a documentacao real do formato: os quatro tipos de alca aparecem aqui de proposito, porque o que o exemplo nao mostra o modelo infere errado.",
+
+  "_regra_do_numero": "O corpo usa MARCADOR no bloco de indicadores, nunca digito: quem substitui e o renderizador, a partir da leitura congelada na versao. Mas o numero em si pode vir de voce: leitura apurada a mao entra com fonte 'manual', e isso e procedencia declarada, nao invencao.",
 
   "squad": "produto",
   "kind": "one_page",
@@ -8,23 +10,54 @@
 
   "insight": "Primeira publicacao: o objetivo aqui e so validar a ligacao entre a skill, a API e a pagina.",
 
+  "meta": {
+    "roadmapVersao": 1
+  },
+  "_meta": "roadmapVersao aponta a versao do artefato de roadmap que este one page PROJETA. Sem ele a secao de roadmap sai vazia. O one page nunca redigita a grade.",
+
   "body_md": "## Onde estamos\n\nPrimeira versao publicada por este time. O texto e livre e o servidor nao o interpreta.\n\n## Indicadores\n\nExemplo de leitura chegou a {{exemplo-adocao}}, variacao de {{exemplo-adocao.delta_pct}} sobre o periodo anterior.\n\n## Ação e decisão\n\nOs itens estruturados estao no bloco `itens`, e aparecem na lateral da pagina.\n",
 
   "itens": [
     {
+      "_leia": "OKR. Renderiza como numero grande no topo. payload.atual e o que aparece em destaque; o texto e o enunciado ao lado. Sem alca deste tipo, a secao de objetivos nao aparece.",
+      "kind": "okr",
+      "slug": "tres-redes-segunda-campanha",
+      "texto": "Ao menos tres redes iniciando segunda campanha na ferramenta",
+      "payload": {
+        "baseline": "0",
+        "meta": "3 redes",
+        "atual": "1",
+        "progressoPct": 33
+      }
+    },
+    {
+      "_leia": "Decisao do genero 'proximo_passo'. Nao exige campo extra.",
       "kind": "decisao",
       "slug": "validar-ligacao",
       "texto": "Validar a ligacao skill, API e pagina antes de usar com dado real",
       "genero": "proximo_passo"
     },
     {
+      "_leia": "Genero 'pergunta' EXIGE escala_para com ao menos um destinatario: pergunta sem dono nao e respondida. Os ids vem de destinatarios.squad ou da busca de pessoas do dossie.",
       "kind": "decisao",
       "slug": "quem-revisa",
       "texto": "Quem revisa o primeiro one page de verdade?",
       "genero": "pergunta",
       "escala_para": ["admin-user"]
+    },
+    {
+      "_leia": "Genero 'risco' EXIGE payload.impacto: risco sem impacto declarado e desabafo.",
+      "kind": "decisao",
+      "slug": "entregas-atrasadas",
+      "texto": "Sete entregas do trimestre estao atrasadas",
+      "genero": "risco",
+      "payload": {
+        "impacto": "Concentrado nas frentes que sustentam os pilotos"
+      }
     }
   ],
+
+  "_itens_kinds": "Os quatro kinds validos sao: okr, decisao, roadmap_item, metrica_ref. Item sem kind e recusado com 422 dizendo qual item. 'metrica_ref' voce NAO manda: o servidor cria essa alca sozinho ao congelar as leituras.",
 
   "leituras": [
     {
@@ -35,6 +68,7 @@
       "categoria": "Adoção",
       "sobe_e_bom": true,
       "fonte": "manual",
+      "nome": "Adocao da ferramenta",
       "definicao": "Metrica de exemplo, so para o teste de ligacao"
     },
     {
@@ -45,9 +79,13 @@
       "categoria": "Adoção",
       "sobe_e_bom": true,
       "fonte": "manual",
+      "nome": "Adocao da ferramenta",
+      "observacao": "Subiu com a entrada dos pilotos. Ainda abaixo da meta.",
       "definicao": "Metrica de exemplo, so para o teste de ligacao"
     }
   ],
+
+  "_leituras": "'nome' e o rotulo legivel (sem ele a tabela mostra o slug). 'observacao' e o julgamento em frase, do tipo 'ruim e melhorando', nunca um semaforo. Os dois viajam na alca congelada, nao na tabela de leituras: a resposta do publish mostra em 'gravado.marcadores_congelados' o que de fato entrou.",
 
   "canais": []
 }

@@ -51,6 +51,30 @@ Se falta alguma, pergunte. Nunca invente.
 - A versão anterior do artefato, para saber o que mudou.
 - As decisões que ficaram abertas na versão anterior.
 
+## Procedência: o que a regra do número quer dizer
+
+A regra é **procedência declarada**, não **origem automática**. Confundir as duas
+inutiliza a ferramenta, e já inutilizou uma vez: diante de números que a pessoa
+conduzindo o produto informou de viva voz, uma sessão inteira recusou escrever o
+documento por considerá-los não rastreáveis. Eram rastreáveis. A fonte era a
+pessoa.
+
+**Quem conduz o produto é uma fonte legítima.** Métrica apurada à mão é o caso
+comum, não a exceção, e entra registrada com `fonte: "manual"`. O que a regra
+proíbe é outra coisa: escrever um número que ninguém disse, deduzir um valor a
+partir de outro, ou apresentar como apurado o que foi estimado.
+
+Diante de um número sem origem, o caminho é **perguntar e registrar**, nesta
+ordem. Recusar é o último passo, não o primeiro, e vale para quando a pergunta já
+foi feita e não houve resposta.
+
+O que continua sendo recusa, sem exceção:
+
+- Número que ninguém informou e que não está no dossiê.
+- Número calculado por você a partir de outros. Você explica número, não produz.
+- Número apresentado sem dizer de onde veio.
+- Métrica que aparece na tabela, não se moveu, e não tem explicação.
+
 ## Estrutura da saída
 
 Cinco blocos, nesta ordem. Bloco vazio é permitido e às vezes é a resposta certa.
@@ -102,11 +126,24 @@ encaixa perfeitamente nas faixas é um roadmap escrito depois do fato.
 ### Dois cortes do mesmo roadmap
 
 - **Detalhado**, para a discussão com quem patrocina o trabalho. Traz as
-  entregas potencialmente relacionadas a cada faixa.
-- **Enxuto**, que é o que entra no one page.
+  entregas potencialmente relacionadas a cada faixa, e **as ocorrências abertas
+  que travam cada uma**, com link direto.
+- **Enxuto**, que é o que entra no one page. Sem as ocorrências: a projeção tem
+  que continuar enxuta, senão vira o detalhado e perde a razão de existir.
 
 O enxuto é **gerado a partir do detalhado**, nunca redigitado. Roadmap mantido em
 dois lugares diverge em semanas.
+
+**As ocorrências que valem anexar** são as que a reunião discute: o que trava
+(aberto e crítico) e o que saiu no período. Não todas — lista completa vira lista
+que ninguém lê. O de-para entre ocorrência e faixa já era feito à mão antes desta
+ferramenta existir; anexá-las tira digitação, não cria capacidade nova.
+
+**Congelamento assimétrico, e diga isso a quem lê.** O *conjunto* de ocorrências
+fica congelado na versão; o *link* aponta para o estado vivo de cada uma. Uma
+ocorrência listada como aberta na v3 pode estar fechada quando alguém clicar. É o
+comportamento certo — ninguém quer link para um retrato — mas quem não foi
+avisado lê como roadmap desatualizado.
 
 ### O roadmap é artefato próprio, e o one page o projeta
 
@@ -116,6 +153,12 @@ que projeta**, e a grade é montada a partir dela na hora de exibir.
 Escrever a grade dentro do corpo do one page é o erro clássico aqui: funciona na
 primeira semana e, na terceira, o quadro do one page e o roadmap contam coisas
 diferentes. Se o roadmap não mudou, o one page aponta a mesma versão de novo.
+
+**Apontar não é opcional depois que existe um roadmap publicado.** Um one page
+sem apontamento é lido contra o roadmap mais recente, e então publicar um roadmap
+novo muda a grade de um documento já publicado — sem ninguém ter editado nada.
+Versão publicada é imutável, e a imutabilidade vale para o que ela projeta, não
+só para o que ela escreve.
 
 ### Estacionamento
 
@@ -201,7 +244,8 @@ estável. Duas coisas caem de graça daí:
 ## Régua de qualidade
 
 - O insight central existe e diz algo que a versão anterior não dizia.
-- Todo número tem fonte, e a ressalva de método, quando existe, está visível.
+- Todo número tem fonte declarada, e a ressalva de método, quando existe, está
+  visível. Fonte pode ser a pessoa que conduz o produto: ver "Procedência".
 - Nenhum número aparece sem que se possa dizer de onde veio.
 - Métrica que não se moveu tem explicação, ou está declarada como não medida.
 - Existe ao menos uma decisão, ou está declarado que não houve nenhuma.
@@ -266,3 +310,24 @@ com a mesma raiz (o modelo é bom em explicar e ruim em apurar):
 Blocos: identificação e período; publicação anterior; objetivos e metas; roadmap
 publicado; movimento do período; indicadores com série e variação; decisões
 abertas; destinatários possíveis; lacunas; endereços de detalhe.
+
+### O que o contrato 1.1 acrescentou
+
+Tudo aqui é aplicação do princípio 1 (toda aritmética já feita) a coisas que
+antes sobravam para quem escreve:
+
+- **Cada objetivo diz se pertence ao período** e se ainda é rascunho. Sem isso,
+  quem escreve compara horizontes na mão — e um documento do terceiro trimestre
+  saiu destacando três objetivos do quarto, dois deles não aprovados.
+- **As entregas atrasadas trazem a faixa sugerida**, como as concluídas já
+  traziam. Atraso é o que define prioridade num roadmap: sem faixa, não se sabe
+  a qual objetivo cada atraso pertence.
+- **A faixa "outros" considera atrasadas também.** Antes olhava só as
+  concluídas, e um time com sete entregas atrasadas e órfãs recebia a lista
+  vazia: a faixa que existe para ser honesta ficava muda justamente quando havia
+  mais o que confessar.
+- **As ocorrências relevantes vêm nomeadas, não só contadas**, com prioridade,
+  estado, faixa sugerida e endereço.
+
+Um dossiê no contrato 1.0 continua servindo: 1.1 só acrescentou campos. Na
+ausência deles, pergunte em vez de deduzir.
