@@ -1,0 +1,90 @@
+name: Sem vazamento de cliente
+
+# Este repositório é público, e o método é cliente-agnóstico por regra:
+# "nada aqui pode nomear um cliente, uma pessoa ou uma ferramenta" (CLAUDE.md).
+#
+# A regra já falhou uma vez. No primeiro commit, `metodo/release-notes.md`
+# citava um cliente pelo nome junto com um número interno dele, e o README
+# listava a carteira inteira. Foi pego por um grep manual, ou seja, por memória.
+# Num repositório público a proteção não pode depender de alguém lembrar.
+#
+# A LISTA DE NOMES NÃO MORA AQUI, de propósito: escrevê-la neste arquivo
+# publicaria exatamente o que ela deveria proteger, que é quem são os clientes.
+# Ela vem do segredo `NOMES_DE_CLIENTE`, separado por vírgula.
+#
+#   gh secret set NOMES_DE_CLIENTE --repo Rumbo-Builders/product-skills
+#
+# DUAS LIMITAÇÕES CONHECIDAS, e as duas dependem de gente:
+#
+# 1. A busca é por substring, sem fronteira de palavra. Nome curto de cliente
+#    gera falso positivo (um cliente chamado "Sol" casaria com "console" e
+#    "solução"). Quando acontecer, o conserto é renomear no texto, não afrouxar
+#    a checagem: falso positivo aqui custa um minuto, falso negativo custa um
+#    vazamento.
+# 2. Os exemplos do CLAUDE.md usam a "Acme" como cliente fictício. Se um dia a
+#    Acme virar cliente de verdade, esta checagem acusa os exemplos. Troque o
+#    nome fictício, não a regra.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  nomes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Nenhum nome de cliente no repositório
+        env:
+          CLIENTES: ${{ secrets.NOMES_DE_CLIENTE }}
+        run: |
+          set -uo pipefail
+
+          if [ -z "${CLIENTES:-}" ]; then
+            echo "FALHA: o segredo NOMES_DE_CLIENTE não está configurado."
+            echo ""
+            echo "Sem ele nada foi conferido, e uma checagem que passa em"
+            echo "silêncio é pior que nenhuma: ela dá confiança sem dar"
+            echo "proteção. Configure com:"
+            echo ""
+            echo "  gh secret set NOMES_DE_CLIENTE --repo <owner>/<repo>"
+            echo ""
+            echo "O valor é a lista de nomes separada por vírgula."
+            exit 1
+          fi
+
+          FALHOU=0
+          IFS=',' read -ra NOMES <<< "$CLIENTES"
+
+          for RAW in "${NOMES[@]}"; do
+            NOME="$(echo "$RAW" | xargs)"
+            [ -z "$NOME" ] && continue
+
+            # -I ignora binário (logo, fonte). O .git fica de fora porque o
+            # histórico já foi auditado e reescrito antes de publicar.
+            if grep -rIiq -- "$NOME" . --exclude-dir=.git --exclude-dir=.github 2>/dev/null; then
+              echo "FALHA: o nome de um cliente aparece no repositório."
+              # Mostra ARQUIVO e LINHA, nunca o trecho: imprimir o texto
+              # colocaria o nome no log público da Action, que é o vazamento
+              # que estamos tentando impedir.
+              grep -rIil -- "$NOME" . --exclude-dir=.git --exclude-dir=.github 2>/dev/null \
+                | sed 's|^\./|  arquivo: |'
+              FALHOU=1
+            fi
+          done
+
+          if [ "$FALHOU" = "0" ]; then
+            echo "ok: nenhum nome de cliente no repositório."
+            echo ""
+            echo "O que a máquina não vê continua com você: um método que"
+            echo "descreve um caso tão específico que só um cliente poderia"
+            echo "ser, sem nomeá-lo, passa neste teste e vaza igual."
+          else
+            echo ""
+            echo "Nome de cliente é binding, não método. Ele mora no"
+            echo "repositório da organização daquele cliente."
+          fi
+
+          exit $FALHOU
