@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "rumbo",
+  "description": "Metodo Rumbo: skills genericas e cliente-agnosticas de produto, escrita e apresentacao. Os bindings de cada cliente vivem em um repositorio da organizacao do proprio cliente.",
+  "owner": {
+    "name": "Juliano Baggio di Sopra",
+    "email": "jsopra@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "rumbo-core",
+      "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck) e a regua de qualidade que elas aplicam.",
+      "author": {
+        "name": "Rumbo"
+      },
+      "category": "productivity",
+      "source": "./plugins/rumbo-core"
+    }
+  ]
+}

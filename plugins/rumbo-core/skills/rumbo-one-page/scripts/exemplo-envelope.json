@@ -1,0 +1,53 @@
+{
+  "_leia": "Envelope de exemplo, para conferir a ligacao ponta a ponta antes de escrever de verdade. Troque 'squad' pelo identificador do seu time. Note que o corpo usa MARCADOR no bloco de indicadores, nunca digito: quem substitui e o renderizador, a partir da leitura congelada na versao.",
+
+  "squad": "produto",
+  "kind": "one_page",
+  "year": 2026,
+  "quarter": 3,
+
+  "insight": "Primeira publicacao: o objetivo aqui e so validar a ligacao entre a skill, a API e a pagina.",
+
+  "body_md": "## Onde estamos\n\nPrimeira versao publicada por este time. O texto e livre e o servidor nao o interpreta.\n\n## Indicadores\n\nExemplo de leitura chegou a {{exemplo-adocao}}, variacao de {{exemplo-adocao.delta_pct}} sobre o periodo anterior.\n\n## Ação e decisão\n\nOs itens estruturados estao no bloco `itens`, e aparecem na lateral da pagina.\n",
+
+  "itens": [
+    {
+      "kind": "decisao",
+      "slug": "validar-ligacao",
+      "texto": "Validar a ligacao skill, API e pagina antes de usar com dado real",
+      "genero": "proximo_passo"
+    },
+    {
+      "kind": "decisao",
+      "slug": "quem-revisa",
+      "texto": "Quem revisa o primeiro one page de verdade?",
+      "genero": "pergunta",
+      "escala_para": ["admin-user"]
+    }
+  ],
+
+  "leituras": [
+    {
+      "slug": "exemplo-adocao",
+      "periodo": "2026-08",
+      "valor_num": 71,
+      "unidade": "percent",
+      "categoria": "Adoção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "definicao": "Metrica de exemplo, so para o teste de ligacao"
+    },
+    {
+      "slug": "exemplo-adocao",
+      "periodo": "2026-09",
+      "valor_num": 74,
+      "unidade": "percent",
+      "categoria": "Adoção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "definicao": "Metrica de exemplo, so para o teste de ligacao"
+    }
+  ],
+
+  "canais": []
+}

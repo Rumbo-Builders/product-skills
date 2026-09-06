@@ -1,0 +1,8 @@
+{
+  "name": "rumbo-CLIENTE",
+  "version": "0.1.0",
+  "description": "Binding da Rumbo para o cliente CLIENTE: conectores, contexto e skills derivadas. Delega o metodo para o plugin rumbo-core.",
+  "author": { "name": "Rumbo" },
+  "keywords": ["rumbo", "cliente", "CLIENTE"],
+  "mcpServers": "./.mcp.json"
+}

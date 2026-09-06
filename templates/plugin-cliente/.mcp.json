@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "_comentario": "Os softwares DESTE cliente. Nunca credencial literal: use ${VAR} e deixe a variavel no ambiente. Remova as entradas que este cliente nao usa.",
+    "exemplo-http": {
+      "type": "http",
+      "url": "https://exemplo.cliente.com/mcp",
+      "headers": { "Authorization": "Bearer ${RUMBO_CLIENTE_TOKEN}" }
+    },
+    "exemplo-stdio": {
+      "command": "npx",
+      "args": ["-y", "algum-servidor-mcp"],
+      "env": { "API_KEY": "${RUMBO_CLIENTE_API_KEY}" }
+    }
+  }
+}
