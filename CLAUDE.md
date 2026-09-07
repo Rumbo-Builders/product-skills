@@ -1,3 +1,7 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 # Convenções de autoria — biblioteca de skills da Rumbo
 
 Este repo tem **uma** regra estrutural, e todas as outras existem pra protegê-la:
@@ -51,6 +55,76 @@ ou vocabulário proibido no PDF renderizado.
 E o inverso vale igual: o que a máquina não vê (colisão de layout, se o argumento
 fecha) a skill tem que mandar o humano olhar, e nunca reportar como conferido o que
 não foi conferido.
+
+---
+
+## Como rodar
+
+Não há build, nem suíte de testes, nem `package.json`. O que existe são scripts por
+skill, e cada um roda direto. Os caminhos abaixo saem de `plugins/rumbo-core/skills/`:
+
+```bash
+# deck: gera, valida o XML, renderiza e reprova o build pelas regras da casa
+bash rumbo-deck/scripts/qa.sh deck.js Saida.pptx
+
+# one page: contexto → redação → régua → publicação em duas etapas
+node rumbo-one-page/scripts/contexto.mjs --time <id> [--ano 2026] [--trimestre 3]
+bash rumbo-one-page/scripts/validar.sh envelope.json
+node rumbo-one-page/scripts/publicar.mjs envelope.json --rascunho   # ou --publicar
+
+# release notes: commits da janela → HTML → PDF renderizado
+bash rumbo-release-notes/scripts/coletar.sh <repo> 2026-08-27 [2026-09-03] [branch]
+bash rumbo-release-notes/scripts/gerar.sh notas.html Saida.pdf
+
+# régua de texto, em qualquer arquivo (os greps completos estão em _principios.md)
+grep -nE "—|[!?]{2,}" arquivo.md
+```
+
+O mais próximo de um teste que este repo tem são dois exemplos, e eles servem de
+smoke test. Rode os dois depois de mexer no motor do deck ou em qualquer régua:
+
+```bash
+node rumbo-deck/scripts/exemplo.js                                  # → Exemplo.pptx
+bash rumbo-one-page/scripts/validar.sh rumbo-one-page/scripts/exemplo-envelope.json
+```
+
+Nenhuma dependência está declarada, e nenhuma vem com o repo: `pptxgenjs` para o
+deck, LibreOffice e poppler (`pdftoppm`, `pdftotext`) para renderizar e conferir,
+Chrome ou Chromium para o PDF das release notes.
+
+**Script que não acha a ferramenta sai com 0 e um aviso.** `qa.sh` sem LibreOffice
+imprime aviso e encerra aprovado sem ter renderizado nada; `validar.sh` sem `node`
+faz o mesmo. Leia a saída inteira antes de dizer que passou, e confira se cada etapa
+de fato rodou. Silêncio virando aprovação é o pior defeito de uma régua, e o
+comentário no meio de `validar.sh` existe porque isso já aconteceu aqui.
+
+## O que roda: arquitetura dos scripts
+
+Três fluxos, e os três com a mesma forma: determinístico onde dá, e o humano olha o
+que a máquina não vê.
+
+**Deck.** `base.js` é o motor sobre `pptxgenjs`, cliente-agnóstico: `criar(tema)`
+devolve os helpers de desenho (`capa`, `chrome`, `slideL`, `tabela`, `escada`,
+`ponte`, `kpiStrip`). Cor, fonte e logo vêm do tema, e `tema-neutro.js` é o de
+referência; geometria e proporção são fixas e não são tema. `qa.sh` gera, valida,
+converte para PDF, extrai o texto e reprova o build no travessão, na pontuação em
+série e no vocabulário proibido (`RUMBO_VOCAB_EXTRA` aponta a lista extra de um
+cliente). Depois manda ler `render/s-*.jpg` slide a slide, porque colisão de layout
+não aparece no texto.
+
+**One page.** `contexto.mjs` → redação → `validar.sh` → `publicar.mjs`. A regra que
+explica o desenho: **o modelo nunca lê o dossiê JSON.** `contexto.mjs` transforma o
+dossiê em briefing markdown, e o que ele decide o modelo não redecide. `validar.sh`
+reprova envelope sem identificador estável, decisão sem gênero, pergunta sem
+destinatário, marcador `{{x}}` que não resolve, dígito solto no bloco de indicadores
+e tabela markdown escrita à mão. `publicar.mjs` exige `--rascunho` ou `--publicar`,
+sem modo padrão, porque publicar comunica e aviso não se despublica. Ambiente:
+`RUMBO_ONEPAGE_API` e `RUMBO_ONEPAGE_TOKEN`.
+
+**Release notes.** `coletar.sh` traz os commits da janela com o corpo inteiro, porque
+o porquê está no corpo e a triagem é trabalho do método, não do script. O modelo
+escreve o HTML sobre `modelo.html` e `base.css`, e `gerar.sh` imprime pelo Chrome
+headless e renderiza em JPG para conferência.
 
 ---
 
@@ -152,11 +226,22 @@ Nomes de skill são globais na sessão — colisão entre dois clientes quebra o
 2. `plugins/rumbo-core/skills/rumbo-<nome>/SKILL.md` — copie `templates/skill-de-metodo/`
 3. Bump da `version` em `plugins/rumbo-core/.claude-plugin/plugin.json`
 
-**Um cliente novo**
-1. `cp -r templates/plugin-cliente plugins/rumbo-<cliente>`
+**Um cliente novo.** Não aqui. O plugin do cliente nasce e vive no repositório da
+organização dele, no formato `<cliente>-claude-plugins`, e o CI deste repo reprova
+commit que nomeie qualquer cliente.
+
+1. `cp -r templates/plugin-cliente <repo-do-cliente>/plugins/rumbo-<cliente>`
 2. Preencha `plugin.json`, `.mcp.json`, `contexto/perfil.md`
-3. Registre em `.claude-plugin/marketplace.json`
+3. Registre no `marketplace.json` **daquele** repositório
 4. Renomeie `skills/NOME-DA-SKILL/` e preencha o contrato de cinco seções
+
+Quem usa instala dois marketplaces: este, com o método, e o do próprio cliente, com o
+binding. Sem o `rumbo-core` instalado, a derivada não tem para onde delegar.
+
+O `templates/plugin-cliente/contexto/perfil.md` ainda pede campos que não deveriam
+entrar num plugin (como cada pessoa decide, quem não pode ser copiado, escopo
+comercial). A régua é: se o cliente não pode ler, não entra. Corrija o template antes
+de servir ao próximo cliente.
 
 **Uma derivada nova para cliente existente**
 1. `cp -r templates/plugin-cliente/skills/NOME-DA-SKILL plugins/rumbo-<cliente>/skills/<metodo>-<cliente>`
@@ -172,6 +257,20 @@ contrato ser `uninstall`.
 
 Credencial não entra no repo. Use `${VAR}` no `.mcp.json` e deixe a variável no
 ambiente. Rodar `git grep -iE 'sk-|token|secret|Bearer'` antes de commitar é barato.
+
+## O CI checa uma coisa só
+
+`.github/workflows/sem-vazamento.yml` reprova o commit se qualquer arquivo contiver
+um nome da lista do segredo `NOMES_DE_CLIENTE` (separada por vírgula,
+`gh secret set NOMES_DE_CLIENTE`). A lista não mora no arquivo de propósito: escrevê-la
+publicaria exatamente o que ela protege. Sem o segredo o job falha, e é intencional,
+porque checagem que passa em silêncio dá confiança sem dar proteção. A busca é por
+substring, então nome curto de cliente gera falso positivo; o conserto é renomear no
+texto, nunca afrouxar a checagem.
+
+**A checagem lê texto, e só texto.** Imagem entrando no repo (um print de artefato no
+README, por exemplo) passa livre pelo CI com nome de cliente, logo ou número interno
+dentro. Print vai conferido a olho antes do commit, porque aqui não há rede embaixo.
 
 ---
 
