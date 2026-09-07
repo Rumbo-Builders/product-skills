@@ -1,6 +1,6 @@
 {
   "name": "rumbo-core",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck, release notes, one page) e a regua de qualidade que elas aplicam. Os plugins de cliente delegam para as skills deste plugin.",
   "author": {
     "name": "Rumbo"

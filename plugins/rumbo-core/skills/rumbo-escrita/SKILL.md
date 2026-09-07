@@ -44,7 +44,9 @@ assuma registro.
 3. **Passar a régua**, na ordem do checklist de `_principios.md`. Em arquivo, rode os
    greps de lá; em texto colado na conversa, confira lendo.
 4. **Devolver.** Em revisão, mostre o antes e o depois lado a lado e diga qual regra
-   cada mudança atende. Reescrever sem dizer por quê não ensina nada.
+   cada mudança atende. Reescrever sem dizer por quê não ensina nada. Quando o texto vai
+   para fora ou pede uma decisão, entregue junto o teste de leitura de `escrita.md`: ele
+   exige outra pessoa, então nunca o reporte como conferido.
 5. **Só publique com confirmação explícita.** Nada sai para canal externo sem o
    usuário mandar.
 

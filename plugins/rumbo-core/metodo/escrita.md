@@ -9,7 +9,12 @@ de texto em prosa: como estruturar, para quem, e em que registro.
 Texto que uma pessoa reconhece como escrito por gente que sabe do que está falando.
 
 Não é texto bonito, não é texto longo e não é texto que soa profissional. O teste é
-outro: quem leu sabe o que fazer com o que leu.
+outro: quem leu sabe o que fazer com o que leu, e duas pessoas que leram sozinhas saem
+com a mesma coisa.
+
+A medida de clareza é quanto sobrou de interpretação depois que você falou. Volume não
+entra na conta. Uma frase vaga não fica parada: cada leitor resolve a lacuna do jeito
+dele, e cada resolução vira uma versão do plano.
 
 ## Entradas mínimas
 
@@ -37,6 +42,15 @@ mais viram lista.
 **Não use lista antes de dar contexto.** Lista sem parágrafo de abertura obriga o
 leitor a adivinhar o critério.
 
+**Todo pedido tem um nome e uma data.** "Vamos ver isso", "precisamos melhorar o tempo
+de resposta" e "o time vai olhar" nomeiam uma intenção e param aí. "Nós" é onde a
+responsabilidade se esconde. Um dono nomeado e uma data transformam a intenção em
+pedido.
+
+**Prioridade nova diz o que para.** Quem escreve "o foco do trimestre é retenção" sem
+dizer o que sai da fila obtém retenção e a fila antiga, as duas malfeitas. Nomear a
+troca faz parte de anunciar a prioridade, e não é uma concessão que se faz depois.
+
 **Rótulo de ação nomeia o ganho, não a tarefa.** Vale para botão, título de seção,
 assunto de e-mail e item de lista. "Ver como economizar" diz o que a pessoa ganha;
 "Iniciar cadastro" diz o trabalho que ela vai ter. O leitor decide pelo ganho.
@@ -48,6 +62,11 @@ o leitor num beco é um defeito de escrita, não uma limitação do produto.
 **Feche pedindo resposta**, quando for comunicado. E feche pelo lado do que se ganha,
 nunca com condicional de ameaça. "Se ninguém participar, eu paro" não é registro de
 comunicado.
+
+**Diga quem mais precisa saber, e por onde vai saber.** Decisão que não chega a quem ela
+afeta continua valendo só para quem estava na sala. A lista de destinatários faz parte
+do texto, e não do que se resolve depois de mandar. Quando isso implicar mandar algo para fora, a confirmação de `_principios.md`
+continua valendo.
 
 ## Português
 
@@ -88,14 +107,33 @@ que é falar do produto com um nome que o próprio produto abandonou.
 Quando o cliente não tiver glossário e você notar um termo recorrente que confunde,
 proponha a linha. Glossário se constrói assim.
 
+## Teste de leitura
+
+Dois minutos antes de entregar, e vale para texto de qualquer tamanho.
+
+Leia a abertura em voz alta. Se passou de um minuto, ou se precisou de "e" para se
+sustentar, são dois textos.
+
+Depois entregue a alguém de fora por noventa segundos, tire o texto da frente e pergunte
+duas coisas: qual é o número, e o que está sendo pedido. Se a pessoa não responde as
+duas de memória, o texto ainda não está pronto, por mais correto que esteja.
+
+Correto e esquecível é o estado normal de texto de trabalho, não a exceção. Rigor de
+número não protege contra isso, e revisão de gramática também não. Este teste é o que
+protege, e ele precisa de outra pessoa: quem escreveu já sabe qual era o ponto.
+
 ## Erros recorrentes
 
 - **Abertura de cortesia.** Três linhas de "espero que estejam bem" antes da conclusão.
-  Corta.
+  Corta. Recontar o que todo mundo já sabe é cortesia com outro nome: abra pelo que
+  mudou.
 - **Ênfase compensando frase fraca.** Caixa alta e exclamação aparecem exatamente onde
   a frase não se sustenta. Reescreva em vez de grifar.
 - **Antítese por reflexo.** "Não é A, é B" sai sozinho. Diga a coisa direto.
 - **Número sem desenho de medição.** "Até 3 pontos" não é medida.
+- **Adjetivo no lugar do número.** "Melhorou significativamente", "crescimento
+  expressivo", "ganho robusto". Se o número existe, ele entra com fonte; se não existe,
+  o adjetivo não ocupa o lugar dele.
 - **Lista órfã.** Sete bullets sem o parágrafo que diz por que são sete.
 
 ## Nunca

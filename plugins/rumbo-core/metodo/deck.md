@@ -94,6 +94,7 @@ Divisor: seção 02
 Princípios / regras de decisão
 Limites e onde a tese pode quebrar
 Fecho
+Anexo (quando houver material que não cabe no argumento)
 ```
 
 Duas exigências que decks comuns pulam:
@@ -101,6 +102,11 @@ Duas exigências que decks comuns pulam:
 - **Síntese ao fim de cada seção**, com título de ação que fecha a seção.
 - **Slide de limites**, dizendo o que não fazemos e sob quais condições a tese quebra.
   Deck de decisão sem lista de riscos é deck de venda.
+
+**O que não cabe no argumento desce para o anexo, e não é apagado.** Fica conferível,
+fora do caminho, e disponível para a pergunta que aparecer. É isso que permite manter um
+argumento por slide sem a sensação de estar escondendo material: nada some, tudo é
+ranqueado. O quadro que sobrevive no corpo é o que sustenta a decisão em jogo.
 
 ## Escolha do infográfico
 

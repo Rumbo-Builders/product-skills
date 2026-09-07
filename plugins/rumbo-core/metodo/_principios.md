@@ -9,9 +9,6 @@ está fora: ela é ferramenta, não entregável.
 
 ## As três regras duras
 
-Existem porque o mercado está saturado de material gerado por máquina, e parecer um
-deles custa autoridade exatamente onde a Rumbo compete, que é em credibilidade.
-
 ### 1. Nenhum travessão
 
 Nunca use travessão (`—`) para separar oração, inserir aposto ou criar pausa. É a
