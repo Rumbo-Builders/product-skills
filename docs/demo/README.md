@@ -27,6 +27,7 @@ quebra. A URL publicada é:
 
     https://claude.ai/code/artifact/12451f2c-b2a7-40ba-8d4f-806944dbf3d0
 
-**O artefato nasce privado.** Para o link do README funcionar para quem chega de fora,
-ele precisa ser compartilhado uma vez, pelo menu da própria página. Enquanto isso não
-for feito, quem clicar vê uma página que não pode abrir, e é pior do que não ter link.
+**O artefato está compartilhado**, e é por isso que o link do README funciona para quem
+chega de fora. Artefato novo nasce privado: se algum dia esta demo for republicada numa
+URL diferente, o compartilhamento precisa ser refeito pelo menu da própria página, senão
+quem clicar vê uma página que não pode abrir, e é pior do que não ter link.
