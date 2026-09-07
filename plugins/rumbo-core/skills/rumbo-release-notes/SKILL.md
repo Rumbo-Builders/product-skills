@@ -37,6 +37,12 @@ Antes de escrever, **procure `.rumbo/perfil.md` na pasta de trabalho**. Ele traz
 tom, quem lê, vocabulário e cuidados, e vale para todas as skills do core. Se
 existir, leia-o: o que ele diz sobre registro e vocabulário vence o default.
 
+**Precedência, e ela importa quando há derivada.** O binding da derivada vence o
+perfil da casa, que vence o default. Com uma derivada ativa, `.rumbo/perfil.md`
+só preenche o que o binding não definiu, e nunca reescreve vocabulário, tom ou
+destinatário que a derivada declarou. Um `.rumbo/` esquecido numa pasta de
+trabalho não pode mudar o documento de um cliente sem ninguém perceber.
+
 **O tom ajusta o registro, e não suspende a régua.** Nenhuma linha do perfil
 libera travessão, ênfase gráfica ou vocabulário de consultoria genérica.
 

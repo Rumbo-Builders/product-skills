@@ -70,6 +70,13 @@ A derivada traz a origem dos dados, o destino da publicação, os canais e o
 vocabulário. Sem binding, pergunte antes de começar: **de onde vem o dossiê,
 qual time, e para onde publica.**
 
+**Precedência, e ela importa quando há derivada.** O binding da derivada vence o
+perfil da casa em `.rumbo/perfil.md`, que vence o default. Com uma derivada ativa,
+o `.rumbo/` só preenche o que o binding não definiu, e nunca reescreve
+vocabulário, tom, origem ou destino que a derivada declarou. Um `.rumbo/`
+esquecido numa pasta de trabalho não pode mudar o documento de um cliente sem
+ninguém perceber.
+
 **Há dois destinos, e o método os trata como equivalentes.** Leia "Dois destinos"
 no método antes de escolher.
 
