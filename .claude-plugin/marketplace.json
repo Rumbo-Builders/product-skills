@@ -4,7 +4,7 @@
   "description": "Metodo Rumbo: skills genericas e cliente-agnosticas de produto, escrita e apresentacao. Os bindings de cada cliente vivem em um repositorio da organizacao do proprio cliente.",
   "owner": {
     "name": "Juliano Baggio di Sopra",
-    "email": "jsopra@gmail.com"
+    "email": "juliano@rumbo.builders"
   },
   "plugins": [
     {
