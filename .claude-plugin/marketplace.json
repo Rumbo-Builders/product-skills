@@ -14,7 +14,8 @@
         "name": "Rumbo"
       },
       "category": "productivity",
-      "source": "./plugins/rumbo-core"
+      "source": "./plugins/rumbo-core",
+      "version": "0.7.0"
     }
   ]
 }

@@ -134,7 +134,11 @@ if [ -n "$BLOCO" ]; then
     echo "ok: nenhum digito solto"
   fi
 else
-  echo "aviso: bloco de indicadores nao encontrado no corpo (titulo com 'indicador')"
+  # Corpo sem secao de indicadores e valido, e comum: a tabela ja mostra os
+  # numeros, e o metodo manda deixar curto quem nao tem o que dizer alem deles.
+  # A mensagem diz que a varredura nao se aplicou, e nao que falta alguma coisa:
+  # aviso que soa como falta faz o autor inventar secao para calar o script.
+  echo "ok: sem secao de indicadores no corpo, nada a varrer"
 fi
 
 # ---------------------------------------------------------------------------

@@ -27,11 +27,32 @@ slide feio: ele circula. Faltou um número, deixe o quadro incompleto e pergunte
 
 ## Binding
 
-A derivada do cliente traz ENTRADAS, SAÍDAS, DESVIOS e o **tema**. Sem tema, use
+A derivada do cliente traz ENTRADAS, SAÍDAS, DESVIOS e o **tema**. Sem derivada,
+procure `.rumbo/tema.js` na pasta de trabalho: é o tema da casa, gerado uma vez e
+compartilhado com o one page e as release notes. Sem nenhum dos dois, use
 `scripts/tema-neutro.js`, que é um ponto de partida sóbrio e **não é identidade de
 ninguém**. Nunca invente cor de marca nem escreva nome de cliente no motor.
 
 Onde o método conflitar com o binding, o binding vence.
+
+## O perfil da casa
+
+Antes de escrever, **procure `.rumbo/perfil.md` na pasta de trabalho**. Ele traz
+tom, quem lê, vocabulário e cuidados, e vale para todas as skills do core. Se
+existir, leia-o: o que ele diz sobre registro e vocabulário vence o default.
+
+**O tom ajusta o registro, e não suspende a régua.** Nenhuma linha do perfil
+libera travessão, ênfase gráfica ou vocabulário de consultoria genérica.
+
+Não existe? Rode a configuração de primeira vez, uma só, e ela serve todas as
+skills daqui em diante:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/scripts/configurar.mjs --casa <id> --nome "<Nome>" \
+  --acento "#333333" [--destaque "#888888"] [--fonte-titulo "..."] \
+  [--fonte-corpo "..."] [--simbolo simbolo.svg] [--logo-claro logo.png] \
+  [--logo-escuro logo-branco.png] [--tom "..."] [--ressalva "..."]
+```
 
 ## Fluxo
 

@@ -46,7 +46,7 @@ function args(argv) {
 const opts = args(process.argv);
 const time = opts.time || opts.squad;
 const base = process.env.RUMBO_ONEPAGE_API;
-const saida = opts.saida || ".rumbo-one-page";
+const saida = opts.saida || ".rumbo";
 
 if (!time) {
   console.error("Falta --time <identificador>.");

@@ -1,0 +1,76 @@
+<!-- Esqueleto do artefato de produto. Preencha, nao reinvente: render.mjs
+     substitui os marcadores delimitados por duplo sublinhado, e nada mais.
+
+     A pagina publicada ja vem embrulhada em doctype, html, head e body, entao
+     aqui comeca direto no title.
+
+     UMA URL, DUAS ABAS, e a ordem importa. One page primeiro, porque e o
+     documento. O detalhado depois, porque e o que menos gente abre e o que mais
+     rola de lado.
+
+     O seletor de versao troca o bloco .versao inteiro, e cada bloco carrega as
+     grades que aquela versao congelou: publicar um roadmap novo nao pode mudar
+     o que uma versao antiga mostra. -->
+<title>__TITULO__</title>
+__FONTES__
+<style>
+__ESTILO__
+</style>
+
+<main class="folha">
+  <header class="topo">
+    <span class="marca">__MARCA__</span>
+    <span class="topo-meta">
+      <span class="versoes">
+        <label for="sel-versao">Versão</label>
+        <select id="sel-versao">__OPCOES__</select>
+      </span>
+      <span>__PERIODO__</span>
+    </span>
+  </header>
+
+  <nav class="abas" role="tablist" aria-label="Seções do documento">
+    <button class="aba" role="tab" id="aba-one-page" aria-controls="painel-one-page" aria-selected="true" data-alvo="one-page">One page</button>
+    <button class="aba" role="tab" id="aba-roadmap" aria-controls="painel-roadmap" aria-selected="false" data-alvo="roadmap">Roadmap detalhado</button>
+  </nav>
+
+__VERSOES__
+
+</main>
+
+<script type="application/json" id="rumbo-envelopes">
+__ENVELOPES__
+</script>
+
+<script>
+  (function () {
+    var abas = Array.prototype.slice.call(document.querySelectorAll(".aba"));
+    var sel = document.getElementById("sel-versao");
+    var versoes = Array.prototype.slice.call(document.querySelectorAll(".versao"));
+
+    function mostrar(versao, alvo) {
+      versoes.forEach(function (v) { v.hidden = v.dataset.versao !== versao; });
+      abas.forEach(function (a) {
+        a.setAttribute("aria-selected", a.dataset.alvo === alvo ? "true" : "false");
+      });
+      document.querySelectorAll(".painel").forEach(function (p) {
+        p.hidden = p.dataset.alvo !== alvo;
+      });
+    }
+
+    function estado() {
+      var ligada = abas.filter(function (a) { return a.getAttribute("aria-selected") === "true"; })[0];
+      return {
+        versao: sel ? sel.value : versoes[0].dataset.versao,
+        alvo: ligada ? ligada.dataset.alvo : "one-page",
+      };
+    }
+
+    abas.forEach(function (a) {
+      a.addEventListener("click", function () { mostrar(estado().versao, a.dataset.alvo); });
+    });
+    if (sel) sel.addEventListener("change", function () { mostrar(sel.value, estado().alvo); });
+
+    mostrar(estado().versao, "one-page");
+  })();
+</script>

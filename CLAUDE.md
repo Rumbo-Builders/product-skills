@@ -35,11 +35,18 @@ Se você está escrevendo algo e não sabe em qual das três ele cai, use o test
 plugins/rumbo-core/
   metodo/            prosa: a PI. Um assunto por arquivo, e material de apoio
                      ao lado (escrita.md, escrita-antes-e-depois.md)
+  scripts/           o que serve MAIS DE UMA skill. Hoje só o configurar.mjs
   skills/<skill>/
     SKILL.md         só o fluxo da conversa
     scripts/         o que roda: motor, tema, QA
     assets/          binários que a skill precisa
 ```
+
+`scripts/` na raiz é para o que nenhuma skill pode ser dona. O configurador de
+primeira vez está lá porque o que ele grava (cor, fonte, logo, tom) é lido pelo
+deck, pelo one page, pelas release notes e pela escrita. Script compartilhado
+morando dentro de uma skill é a mesma doença do método copiado: um dia alguém
+mexe nele por causa do one page e o deck muda de cor.
 
 Divisão de trabalho: **`metodo/` é o que se lê, `scripts/` é o que roda, `SKILL.md`
 é o que conduz.** Se o SKILL.md está explicando o método, ele engordou: o texto
@@ -67,10 +74,19 @@ skill, e cada um roda direto. Os caminhos abaixo saem de `plugins/rumbo-core/ski
 # deck: gera, valida o XML, renderiza e reprova o build pelas regras da casa
 bash rumbo-deck/scripts/qa.sh deck.js Saida.pptx
 
-# one page: contexto → redação → régua → publicação em duas etapas
+# primeira vez, uma só: a entrevista vira .rumbo/ (serve todas as skills)
+node ../scripts/configurar.mjs --casa <id> --nome "<Nome>" --acento "#1f4f7a"
+
+# one page: contexto → redação → régua → publicação
 node rumbo-one-page/scripts/contexto.mjs --time <id> [--ano 2026] [--trimestre 3]
 bash rumbo-one-page/scripts/validar.sh envelope.json
 node rumbo-one-page/scripts/publicar.mjs envelope.json --rascunho   # ou --publicar
+
+# ...ou, sem origem que fale o contrato, o caminho sem servidor
+node rumbo-one-page/scripts/contexto-local.mjs --anterior anterior.json \
+  --movimento movimento.json --triagem triagem.json
+node rumbo-one-page/scripts/render.mjs --one-page envelope.json \
+  --roadmap envelope-roadmap.json --anterior .rumbo/anterior.json
 
 # release notes: commits da janela → HTML → PDF renderizado
 bash rumbo-release-notes/scripts/coletar.sh <repo> 2026-08-27 [2026-09-03] [branch]
@@ -112,8 +128,13 @@ série e no vocabulário proibido (`RUMBO_VOCAB_EXTRA` aponta a lista extra de u
 cliente). Depois manda ler `render/s-*.jpg` slide a slide, porque colisão de layout
 não aparece no texto.
 
-**One page.** `contexto.mjs` → redação → `validar.sh` → `publicar.mjs`. A regra que
-explica o desenho: **o modelo nunca lê o dossiê JSON.** `contexto.mjs` transforma o
+**One page. Dois destinos, e o mesmo envelope.** Com origem que fale o contrato:
+`contexto.mjs` → redação → `validar.sh` → `publicar.mjs`. Sem origem nenhuma:
+`contexto-local.mjs` → redação → `validar.sh` → `render.mjs`, que monta uma página
+de duas abas (one page e roadmap detalhado) para o agente publicar, com o histórico
+das versões embutido nela e cada versão carregando a cópia da grade que projetou.
+A régua é a mesma nos dois, e é isso que impede o destino barato de virar o destino
+ruim. A regra que explica o desenho: **o modelo nunca lê o dossiê JSON.** `contexto.mjs` transforma o
 dossiê em briefing markdown, e o que ele decide o modelo não redecide. `validar.sh`
 reprova envelope sem identificador estável, decisão sem gênero, pergunta sem
 destinatário, marcador `{{x}}` que não resolve, dígito solto no bloco de indicadores
@@ -186,6 +207,34 @@ cliente: stakeholders, cadência, vocabulário, tom, o que não se fala.
 
 Escrever stakeholders dentro de `roadmap-acme` **e** dentro de `follow-up-acme` é o
 começo da divergência. Fato de cliente vai pro perfil, uma vez.
+
+### Binding sem plugin: `.rumbo/` na pasta de trabalho
+
+Um plugin de cliente exige um repositório e uma instalação, e quem só quer usar o
+método hoje não tem nenhum dos dois. Para esse caso existe uma quarta forma, que é
+o mesmo binding sem o plugin: `node plugins/rumbo-core/scripts/configurar.mjs`
+grava um `.rumbo/` na pasta de trabalho.
+
+| Arquivo | O que é | Quem lê |
+|---|---|---|
+| `perfil.md` | tom, quem lê, vocabulário, cuidados | o modelo |
+| `marca.json` | cores, fontes, logo, favicon, ressalvas | os scripts |
+| `tema.css` | derivado de `marca.json` | one page e release notes |
+| `tema.js` | derivado de `marca.json` | o motor do deck |
+
+A divisão é a mesma das três camadas, um nível abaixo: `marca.json` e `perfil.md`
+são da casa e valem para todas as skills; o que é de uma skill só fica com ela
+(`one-page.config.json`, ao lado). Cor escrita nos dois diverge na semana em que
+alguém editar só um.
+
+**Tom ajusta registro, não suspende a régua.** Formal ou direto é escolha da casa.
+Travessão, ênfase gráfica e vocabulário de consultoria continuam reprovando. Sem
+essa linha escrita no `perfil.md`, "tom de voz" vira a porta dos fundos por onde a
+régua sai.
+
+**`.rumbo/` não entra em repositório**, e está no `.gitignore` daqui. Ele carrega
+nome, cor e logo, e a checagem de vazamento só lê texto: um PNG de logo passa por
+ela sem ser visto.
 
 ---
 

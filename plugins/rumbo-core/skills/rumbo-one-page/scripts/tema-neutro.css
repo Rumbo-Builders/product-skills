@@ -1,0 +1,92 @@
+/* Tema neutro do artefato de produto.
+
+   ESTE TEMA NAO E A IDENTIDADE DE NINGUEM. Ele existe para o documento sair
+   legivel antes de alguem ter configurado marca, e para servir de referencia do
+   conjunto completo de variaveis. Rode `configurar.mjs` e gere o seu.
+
+   Cinza puro le como cor nao escolhida. Os neutros daqui puxam levemente para o
+   azul do acento, o que ja e uma escolha: quando voce gerar o seu, o script faz
+   o mesmo a partir da sua cor.
+
+   TODO token e declarado no :root sem condicao. Os blocos de tema abaixo so
+   redefinem: cor que existe unicamente dentro de um deles nao se aplica no
+   estado sem marcacao, que e o da maioria dos leitores. */
+
+:root {
+  color-scheme: light;
+
+  --acento:       #1f4f7a;   /* autoridade: titulo, borda, superficie escura */
+  --destaque:     #4b9fd5;   /* acento secundario */
+
+  --papel:        #ffffff;
+  --fundo:        #f6f7f9;
+  --superficie:   #ffffff;
+  --superficie-2: #eef1f5;
+  --escura:       #1f4f7a;
+  --tinta:        #1f4f7a;
+  --texto:        #1c2126;
+  --apagado:      #5f6b76;   /* piso de contraste sobre --fundo */
+  --regua:        #dde3ea;
+  --regua-forte:  #c2ccd7;
+
+  /* Semantica de estado, separada do acento. Verde e vermelho aqui nao sao
+     identidade: sao leitura de entrega, e mudam de significado se virarem marca. */
+  --bom:           #2f6b3f;
+  --atencao:       #8a5f00;
+  --grave:         #a33131;
+  --bom-fundo:     #e8f0e9;
+  --atencao-fundo: #f6eddb;
+  --grave-fundo:   #f6e6e6;
+
+  --fonte-corpo:   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --fonte-display: Georgia, "Times New Roman", serif;
+  --fonte-mono:    ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+
+  --e1: 0.25rem; --e2: 0.5rem;  --e3: 0.75rem; --e4: 1rem;
+  --e5: 1.5rem;  --e6: 2rem;    --e7: 3rem;    --e8: 4rem;
+
+  --raio: 3px;
+  --medida: 68ch;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --papel:        #0e1419;
+    --fundo:        #0e1419;
+    --superficie:   #161e26;
+    --superficie-2: #1c2731;
+    --escura:       #1c2731;
+    --tinta:        #7fc0ee;
+    --texto:        #e6ecf2;
+    --apagado:      #9aa8b4;
+    --regua:        #26333f;
+    --regua-forte:  #36485a;
+    --bom:           #7fc08c;
+    --atencao:       #e0a72e;
+    --grave:         #e88b8b;
+    --bom-fundo:     #14301d;
+    --atencao-fundo: #33280d;
+    --grave-fundo:   #331919;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --papel:        #0e1419;
+  --fundo:        #0e1419;
+  --superficie:   #161e26;
+  --superficie-2: #1c2731;
+  --escura:       #1c2731;
+  --tinta:        #7fc0ee;
+  --texto:        #e6ecf2;
+  --apagado:      #9aa8b4;
+  --regua:        #26333f;
+  --regua-forte:  #36485a;
+  --bom:           #7fc08c;
+  --atencao:       #e0a72e;
+  --grave:         #e88b8b;
+  --bom-fundo:     #14301d;
+  --atencao-fundo: #33280d;
+  --grave-fundo:   #331919;
+}

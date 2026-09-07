@@ -1,0 +1,51 @@
+{
+  "_leia": "Formato normalizado do que aconteceu no periodo. Este arquivo E a documentacao: o que ele nao mostra, o modelo infere errado. Quem monta e a skill, lendo a ferramenta onde o trabalho do time vive, e o `contexto-local.mjs` so apura em cima disto.",
+
+  "_por_que_normalizado": "O metodo nao conhece ferramenta. Jira, quadro de tarefas, planilha ou conversa: qualquer origem serve, desde que chegue nesta forma. E a mesma ideia do contrato do dossie, na versao sem servidor.",
+
+  "lido_em": "2026-09-07T12:00:00Z",
+  "janela_desde": "2026-09-01T00:00:00Z",
+  "_janela": "Duas buscas, e nao uma: o que mudou desde a ultima publicacao, e tudo aberto e critico sem filtro de data. Um bloqueio de tres semanas atras continua sendo bloqueio, e sumir da janela nao o resolve. Nao traga a lista inteira: ela gasta o contexto que faria falta na redacao, e a parte que nao mudou ja foi triada.",
+
+  "projetos": [
+    {
+      "id": "p-1",
+      "nome": "Nome da entrega, como o time a chama",
+      "estado": "completed",
+      "alvo": "2026-09-10",
+      "concluido_em": "2026-09-05",
+      "initiative": "Objetivo a que ela se liga, se houver",
+      "url": "https://exemplo/entrega/1",
+      "_id": "Identificador ESTAVEL na origem. E por ele que a triagem lembra a decisao, e por ele que o diff compara. Texto muda de redacao sem mudar de conteudo."
+    },
+    {
+      "id": "p-2",
+      "nome": "Entrega que passou do alvo e nao fechou",
+      "estado": "started",
+      "alvo": "2026-07-31",
+      "concluido_em": null,
+      "initiative": null,
+      "url": "https://exemplo/entrega/2",
+      "_atraso": "Sem concluido_em e com alvo no passado, o script conta os dias. Voce nao conta."
+    }
+  ],
+  "_projetos": "As ENTREGAS: o que aparece na celula do roadmap. Entrega sem objetivo e candidata a faixa \"outros\", que existe para isso e nao e sobra.",
+
+  "issues": [
+    {
+      "id": "OCR-244",
+      "titulo": "O que esta travando, em uma linha",
+      "prioridade": "Urgent",
+      "estado": "In Progress",
+      "rotulos": ["bug"],
+      "concluida_em": null,
+      "url": "https://exemplo/ocorrencia/244"
+    }
+  ],
+  "_issues": "As OCORRENCIAS. Elas NUNCA viram item de roadmap: anexam a uma celula, em payload.issues, e aparecem como chip so no corte detalhado. O rotulo de defeito e o que separa trabalho reativo do resto.",
+
+  "ciclos": [
+    { "numero": 12, "inicio": "2026-08-25", "fim": "2026-09-07" }
+  ],
+  "_ciclos": "Opcional. Serve a indicador apurado automaticamente, quando houver. Ciclo mal usado produz numero que parece medicao e nao e: confira antes de prometer."
+}
