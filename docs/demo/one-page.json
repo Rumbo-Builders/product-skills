@@ -1,0 +1,186 @@
+{
+  "_leia": "One page FICTICIO da demo publicada. Time, produto, pessoas e numeros sao inventados. Para o formato comentado campo a campo, veja scripts/exemplo-envelope.json.",
+  "squad": "engajamento",
+  "kind": "one_page",
+  "year": 2026,
+  "quarter": 3,
+  "insight": "A ativação melhorou e sustentou, mas a retomada de dormentes não saiu do lugar, e é ela que decide a meta do trimestre.",
+  "meta": {
+    "roadmapVersao": 1
+  },
+  "body_md": "## Onde estamos\n\n- A aposta da ativação se confirmou e não precisa de mais atenção neste trimestre. O risco está inteiro na outra frente: sem resolver a saturação da fila, o resumo semanal não alcança a base que ele existe para alcançar, e a meta de reativação não fecha.\n",
+  "itens": [
+    {
+      "kind": "okr",
+      "slug": "uso-semanal-recorrente",
+      "texto": "Elevar a proporção de contas com uso semanal recorrente",
+      "payload": {
+        "destaque": "41%",
+        "baseline": "33%",
+        "meta": "45%",
+        "atual": "41%",
+        "progressoPct": 67
+      }
+    },
+    {
+      "kind": "okr",
+      "slug": "reativar-contas-paradas",
+      "texto": "Reativar contas sem uso há mais de 30 dias",
+      "payload": {
+        "destaque": "7%",
+        "baseline": "6%",
+        "meta": "15%",
+        "atual": "7%",
+        "progressoPct": 11
+      }
+    },
+    {
+      "kind": "decisao",
+      "slug": "fila-de-envio-satura",
+      "texto": "A fila de envio satura acima de 20 mil destinatários e metade da base não recebeu o resumo semanal",
+      "genero": "risco",
+      "payload": {
+        "impacto": "Sem alcance, a frente de dormentes não tem como mover o indicador antes do fim do trimestre",
+        "caminho": "Instrumentar a fila de envio antes de qualquer nova campanha"
+      }
+    },
+    {
+      "kind": "decisao",
+      "slug": "onde-investir-no-quarto",
+      "texto": "Sustentamos investimento na ativação no quarto trimestre, ou realocamos para dormentes?",
+      "genero": "pergunta",
+      "escala_para": [
+        "Direção de produto"
+      ]
+    }
+  ],
+  "leituras": [
+    {
+      "slug": "ativacao-primeiro-dia",
+      "periodo": "2026-07",
+      "valor_num": 31,
+      "unidade": "percent",
+      "categoria": "Adoção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Ativação no primeiro dia",
+      "meta": {
+        "valor": 40,
+        "regra": "acima_de"
+      },
+      "definicao": "Contas que chegam ao primeiro valor no mesmo dia do cadastro"
+    },
+    {
+      "slug": "ativacao-primeiro-dia",
+      "periodo": "2026-08",
+      "valor_num": 36,
+      "unidade": "percent",
+      "categoria": "Adoção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Ativação no primeiro dia",
+      "meta": {
+        "valor": 40,
+        "regra": "acima_de"
+      },
+      "definicao": "Contas que chegam ao primeiro valor no mesmo dia do cadastro"
+    },
+    {
+      "slug": "ativacao-primeiro-dia",
+      "periodo": "2026-09",
+      "valor_num": 42,
+      "unidade": "percent",
+      "categoria": "Adoção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Ativação no primeiro dia",
+      "meta": {
+        "valor": 40,
+        "regra": "acima_de"
+      },
+      "observacao": "Passou a meta e sustentou por duas quinzenas. A aposta se confirmou.",
+      "definicao": "Contas que chegam ao primeiro valor no mesmo dia do cadastro"
+    },
+    {
+      "slug": "reativacao-dormentes",
+      "periodo": "2026-07",
+      "valor_num": 6,
+      "unidade": "percent",
+      "categoria": "Retenção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Reativação de dormentes",
+      "meta": {
+        "valor": 15,
+        "regra": "acima_de"
+      },
+      "definicao": "Contas sem uso há mais de 30 dias que voltam a usar no mês"
+    },
+    {
+      "slug": "reativacao-dormentes",
+      "periodo": "2026-08",
+      "valor_num": 6,
+      "unidade": "percent",
+      "categoria": "Retenção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Reativação de dormentes",
+      "meta": {
+        "valor": 15,
+        "regra": "acima_de"
+      },
+      "definicao": "Contas sem uso há mais de 30 dias que voltam a usar no mês"
+    },
+    {
+      "slug": "reativacao-dormentes",
+      "periodo": "2026-09",
+      "valor_num": 7,
+      "unidade": "percent",
+      "categoria": "Retenção",
+      "sobe_e_bom": true,
+      "fonte": "manual",
+      "nome": "Reativação de dormentes",
+      "meta": {
+        "valor": 15,
+        "regra": "acima_de"
+      },
+      "observacao": "Ruim e parada. O resumo semanal só alcançou metade da base.",
+      "definicao": "Contas sem uso há mais de 30 dias que voltam a usar no mês"
+    },
+    {
+      "slug": "tempo-primeiro-valor",
+      "periodo": "2026-07",
+      "valor_num": 18,
+      "unidade": "min",
+      "categoria": "Adoção",
+      "sobe_e_bom": false,
+      "fonte": "manual",
+      "nome": "Tempo até o primeiro valor",
+      "definicao": "Minutos entre o cadastro e a primeira ação que entrega valor"
+    },
+    {
+      "slug": "tempo-primeiro-valor",
+      "periodo": "2026-08",
+      "valor_num": 12,
+      "unidade": "min",
+      "categoria": "Adoção",
+      "sobe_e_bom": false,
+      "fonte": "manual",
+      "nome": "Tempo até o primeiro valor",
+      "definicao": "Minutos entre o cadastro e a primeira ação que entrega valor"
+    },
+    {
+      "slug": "tempo-primeiro-valor",
+      "periodo": "2026-09",
+      "valor_num": 9,
+      "unidade": "min",
+      "categoria": "Adoção",
+      "sobe_e_bom": false,
+      "fonte": "manual",
+      "nome": "Tempo até o primeiro valor",
+      "observacao": "Metade do que era em julho, com o onboarding em 3 passos.",
+      "definicao": "Minutos entre o cadastro e a primeira ação que entrega valor"
+    }
+  ],
+  "canais": []
+}

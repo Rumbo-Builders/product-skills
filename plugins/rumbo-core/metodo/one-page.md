@@ -230,6 +230,29 @@ entra nesta versão). O one page mostra o recorte.
 **O que escala é marcado explicitamente**, com destinatário. O resto é
 informação.
 
+## Dois destinos, e o mesmo envelope
+
+O método não conhece o lugar onde o artefato é publicado, e não deve conhecer.
+Conhece o **envelope**, e é o envelope que torna os dois destinos equivalentes:
+
+1. **Uma origem que fala o contrato do dossiê**, que recebe, versiona e comunica.
+   É o destino de quem já tem onde o trabalho vive, e quer o artefato ao lado dele.
+2. **Uma página publicada pelo próprio agente**, sem servidor nenhum. O histórico
+   das versões viaja embutido na própria página, e cada versão guarda uma cópia
+   das grades que projetou.
+
+O segundo existe porque a maioria não tem o primeiro, e construir um servidor
+para publicar um documento semanal é desproporcional. **Sem servidor, a régua
+continua sendo a mesma**, e é isso que impede o destino barato de virar o destino
+ruim: mesmo envelope, mesmos seis géneros, mesma proibição de tabela escrita à
+mão, mesma verificação antes de publicar.
+
+**O que o segundo destino compra em troca da simplicidade** é que a imutabilidade
+passa a depender de quem escreve o renderizador, não de um servidor que recusa na
+porta. Versão publicada é imutável, e a imutabilidade vale para o que ela
+projeta: por isso cada versão carrega a cópia da grade que mostrou, em vez de
+apontar para a atual.
+
 ## O elo entre one page e roadmap
 
 O one page **não copia** o roadmap: ele mostra o corte enxuto e o que mudou.

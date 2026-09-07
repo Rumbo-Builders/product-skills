@@ -1,0 +1,350 @@
+/* Motor de layout do artefato de produto. Neutro: toda cor e toda fonte saem de
+   variavel, e quem as define e o tema do cliente, carregado antes deste arquivo.
+
+   Nenhuma cor literal aqui. Se aparecer um hex neste arquivo, ele deixou de ser
+   motor e virou tema. */
+
+* { box-sizing: border-box; }
+
+body {
+  /* O artifact compoe sobre um fundo que o hospedeiro pinta no tema DELE. Body
+     sem fundo proprio empresta o fundo do hospedeiro, e a pagina sai com o texto
+     de um tema sobre o chao do outro. */
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+.folha { max-width: 62rem; margin: 0 auto; padding: var(--e6) var(--e5) var(--e8); }
+
+/* --------------------------------------------------------------------------
+   cabecalho
+   -------------------------------------------------------------------------- */
+
+.topo {
+  display: flex; align-items: center; gap: var(--e4);
+  flex-wrap: wrap;
+  padding-bottom: var(--e4);
+  border-bottom: 2px solid var(--tinta);
+}
+.marca { display: flex; align-items: center; gap: var(--e3); color: var(--tinta); }
+.marca svg { width: 26px; height: 26px; display: block; }
+.marca b { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; }
+.marca span { font-weight: 400; }
+
+.topo-meta {
+  margin-left: auto;
+  display: flex; align-items: center; gap: var(--e4);
+  font-size: 0.8125rem; color: var(--apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   abas
+   -------------------------------------------------------------------------- */
+
+.abas { display: flex; gap: var(--e5); margin-top: var(--e4); border-bottom: 1px solid var(--regua); }
+.aba {
+  appearance: none; background: none; border: 0;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  padding: var(--e3) 0;
+  font: inherit; font-size: 0.9375rem; font-weight: 500;
+  color: var(--apagado); cursor: pointer;
+}
+.aba:hover { color: var(--texto); }
+.aba[aria-selected="true"] { color: var(--tinta); border-bottom-color: var(--tinta); font-weight: 600; }
+.aba:focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; border-radius: var(--raio); }
+
+.painel { padding-top: var(--e6); }
+
+/* --------------------------------------------------------------------------
+   tipografia
+   -------------------------------------------------------------------------- */
+
+/* Titulo de secao, nao sobrancelha. A regua que segue o texto ate a borda e o
+   que separa um rotulo de um titulo: ela fecha a largura da secao e diz onde a
+   secao comeca, sem gastar corpo de fonte. A tinta no lugar do apagado faz o
+   resto do trabalho. */
+h2 {
+  display: flex; align-items: center; gap: var(--e3);
+  font-size: 0.8125rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--tinta);
+  margin: 0 0 var(--e4);
+}
+h2::after { content: ""; flex: 1; height: 1px; background: var(--regua); }
+
+/* Subtitulo de secao, no padrao do beta: caixa normal, descritivo, logo abaixo
+   do titulo. Ele explica a secao; o titulo so a nomeia. */
+.subtitulo { margin: calc(var(--e4) * -1) 0 var(--e4); color: var(--apagado); font-size: 0.875rem; }
+
+/* Legenda de rodape de tabela. Ressalva fica visivel, nunca escondida. */
+.legenda { margin: var(--e3) 0 0; color: var(--apagado); font-size: 0.75rem; }
+h3 { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.02em; margin: var(--e5) 0 var(--e2); color: var(--tinta); }
+h3:first-child { margin-top: 0; }
+
+/* Coluna unica preserva a medida de leitura e deixa metade da folha vazia, porque
+   as tabelas correm de ponta a ponta e o texto parava no meio. Duas colunas
+   resolvem as duas coisas: a medida continua curta e a folha fica preenchida.
+
+   Quem escolhe entre uma e duas e o renderizador, que conta paragrafo antes de
+   marcar .prosa-duas. CSS nao sabe se o bloco tem tres paragrafos ou um, e um
+   paragrafo curto partido em duas colunas le pior do que inteiro. */
+.prosa { max-width: var(--medida); }
+.prosa-duas { max-width: none; }
+/* Largura cheia em coluna unica. E o estado das listas: item curto nao sofre com
+   medida longa, e duas colunas quebrariam a sequencia da lista ao meio. */
+.prosa-larga { max-width: none; }
+.prosa-larga ul { padding-left: var(--e4); }
+.prosa-larga li { margin-bottom: var(--e3); }
+.prosa p { margin: 0 0 var(--e4); }
+.prosa strong { font-weight: 600; }
+.prosa code, .mono { font-family: var(--fonte-mono); font-size: 0.875em; }
+.prosa ul { margin: 0 0 var(--e4); padding-left: var(--e5); }
+.prosa li { margin-bottom: var(--e1); }
+
+.bloco { margin-bottom: var(--e7); }
+.bloco:last-child { margin-bottom: 0; }
+/* O bloco que termina no titulo da tabela cola nela. Tres rem entre um titulo e
+   a tabela que ele nomeia fazem o titulo parecer orfao do bloco anterior. */
+.bloco-junto { margin-bottom: var(--e4); }
+
+
+/* O ponto de virada e a largura em que a coluna unica passa a sobrar espaco.
+   Abaixo dele, uma coluna so, senao a medida cai para o ilegivel. */
+@media (min-width: 60rem) {
+  .prosa-duas { columns: 2; column-gap: var(--e7); }
+  /* O titulo atravessa as duas colunas: secao com titulo dentro de uma coluna so
+     perde a hierarquia, e o leitor deixa de ver onde a secao comeca. */
+  .prosa-duas > h3 { column-span: all; }
+  .prosa-duas p { break-inside: avoid; }
+  .prosa-duas p:last-child { margin-bottom: 0; }
+}
+
+/* O insight e a tese da versao, e a unica coisa na pagina em display serif.
+   Gastar a face de display em mais de um lugar tira o peso dela justamente aqui. */
+.insight {
+  font-family: var(--fonte-display);
+  /* O teto vem do renderizador, que conta os caracteres para a manchete fechar
+     em duas linhas. Sem a variavel, o teto e o de sempre. */
+  font-size: clamp(1.4rem, 1.05rem + 1.55vw, var(--insight-teto, 2.15rem));
+  line-height: 1.26; font-weight: 500;
+  letter-spacing: -0.02em;
+  /* A tese da versao ocupa a folha inteira e ganha peso de abertura. O equilibrio
+     de quebra e o que impede a ultima linha de sair com duas palavras. */
+  text-wrap: balance;
+  color: var(--tinta);
+  max-width: none; margin: 0;
+}
+.insight-cerca { border-left: 3px solid var(--destaque); padding-left: var(--e5); }
+
+.vazio { color: var(--apagado); font-style: italic; margin: 0; }
+
+/* --------------------------------------------------------------------------
+   objetivos em destaque
+   -------------------------------------------------------------------------- */
+
+/* Os cards dividem a linha em partes iguais e a linha inteira e usada. O teto de
+   24rem que existia aqui antes cabia dois por linha e jogava o terceiro objetivo
+   sozinho numa segunda linha, com metade dela vazia.
+
+   O teto continua fazendo falta num caso, e so nele: com um objetivo so, esticar
+   o card sobre a folha inteira e pior que deixa-lo do tamanho que precisa. Por
+   isso o limite virou max-width do bloco, contado pelo renderizador. */
+.objetivos { display: grid; gap: var(--e4); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); list-style: none; margin: 0; padding: 0; }
+.objetivos[data-n="1"] { max-width: 24rem; }
+.objetivo { background: var(--superficie); border: 1px solid var(--regua); border-radius: var(--raio); padding: var(--e4); }
+.objetivo .valor {
+  display: block;
+  font-size: 1.75rem; font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.03em; color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--e2);
+}
+.objetivo .enunciado { font-size: 0.9375rem; color: var(--texto); }
+.objetivo.abandonado { opacity: 0.72; }
+/* A decisao de largar e informacao: o objetivo abandonado continua visivel,
+   riscado. Apagar a linha esconde o que costuma ser o dado do trimestre. */
+.objetivo.abandonado .enunciado { text-decoration: line-through; text-decoration-thickness: 1px; }
+.objetivo.abandonado .valor { color: var(--apagado); }
+.objetivo .nota { display: block; margin-top: var(--e2); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--apagado); }
+
+/* --------------------------------------------------------------------------
+   roadmap
+   -------------------------------------------------------------------------- */
+
+/* Conteudo largo rola no proprio container: o corpo da pagina nunca rola de lado. */
+.rolagem { overflow-x: auto; border: 1px solid var(--regua); border-radius: var(--raio); background: var(--superficie); }
+
+.grade { border-collapse: collapse; width: 100%; min-width: 44rem; }
+.grade th, .grade td { border-right: 1px solid var(--regua); border-bottom: 1px solid var(--regua); padding: var(--e3); vertical-align: top; text-align: left; }
+.grade th:last-child, .grade td:last-child { border-right: 0; }
+.grade tr:last-child td { border-bottom: 0; }
+.grade thead th {
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--apagado); background: var(--superficie-2); white-space: nowrap;
+}
+.grade thead th.agora { color: var(--tinta); }
+.grade thead th.agora::after { content: ""; display: block; height: 2px; background: var(--destaque); margin-top: var(--e2); margin-bottom: calc(var(--e2) * -1 - 2px); }
+.grade td.agora { background: var(--superficie-2); }
+.grade .faixa {
+  width: 12rem; font-weight: 600; font-size: 0.9375rem; color: var(--tinta);
+  background: var(--superficie-2); position: sticky; left: 0;
+}
+.grade .faixa .aposta { display: block; font-weight: 400; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+.grade .faixa.outros { color: var(--apagado); }
+
+.celula { font-size: 0.9375rem; }
+.celula + .celula { margin-top: var(--e3); padding-top: var(--e3); border-top: 1px dashed var(--regua); }
+.celula.risco { border-left: 3px solid var(--atencao); padding-left: var(--e3); margin-left: calc(var(--e3) * -1); }
+
+/* Planejado e ainda nao comecado. Italico e cor apagada dizem "previsto" sem
+   precisar da palavra na celula, que ja e curta. */
+.celula.previsto { font-style: italic; color: var(--apagado); }
+
+/* Fora do escopo. Riscado, apagado e um corpo menor: continua legivel, para de
+   competir com o que esta de pe, e o leitor ve que houve uma decisao ali.
+   O risco nunca depende so da cor: a linha do risco e forma, nao tinta. */
+.celula.cortado { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); font-size: 0.875rem; }
+
+/* O alvo fica sob o texto da celula, apagado: ele e a regua, nao o trabalho. */
+.alvo { display: block; margin-top: var(--e1); font-size: 0.75rem; color: var(--apagado); font-variant-numeric: tabular-nums; }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--e1); margin-top: var(--e2); }
+.chip {
+  display: inline-flex; align-items: center; gap: var(--e1);
+  font-family: var(--fonte-mono); font-size: 0.6875rem;
+  padding: 2px var(--e2); border-radius: 999px;
+  border: 1px solid var(--regua-forte); color: var(--apagado);
+  text-decoration: none; white-space: nowrap;
+}
+.chip:hover { border-color: var(--tinta); color: var(--tinta); }
+.chip.critica { border-color: var(--atencao); color: var(--atencao); }
+.chip.fechada { text-decoration: line-through; }
+
+.nnl { display: grid; gap: var(--e4); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.coluna-nnl { background: var(--superficie); border: 1px solid var(--regua); border-radius: var(--raio); padding: var(--e4); }
+.coluna-nnl > h3 { margin-top: 0; }
+.coluna-nnl ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e3); }
+.coluna-nnl li { font-size: 0.9375rem; }
+.criterio { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+
+.estacionamento { display: grid; gap: var(--e3); list-style: none; margin: 0; padding: 0; }
+.estacionamento li { display: flex; gap: var(--e3); align-items: baseline; font-size: 0.9375rem; }
+.parado-corpo { display: grid; gap: var(--e1); }
+.parado-corpo b { font-weight: 600; color: var(--tinta); }
+.parado-desc { color: var(--texto); font-size: 0.875rem; }
+.tipo {
+  flex: none; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px var(--e2); border-radius: var(--raio);
+  background: var(--superficie-2); color: var(--apagado); border: 1px solid var(--regua);
+}
+
+/* --------------------------------------------------------------------------
+   indicadores
+   -------------------------------------------------------------------------- */
+
+.indicadores { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.9375rem; }
+.indicadores th, .indicadores td { padding: var(--e3); border-bottom: 1px solid var(--regua); text-align: left; vertical-align: top; }
+.indicadores thead th { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--apagado); background: var(--superficie-2); }
+.indicadores tbody tr:last-child td { border-bottom: 0; }
+.indicadores .n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.indicadores .atual { font-weight: 600; color: var(--tinta); }
+/* A variacao e a data moram na celula do valor, e nao em colunas proprias: duas
+   colunas a menos deixam o nome e a observacao respirarem, que e onde esta o
+   julgamento. */
+.indicadores .delta { font-size: 0.8125rem; font-weight: 600; }
+.indicadores .quando { font-size: 0.75rem; color: var(--apagado); font-weight: 400; }
+.indicadores .meta-leitura { font-size: 0.75rem; color: var(--apagado); font-weight: 400; }
+.indicadores .nome { font-weight: 500; }
+.indicadores .def { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+.indicadores .obs { color: var(--apagado); font-size: 0.875rem; }
+
+/* A direcao e semantica, nao o sinal: quem cruza subiu com sobe_e_bom e o script. */
+.dir { font-weight: 600; }
+.dir.melhorou { color: var(--bom); }
+.dir.piorou   { color: var(--grave); }
+.dir.estavel  { color: var(--apagado); }
+
+.marcador { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--tinta); }
+
+/* --------------------------------------------------------------------------
+   acao e decisao
+   -------------------------------------------------------------------------- */
+
+/* Duas colunas a partir do ponto em que a folha comporta. Em coluna unica, um
+   cartao de uma linha ocupava a largura inteira e a secao virava a parte mais
+   vazia da pagina, justamente onde mora o que precisa de decisao.
+
+   A ordem de leitura continua sendo a da lista, da esquerda para a direita e
+   depois para baixo: e por isso que aqui e grade, e nao coluna de texto, que
+   inverteria a ordem para cima e para baixo antes de ir para o lado. */
+/* Um por linha. A leitura fica em coluna unica, de cima para baixo, na ordem do
+   metodo: o que exige resposta de alguem vem primeiro. */
+.decisoes { display: grid; gap: var(--e4); grid-template-columns: 1fr; list-style: none; margin: 0; padding: 0; }
+.decisao {
+  display: grid; gap: var(--e2);
+  background: var(--superficie);
+  border: 1px solid var(--regua); border-left: 3px solid var(--regua-forte);
+  border-radius: var(--raio);
+  padding: var(--e4);
+}
+/* A faixa de cor codifica o genero, que determina o que o item precisa carregar.
+   Nao e decoracao: e a taxonomia do metodo, visivel de relance. */
+.decisao.risco       { border-left-color: var(--grave); }
+.decisao.pergunta    { border-left-color: var(--atencao); }
+.decisao.dependencia { border-left-color: var(--atencao); }
+.decisao.decisao_roadmap { border-left-color: var(--destaque); }
+.decisao.nota_metodo { border-left-color: var(--regua-forte); }
+.decisao.proximo_passo { border-left-color: var(--bom); }
+
+.genero { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--apagado); }
+.decisao p { margin: 0; }
+.exige { display: flex; flex-wrap: wrap; gap: var(--e2) var(--e4); font-size: 0.8125rem; color: var(--apagado); }
+.exige b { font-weight: 600; color: var(--texto); }
+.para { display: inline-flex; align-items: center; gap: var(--e1); font-weight: 600; color: var(--tinta); }
+
+/* --------------------------------------------------------------------------
+   versoes
+   -------------------------------------------------------------------------- */
+
+.versoes { display: flex; align-items: center; gap: var(--e2); font-size: 0.8125rem; }
+.versoes label { color: var(--apagado); }
+.versoes select {
+  font: inherit; font-size: 0.8125rem;
+  padding: var(--e1) var(--e2);
+  background: var(--superficie); color: var(--texto);
+  border: 1px solid var(--regua-forte); border-radius: var(--raio);
+}
+.versoes select:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+
+.aviso-versao {
+  display: flex; gap: var(--e3); align-items: baseline;
+  background: var(--atencao-fundo); color: var(--texto);
+  border-left: 3px solid var(--atencao);
+  padding: var(--e3) var(--e4); border-radius: var(--raio);
+  font-size: 0.875rem; margin-bottom: var(--e5);
+}
+
+
+@media (max-width: 40rem) {
+  .folha { padding: var(--e5) var(--e4) var(--e7); }
+  .topo-meta { margin-left: 0; width: 100%; }
+  .grade .faixa { position: static; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@media print {
+  .abas, .versoes { display: none; }
+  body { background: #fff; }
+  /* Na folha impressa a coluna e mais estreita que na tela, e duas colunas ali
+     devolvem a medida ilegivel que o ajuste de tela existia para evitar. */
+  .prosa-duas { columns: auto; }
+}

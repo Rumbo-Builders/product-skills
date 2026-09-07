@@ -1,0 +1,175 @@
+{
+  "_leia": "Roadmap FICTICIO da demo publicada. Time, produto e numeros sao inventados. Para o formato comentado campo a campo, veja scripts/exemplo-envelope-roadmap.json.",
+  "_grade_dupla": "As colunas sao SEMANAS e os grupos sao QUINZENAS. O corte detalhado mostra as semanas; o enxuto, dentro do one page, mostra os grupos. Nao sao dois roadmaps: e o mesmo, agrupado, e por isso eles nao divergem.",
+  "squad": "engajamento",
+  "kind": "roadmap",
+  "year": 2026,
+  "quarter": 3,
+  "insight": "Três frentes no trimestre, com a retomada de dormentes concentrada na segunda quinzena de setembro.",
+  "body_md": "",
+  "meta": {
+    "modo": "timeline",
+    "granularidade": "semana",
+    "faixas": [
+      {
+        "slug": "ativacao",
+        "titulo": "Ativação no primeiro uso",
+        "tipo": "objetivo",
+        "aposta": "Quem chega ao primeiro valor em minutos volta na semana seguinte"
+      },
+      {
+        "slug": "dormentes",
+        "titulo": "Retomada de dormentes",
+        "tipo": "objetivo",
+        "aposta": "Reengajar quem já conhece custa menos que adquirir"
+      },
+      {
+        "slug": "outros",
+        "titulo": "Outros",
+        "tipo": "outros"
+      }
+    ],
+    "grupos": [
+      { "slug": "1a-jul", "rotulo": "1a jul" },
+      { "slug": "2a-jul", "rotulo": "2a jul" },
+      { "slug": "1a-ago", "rotulo": "1a ago" },
+      { "slug": "2a-ago", "rotulo": "2a ago" },
+      { "slug": "1a-set", "rotulo": "1a set", "atual": true },
+      { "slug": "2a-set", "rotulo": "2a set" }
+    ],
+    "colunas": [
+      { "slug": "s-06-jul", "rotulo": "6 jul", "grupo": "1a-jul", "inicio": "2026-07-06", "fim": "2026-07-12" },
+      { "slug": "s-13-jul", "rotulo": "13 jul", "grupo": "1a-jul", "inicio": "2026-07-13", "fim": "2026-07-19" },
+      { "slug": "s-20-jul", "rotulo": "20 jul", "grupo": "2a-jul", "inicio": "2026-07-20", "fim": "2026-07-26" },
+      { "slug": "s-27-jul", "rotulo": "27 jul", "grupo": "2a-jul", "inicio": "2026-07-27", "fim": "2026-08-02" },
+      { "slug": "s-03-ago", "rotulo": "3 ago", "grupo": "1a-ago", "inicio": "2026-08-03", "fim": "2026-08-09" },
+      { "slug": "s-10-ago", "rotulo": "10 ago", "grupo": "1a-ago", "inicio": "2026-08-10", "fim": "2026-08-16" },
+      { "slug": "s-17-ago", "rotulo": "17 ago", "grupo": "2a-ago", "inicio": "2026-08-17", "fim": "2026-08-23" },
+      { "slug": "s-24-ago", "rotulo": "24 ago", "grupo": "2a-ago", "inicio": "2026-08-24", "fim": "2026-08-30" },
+      { "slug": "s-31-ago", "rotulo": "31 ago", "grupo": "2a-ago", "inicio": "2026-08-31", "fim": "2026-09-06" },
+      { "slug": "s-07-set", "rotulo": "7 set", "grupo": "1a-set", "inicio": "2026-09-07", "fim": "2026-09-13", "atual": true },
+      { "slug": "s-14-set", "rotulo": "14 set", "grupo": "1a-set", "inicio": "2026-09-14", "fim": "2026-09-20" },
+      { "slug": "s-21-set", "rotulo": "21 set", "grupo": "2a-set", "inicio": "2026-09-21", "fim": "2026-09-27" },
+      { "slug": "s-28-set", "rotulo": "28 set", "grupo": "2a-set", "inicio": "2026-09-28", "fim": "2026-09-30" }
+    ]
+  },
+  "_itens": "Trabalho que atravessa duas semanas aparece nas duas, com o mesmo texto e slugs distintos. No enxuto o motor colapsa por texto, e por isso a quinzena mostra a frente uma vez so.",
+  "itens": [
+    {
+      "kind": "roadmap_item",
+      "slug": "onboarding-3-passos-s1",
+      "texto": "Onboarding em 3 passos",
+      "payload": {
+        "faixa": "ativacao",
+        "coluna": "s-20-jul",
+        "issues": [
+          { "id": 1041, "titulo": "Passo 2 não guarda o rascunho quando o usuário sai", "prioridade": "P1", "url": "https://exemplo.invalid/issues/1041" }
+        ]
+      }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "onboarding-3-passos-s2",
+      "texto": "Onboarding em 3 passos",
+      "payload": { "faixa": "ativacao", "coluna": "s-27-jul" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "checklist-primeiro-valor",
+      "texto": "Checklist de primeiro valor",
+      "payload": { "faixa": "ativacao", "coluna": "s-03-ago" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "modelos-por-segmento",
+      "texto": "Modelos prontos por segmento",
+      "payload": { "faixa": "ativacao", "coluna": "s-17-ago" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "sinal-de-abandono",
+      "texto": "Detectar sinal de abandono",
+      "payload": { "faixa": "dormentes", "coluna": "s-24-ago" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "resumo-semanal-s1",
+      "texto": "Resumo semanal por e-mail",
+      "payload": {
+        "faixa": "dormentes",
+        "coluna": "s-07-set",
+        "destaque": "risco",
+        "issues": [
+          { "id": 1108, "titulo": "Fila de envio satura acima de 20 mil destinatários", "prioridade": "P0", "url": "https://exemplo.invalid/issues/1108" }
+        ]
+      }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "resumo-semanal-s2",
+      "texto": "Resumo semanal por e-mail",
+      "payload": { "faixa": "dormentes", "coluna": "s-14-set", "destaque": "risco" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "retomar-de-onde-parou-s1",
+      "texto": "Retomar de onde parou",
+      "payload": { "faixa": "dormentes", "coluna": "s-21-set", "destaque": "previsto" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "retomar-de-onde-parou-s2",
+      "texto": "Retomar de onde parou",
+      "payload": { "faixa": "dormentes", "coluna": "s-28-set", "destaque": "previsto" }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "migracao-billing",
+      "texto": "Migração do billing",
+      "payload": { "faixa": "outros", "coluna": "s-10-ago" }
+    },
+
+    {
+      "_leia": "estadoNnl 'parking' tira o item da grade e o coloca no estacionamento. O motivo e obrigatorio na pratica: parado sem motivo escrito volta a ser discutido do zero toda semana.",
+      "kind": "roadmap_item",
+      "slug": "push-de-retomada",
+      "texto": "Reativação por notificação no aplicativo",
+      "payload": {
+        "estadoNnl": "parking",
+        "descricao": "Alcançar quem não abre e-mail, usando a mesma régua do sinal de abandono.",
+        "estacionamento": {
+          "tipo": "oportunidade",
+          "motivo": "Depende da fila de envio, que é justamente o que está saturado. Um segundo canal sobre a mesma fila multiplica o problema em vez de resolver."
+        }
+      }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "segmentar-resumo",
+      "texto": "Segmentar o resumo semanal por comportamento",
+      "payload": {
+        "estadoNnl": "parking",
+        "descricao": "Conteúdo diferente para quem parou de usar e para quem nunca chegou a ativar.",
+        "estacionamento": {
+          "tipo": "oportunidade",
+          "motivo": "Só faz sentido depois que o resumo alcançar a base inteira. Segmentar metade da base é otimizar em cima de uma amostra enviesada."
+        }
+      }
+    },
+    {
+      "kind": "roadmap_item",
+      "slug": "unificar-cadastros",
+      "texto": "Unificar os dois cadastros de conta",
+      "payload": {
+        "estadoNnl": "parking",
+        "descricao": "Contas criadas pelo onboarding antigo e pelo de três passos vivem em tabelas separadas.",
+        "estacionamento": {
+          "tipo": "dívida técnica",
+          "motivo": "Não trava nenhuma entrega do trimestre, e cada semana acrescenta linhas aos dois lados. Entra no planejamento do próximo, com data."
+        }
+      }
+    }
+  ],
+  "leituras": [],
+  "canais": []
+}
