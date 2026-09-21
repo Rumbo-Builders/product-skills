@@ -132,9 +132,63 @@ opcional: `roadmap.modo`, `roadmap.granularidade`, `movimento.origem` e um
 Sem configuração nenhuma o documento sai no tema neutro, que **não é a identidade
 de ninguém** e existe só para a página ser legível antes da primeira conversa.
 
+## Conduzir, e deixar ver
+
+**A primeira chamada da sessão é esta, antes de qualquer arquivo:**
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/estado.mjs --time <identificador>
+```
+
+Ele imprime o mapa das etapas, onde a montagem parou, e a linha que diz se
+alguma mensagem já saiu. Havendo montagem em andamento, **pergunte se continua
+ou recomeça**, em vez de decidir por quem está esperando.
+
+A cada etapa vencida, marque e mostre o mapa de novo:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/estado.mjs --time <id> --concluir lacunas
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/estado.mjs --time <id> --escolher base="partiu da v4"
+```
+
+Isso existe porque o roteiro só vivia nesta prosa, e prosa não sobrevive a
+sessão longa: um PM montou e remontou o mesmo documento sem nunca saber em que
+ponto estava, nem em que ponto a coisa ficava irreversível. Marcar etapa não é
+burocracia: é o que permite retomar amanhã.
+
+O mapa mora em `scripts/estado.mjs`, numa lista só, e as etapas de lá são as
+deste Fluxo, uma a uma, pelo mesmo id. Mudou a granularidade, mudou a lista, e
+a prosa acompanha.
+
+Depois de publicar, `--descartar`: o estado guarda número que já virou versão, e
+guardar convida a reaproveitar leitura velha na semana seguinte.
+
 ## Fluxo
 
-1. **Buscar contexto e montar o briefing.**
+1. **De onde parte esta versão** (etapa `base`). **Pergunte antes de buscar
+   qualquer coisa**: partir da última publicada, de uma versão específica, ou em
+   branco.
+
+   ```bash
+   node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/base.mjs --time <id>              # da ultima publicada
+   node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/base.mjs --time <id> --versao 4   # de uma especifica
+   node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/base.mjs --time <id> --branco     # do zero
+   ```
+
+   **O que não se herda é a parte que importa, e o script diz em voz alta o que
+   tirou.** Some o insight, que era o que mudou naquela versão. Somem os valores
+   atuais dos objetivos, porque número herdado é dado velho publicado como novo.
+   Somem as listas de escalada, porque nomear alguém já é enviar DM, e reenviar
+   sem pedido não se faz. Some a alça de métrica, que quem cria é o servidor.
+
+   Tirar a escalada deixa as decisões de género `pergunta` inválidas de
+   propósito, até alguém reconfirmar que a pergunta segue de pé e para quem. A
+   recusa ali é a pergunta certa, não um defeito.
+
+   Sem versão anterior, o script diz e segue em branco. Primeira vez de um time
+   não tem esta escolha, e o mapa não deve fingir que tem.
+
+2. **Buscar contexto e montar o briefing** (etapa `contexto`).
 
    ```bash
    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/contexto.mjs \
@@ -164,7 +218,7 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    ficou de fora: identificador já decidido não volta a ser perguntado, e é isso
    que permite ler a ferramenta toda semana sem reclassificar a lista inteira.
 
-2. **Abrir pelas lacunas.** O briefing termina com as perguntas que o dossiê não
+3. **Abrir pelas lacunas** (etapa `lacunas`). O briefing termina com as perguntas que o dossiê não
    respondeu. Faça-as antes de escrever. Este é o passo que separa um documento
    honesto de um bonito.
 
@@ -174,7 +228,7 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    desperdiça a apuração: na semana seguinte ela não existe mais, e você pergunta
    de novo.
 
-3. **Confirmar o roadmap, e publicá-lo primeiro.** Carregue o anterior e pergunte
+4. **Confirmar o roadmap, e publicá-lo primeiro** (etapa `roadmap`). Carregue o anterior e pergunte
    o que mudou, em vez de pedir para descrever de novo. Se o modo ou a
    granularidade mudarem, é escolha de quem conduz, e vale da versão em diante.
 
@@ -193,7 +247,7 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    "outros" é declarada como as demais, e `payload.issues` anexa as ocorrências
    de cada célula. Adivinhar essa forma já custou quatro tentativas às cegas.
 
-4. **Escrever.** A narrativa é sua; os números não. Envie cada leitura com o
+5. **Escrever** (etapa `escrita`). A narrativa é sua; os números não. Envie cada leitura com o
    rótulo legível e, quando houver julgamento, a observação: é ela que vira a
    última coluna da tabela, e é onde mora a frase do tipo "ruim e melhorando".
    Classifique cada item de ação e decisão em um dos seis géneros, e preencha o
@@ -202,14 +256,14 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    O corpo do one page é a **narrativa que a tabela não conta**. Se você não tem
    nada a dizer além do que os números já mostram, deixe curto.
 
-5. **Escrever o insight central.** Uma frase: o que é essencial e o que mudou.
+6. **Escrever o insight central** (etapa `insight`). Uma frase: o que é essencial e o que mudou.
    Se você não consegue escrevê-la, o documento ainda não está pronto.
 
-6. **Mostrar antes de publicar.** Devolva o rascunho na conversa e espere
+7. **Mostrar antes de publicar** (etapa `conferir`). Devolva o rascunho na conversa e espere
    convergência. Publicar texto não aprovado é desperdício, e a publicação
    comunica.
 
-7. **Validar.**
+8. **Validar** (etapa `validar`).
 
    ```bash
    bash ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/validar.sh envelope.json
@@ -219,7 +273,7 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    item de roadmap sem identificador, decisão sem o campo do género, e as regras
    de escrita da casa.
 
-8. **Publicar em duas etapas.**
+9. **Publicar em duas etapas** (etapa `publicar`).
 
    ```bash
    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/publicar.mjs envelope.json --rascunho
@@ -227,8 +281,9 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/publicar.mjs envelope.json --publicar
    ```
 
-   Rascunho não comunica nada. A publicação comunica, e **quem escolhe canal e
-   destinatários é quem publica**, item por item.
+   Rascunho não comunica nada. **Publique com `canais` vazio**: a versão fica
+   gravada e nenhuma mensagem sai. Quem escolhe canal e destinatários é quem
+   publica, na etapa seguinte, item por item.
 
    **Sem origem que fale o contrato, o destino é uma página que você publica:**
 
@@ -255,6 +310,50 @@ de ninguém** e existe só para a página ser legível antes da primeira convers
    vazio é a resposta boa; qualquer coisa ali é campo com nome errado sumindo em
    silêncio.
 
+10. **Canal, privados e mensagem** (etapa `comunicar`).
+
+    ```bash
+    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/comunicar.mjs --envelope envelope.json --time <id>
+    ```
+
+    Ele não envia nada. Mostra três coisas, e é para mostrá-las que existe: quem
+    recebe em privado, **com nome e não com identificador**; qual canal, com os
+    disponíveis ao lado; e a mensagem que a origem vai compor, reconstruída.
+
+    **Nomear alguém em `escala_para` já é enviar.** A pessoa recebe privado, e
+    até aqui isso não aparecia em lugar nenhum como envio: o autor aprovava o
+    documento e descobria o resto pelo relatório de entrega, depois. Tirar o
+    nome é a única forma de não enviar.
+
+    Leve o plano inteiro a quem publica e **espere resposta item por item**.
+    Silêncio não é autorização: sem resposta, não sai.
+
+    ```bash
+    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/comunicar.mjs --envelope envelope.json --time <id> --canais <slug>
+    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/comunicar.mjs --envelope envelope.json --time <id> --sem-canal
+    ```
+
+    Confirmado, aí sim `publicar.mjs --publicar` envia. Aviso enviado não se
+    desfaz, e é por isso que esta etapa é a última e não a primeira.
+
+    A mensagem mostrada é reconstrução fiel do conteúdo, não os bytes literais:
+    quem compõe é a origem, no envio. Se o que ela vai dizer importa mais que o
+    conteúdo, o lugar de mudar é a origem, não aqui.
+
+11. **O que o binding acrescenta** (etapa `binding`).
+
+    O método para aqui. Um binding pode declarar passos próprios depois da
+    comunicação, e é onde entra o que só existe na casa de um cliente: abrir
+    trabalho a partir das decisões, registrar em outro sistema, avisar um
+    fluxo interno.
+
+    Se o binding declara algum, execute os dele agora, com as mesmas regras
+    desta etapa: sugerir, mostrar, esperar resposta, e nunca agir sozinho. Se
+    não declara nenhum, a etapa salta e a montagem acabou.
+
+    **Nada aqui é automático por padrão.** Um passo de binding que dispara sem
+    ser confirmado é a mesma falha que esta etapa inteira existe para corrigir.
+
 ## Recusas
 
 Não publique, e diga por quê:
@@ -265,6 +364,12 @@ Não publique, e diga por quê:
 - Com pergunta sem destinatário nomeado.
 - Com número que você não conseguiu rastrear até uma fonte **depois de ter
   perguntado**. Antes de perguntar não é recusa, é pergunta pendente.
+
+E não comunique, mesmo com o documento aprovado:
+
+- Sem o plano de comunicação ter sido mostrado e respondido, canal e privados.
+- Com destinatário que você não conseguiu nomear. Identificador solto num plano
+  não é pessoa: ninguém aprova o que não consegue ler.
 
 Recusar é o trabalho. Um one page com um número inventado destrói mais confiança
 do que dez semanas sem publicar.
