@@ -118,7 +118,9 @@ try {
     // reenviar é barato. Mas quem publicou precisa saber.
     if ([...canais, ...dms].some((x) => !x.ok)) {
       console.log(
-        "\nA versao foi publicada. Parte dos avisos falhou: reenvie ou avise a mao.",
+        "\nA versao foi publicada. Parte dos avisos nao saiu: leia o erro de cada" +
+          "\nlinha acima antes de reenviar. Ha motivo que reenviar nao resolve," +
+          "\ncomo destino mal configurado na origem.",
       );
     }
   } else if (!publicar) {
