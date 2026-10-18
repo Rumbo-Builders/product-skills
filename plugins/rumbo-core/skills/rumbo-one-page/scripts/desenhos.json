@@ -1,0 +1,271 @@
+{
+  "_leia": "Desenhos de partida por tipo de time, no formato do contrato com o sistema da casa: { tipo, abas: [ { slug, titulo, blocos: [ { tipo, titulo?, corte? } ] } ] }. Na etapa de desenho, a conversa propoe o do tipo do time e a pessoa troca, tira e renomeia. Com o sistema da casa, o desenho vai para a configuracao do squad; sem ele, para .rumbo/one-page.config.json e para meta.desenho de cada versao. A primeira aba leva insight, objetivos e decisoes: juntos no atalho nucleo, ou soltos, para caber indicadores entre eles. texto e o corpo em prosa (body_md). Catalogo em metodo/one-page-blocos.md.",
+  "produto": {
+    "tipo": "produto",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "insight"
+          },
+          {
+            "tipo": "objetivos"
+          },
+          {
+            "tipo": "roadmap",
+            "corte": "enxuto"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "indicadores"
+          },
+          {
+            "tipo": "decisoes"
+          }
+        ]
+      },
+      {
+        "slug": "roadmap",
+        "titulo": "Roadmap detalhado",
+        "blocos": [
+          {
+            "tipo": "roadmap",
+            "corte": "detalhado"
+          }
+        ]
+      }
+    ]
+  },
+  "marketing": {
+    "tipo": "marketing",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "indicadores",
+            "titulo": "Leitura da semana"
+          },
+          {
+            "tipo": "trilha_mensal"
+          },
+          {
+            "tipo": "saude"
+          }
+        ]
+      },
+      {
+        "slug": "acoes",
+        "titulo": "Ações para chegar lá",
+        "blocos": [
+          {
+            "tipo": "acoes"
+          },
+          {
+            "tipo": "verba"
+          }
+        ]
+      },
+      {
+        "slug": "outras",
+        "titulo": "Outras frentes",
+        "blocos": [
+          {
+            "tipo": "outras_frentes"
+          }
+        ]
+      }
+    ]
+  },
+  "juridico": {
+    "tipo": "juridico",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "indicadores",
+            "titulo": "Leitura da semana"
+          },
+          {
+            "tipo": "trilha_mensal"
+          }
+        ]
+      },
+      {
+        "slug": "acoes",
+        "titulo": "Ações para chegar lá",
+        "blocos": [
+          {
+            "tipo": "checklist",
+            "titulo": "Programa de integridade"
+          },
+          {
+            "tipo": "acoes"
+          }
+        ]
+      },
+      {
+        "slug": "outras",
+        "titulo": "Outras frentes",
+        "blocos": [
+          {
+            "tipo": "outras_frentes"
+          }
+        ]
+      }
+    ]
+  },
+  "financeiro": {
+    "tipo": "financeiro",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "indicadores",
+            "titulo": "Leitura da semana"
+          },
+          {
+            "tipo": "verba",
+            "titulo": "Orçamento"
+          }
+        ]
+      },
+      {
+        "slug": "acoes",
+        "titulo": "Ações para chegar lá",
+        "blocos": [
+          {
+            "tipo": "acoes"
+          },
+          {
+            "tipo": "checklist"
+          }
+        ]
+      }
+    ]
+  },
+  "comercial": {
+    "tipo": "comercial",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "funil",
+            "titulo": "Pipeline"
+          },
+          {
+            "tipo": "indicadores"
+          }
+        ]
+      },
+      {
+        "slug": "acoes",
+        "titulo": "Ações para chegar lá",
+        "blocos": [
+          {
+            "tipo": "acoes"
+          }
+        ]
+      },
+      {
+        "slug": "outras",
+        "titulo": "Outras frentes",
+        "blocos": [
+          {
+            "tipo": "outras_frentes"
+          }
+        ]
+      }
+    ]
+  },
+  "operacoes": {
+    "tipo": "operacoes",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "texto"
+          },
+          {
+            "tipo": "indicadores"
+          },
+          {
+            "tipo": "saude"
+          }
+        ]
+      },
+      {
+        "slug": "acoes",
+        "titulo": "Ações para chegar lá",
+        "blocos": [
+          {
+            "tipo": "acoes"
+          },
+          {
+            "tipo": "checklist"
+          }
+        ]
+      }
+    ]
+  },
+  "outro": {
+    "tipo": "outro",
+    "abas": [
+      {
+        "slug": "one-page",
+        "titulo": "One page",
+        "blocos": [
+          {
+            "tipo": "nucleo"
+          },
+          {
+            "tipo": "indicadores"
+          },
+          {
+            "tipo": "texto"
+          }
+        ]
+      }
+    ]
+  }
+}

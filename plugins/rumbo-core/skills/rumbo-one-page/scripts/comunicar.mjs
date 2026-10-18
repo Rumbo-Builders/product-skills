@@ -19,6 +19,7 @@
  *   node comunicar.mjs --envelope env.json --time <id> --sem-canal    grava lista vazia
  */
 
+import { exigirId } from "../../../scripts/pagina.mjs";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -94,6 +95,7 @@ export function mensagem(envelope, titulo) {
 
 if (process.argv[1] && process.argv[1].endsWith("comunicar.mjs")) {
   const time = opts.time || opts.squad;
+  exigirId(time, "comunicar");
   if (!opts.envelope || !time) {
     console.error("Uso: node comunicar.mjs --envelope <arq.json> --time <id>");
     process.exit(1);

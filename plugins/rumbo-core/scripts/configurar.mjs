@@ -200,6 +200,15 @@ if (destaque && r(destaque, acento) < 3) {
 // ---------------------------------------------------------------------------
 
 const nome = o.nome || casa;
+
+// Nome de fonte vai para o CSS da pagina publicada e para a URL do Google Fonts.
+// So letras, digitos, espaco e hifen: um "</style>" no nome sairia do bloco.
+for (const chave of ["fonte-titulo", "fonte-corpo"]) {
+  if (o[chave] && !/^[A-Za-z0-9 -]{1,60}$/.test(o[chave])) {
+    console.error(`--${chave} "${o[chave]}": use so letras, digitos, espaco e hifen, como o nome aparece no Google Fonts.`);
+    process.exit(1);
+  }
+}
 const ressalvas = [].concat(o.ressalva ?? o.rodape ?? []).filter((x) => typeof x === "string");
 const caminho = (v) => (typeof v === "string" ? v : null);
 
@@ -444,7 +453,9 @@ if (marca.logo.simbolo && !existsSync(marca.logo.simbolo)) {
   pendencias.push(`o simbolo "${marca.logo.simbolo}" nao existe neste caminho. O cabecalho da pagina sai sem ele.`);
 } else if (marca.logo.simbolo) {
   const svg = readFileSync(marca.logo.simbolo, "utf8");
-  if (!/currentColor/.test(svg))
+  if (/<script|<foreignObject|javascript:|\son[a-z]+\s*=|<iframe|<embed|<object/i.test(svg))
+    pendencias.push("o simbolo tem script, evento ou objeto embutido. A pagina vai recusa-lo: use um SVG so de desenho.");
+  else if (!/currentColor/.test(svg))
     pendencias.push(
       'o simbolo nao usa fill="currentColor". Ele mantem a cor original no tema escuro, e pode sumir no fundo.',
     );

@@ -1,0 +1,9 @@
+{
+  "_leia": "Fontes normalizadas que sustentam as escolhas. O modelo pode ter lido o documento inteiro; aqui entra o nome, a data e o tipo. Escolha cita a fonte por 'rotulo', e e por ele que o briefing apura a idade de cada fonte e diz qual delas nenhuma escolha usa.",
+  "fontes": [
+    { "id": "f-1", "rotulo": "Ata do conselho de 2026-09-28", "tipo": "ata", "data": "2026-09-28" },
+    { "id": "f-2", "rotulo": "Declaração do CEO, conselho de 2026-07-06", "tipo": "declaracao", "data": "2026-07-06" },
+    { "id": "f-3", "rotulo": "Pesquisa com 12 lojas, 2026-08", "tipo": "pesquisa", "data": "2026-08-15" },
+    { "id": "f-4", "rotulo": "Comitê de produto de 2026-10-02", "tipo": "ata", "data": "2026-10-02" }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "_leia": "Envelope de exemplo da ESTRATEGIA. Casa ficticia: uma plataforma de pedidos para distribuidoras regionais de bebidas. Tudo inventado. Copie a forma, nao os valores. Este arquivo e a documentacao real do formato: os seis tipos de alca aparecem aqui de proposito, porque o que o exemplo nao mostra o modelo infere errado.",
+  "_regra_da_escolha": "Toda escolha carrega fonte: sem fonte nao entra. A fonte e nome e data de um documento, ata ou declaracao, nunca o resumo que o modelo fez; declaracao da lideranca com data e fonte legitima. A renuncia e opcional e entra so onde e essencial: quando outra escolha ou premissa se apoia nela, ou quando e como se vende. Escrever o 'fora' de toda escolha e redundancia. Escolha que nao passa no teste do oposto nao se conserta com renuncia: volta como pergunta.",
+  "_apostas_e_okrs": "As alcas aposta, okr e kr aparecem aqui porque a casa deste exemplo nao tem outro lugar para elas. Quando a casa tem sistema de apostas e OKRs (o modulo ProductOps, ou o one page dos squads), elas ficam fora do envelope: a revisao da cascata so confere a amarracao, e o que nao amarra vira insight.",
+  "_status": "status 'published' liga as regras de publicacao da regua (insight, elo mais fraco, cascata com os tres primeiros estagios). Rascunho sem status so passa pelas regras estruturais.",
+  "time": "distribuidora-exemplo",
+  "kind": "estrategia",
+  "status": "published",
+  "year": 2026,
+  "quarter": 4,
+  "ciclo": {
+    "slug": "2026-h2",
+    "rotulo": "2º semestre de 2026",
+    "inicio": "2026-07-01",
+    "fim": "2026-12-31"
+  },
+  "insight": "A aposta do pedido por foto virou o caminho da capacidade de onboarding, e a integração sob medida saiu de vez do onde jogar.",
+  "meta": {
+    "_leia": "revisao e nascimento, conselho ou fechamento. elo_mais_fraco aponta o slug de uma escolha, aposta ou premissa deste envelope, e o corpo explica por que. Versao sem elo mais fraco e versao que nao foi lida.",
+    "revisao": "conselho",
+    "elo_mais_fraco": "cap-onboarding-sem-gente"
+  },
+  "body_md": "## O que mudou\n\nO conselho confirmou a renúncia à integração sob medida depois de perder duas contas grandes que a pediam. A capacidade de onboarding sem gente ganhou a aposta do pedido por foto como caminho.\n\n## O elo mais fraco\n\nOnboarding sem gente é a capacidade que sustenta o como ganhar e é a que menos existe hoje: cada ativação leva uma hora e meia de vendedor.\n",
+  "itens": [
+    {
+      "_leia": "ESCOLHA de estagio aspiracao. E a unica que nao serve ninguem. Uma aspiracao vigente por versao. A renuncia fica aqui porque e essencial: o onde jogar inteiro se apoia nela, e sem ela o recorte de cliente parece arbitrario.",
+      "kind": "escolha",
+      "slug": "asp-dono-decide-sem-planilha",
+      "texto": "O dono da loja pequena decide o que comprar sem planilha e sem vendedor na linha",
+      "payload": {
+        "estagio": "aspiracao",
+        "renuncia": "Não servir a rede grande que compra por licitação interna",
+        "fonte": "Declaração do CEO, conselho de 2026-07-06",
+        "estado": "vigente"
+      }
+    },
+    {
+      "_leia": "serve SO SOBE UM ESTAGIO: onde jogar serve a aspiracao, como ganhar serve um onde jogar, capacidade serve um como ganhar, sistema serve uma capacidade. Apontar dois estagios acima reprova. estado 'revisada' diz que o texto mudou nesta versao. ONDE JOGAR e um recorte por alca, e recorte leva o nome que a casa da a ele (Cliente, Molecula, Canal, Geografia): ele sai como rotulo na pagina, nunca como prefixo no texto. Ferramenta e entrega nao sao onde jogar: sao como ganhar ou aposta. Sem renuncia: o recorte ja diz onde se joga.",
+      "kind": "escolha",
+      "slug": "oj-distribuidoras-regionais",
+      "texto": "Distribuidoras regionais de bebidas com até 300 lojas atendidas, vendendo pelo app da distribuidora",
+      "payload": {
+        "estagio": "onde_jogar",
+        "recorte": "Cliente",
+        "serve": "asp-dono-decide-sem-planilha",
+        "fonte": "Ata do conselho de 2026-09-28",
+        "estado": "revisada"
+      }
+    },
+    {
+      "kind": "escolha",
+      "slug": "oj-sudeste-cidade-a-cidade",
+      "texto": "O Sudeste, cidade a cidade, onde a distribuidora já entrega",
+      "payload": {
+        "estagio": "onde_jogar",
+        "recorte": "Geografia",
+        "serve": "asp-dono-decide-sem-planilha",
+        "fonte": "Ata do conselho de 2026-09-28",
+        "estado": "vigente"
+      }
+    },
+    {
+      "_leia": "Esta renuncia fica porque e como se vende: diz ao comercial o que recusar, mesmo pagando mais.",
+      "kind": "escolha",
+      "slug": "cg-integracao-em-um-dia",
+      "texto": "Ganhar pela integração com o sistema da loja em um dia, sem projeto",
+      "payload": {
+        "estagio": "como_ganhar",
+        "serve": "oj-distribuidoras-regionais",
+        "renuncia": "Não vender para quem exige integração sob medida, mesmo pagando mais",
+        "fonte": "Ata do conselho de 2026-09-28",
+        "estado": "vigente"
+      }
+    },
+    {
+      "_leia": "CAPACIDADE e a maquina que entrega a vantagem: frase com verbo e medida, nunca departamento. Tres filtros: ja existe e e medida? sai. e tarefa operacional? sai. qual squad a sustenta? vai em sustentada_por. De tres a cinco vigentes; fora disso a regua avisa. situacao e a capacidade observada contra a declarada: existe, em_construcao ou nao_existe, e sai como pilula na pagina. Renuncia so se essencial; aqui nao e.",
+      "kind": "escolha",
+      "slug": "cap-onboarding-sem-gente",
+      "texto": "Ativar uma loja em 30 minutos sem vendedor",
+      "payload": {
+        "estagio": "capacidade",
+        "serve": "cg-integracao-em-um-dia",
+        "sustentada_por": "Squad de ativação",
+        "fonte": "Comitê de produto de 2026-10-02",
+        "estado": "vigente",
+        "situacao": "nao_existe"
+      }
+    },
+    {
+      "kind": "escolha",
+      "slug": "cap-catalogo-sincronizado",
+      "texto": "Catálogo e preço sincronizados com o sistema da loja todo dia",
+      "payload": {
+        "estagio": "capacidade",
+        "serve": "cg-integracao-em-um-dia",
+        "sustentada_por": "Squad de integração",
+        "fonte": "Comitê de produto de 2026-10-02",
+        "estado": "vigente",
+        "situacao": "em_construcao"
+      }
+    },
+    {
+      "kind": "escolha",
+      "slug": "cap-cobranca-sem-boleto",
+      "texto": "Cobrar na própria plataforma, sem boleto nem conferência manual",
+      "payload": {
+        "estagio": "capacidade",
+        "serve": "cg-integracao-em-um-dia",
+        "sustentada_por": "Squad financeiro",
+        "fonte": "Comitê de produto de 2026-10-02",
+        "estado": "vigente",
+        "situacao": "existe"
+      }
+    },
+    {
+      "_leia": "APOSTA. serve aponta uma escolha; sem isso e iniciativa, e vai para o roadmap. hipotese na forma 'se, entao, porque'. criterio_matar leva o que e ate quando, com a data por extenso ISO, porque e dela que o briefing cobra o vencido. leitura e opcional: o slug da leitura que o one page envia para este indicador. quadrante e opcional.",
+      "kind": "aposta",
+      "slug": "ap-pedido-por-foto",
+      "texto": "Pedido por foto do bloco de papel",
+      "payload": {
+        "serve": "cap-onboarding-sem-gente",
+        "problema": "Loja pequena não digita pedido; o vendedor digita por ela e o erro volta como devolução",
+        "hipotese": "Se a loja mandar a foto do pedido e a plataforma pré-preencher, então 60% dos pedidos dessas lojas entram sem o vendedor, porque a barreira é digitação e não confiança",
+        "indicador": "Percentual de pedidos das lojas da coorte entrando sem toque do vendedor",
+        "criterio_matar": "Abaixo de 30% em 2026-12-15 com ao menos 40 lojas na coorte",
+        "horizonte": "2026-12-31",
+        "quadrante": "operacao_qualidade",
+        "leitura": "pedidos-sem-vendedor",
+        "estado": "ativa"
+      }
+    },
+    {
+      "kind": "aposta",
+      "slug": "ap-plano-plus",
+      "texto": "Plano pago com sortimento sugerido",
+      "payload": {
+        "serve": "cap-catalogo-sincronizado",
+        "problema": "A loja compra o que sempre comprou e perde margem em categoria que não conhece",
+        "hipotese": "Se a plataforma sugerir sortimento a partir do giro de lojas parecidas, então 20% das lojas pagam o plano, porque o ganho de margem é maior que a mensalidade",
+        "indicador": "Lojas pagantes do plano sobre lojas ativas",
+        "criterio_matar": "Abaixo de 8% de conversão em 2026-12-15",
+        "horizonte": "2027-03-31",
+        "quadrante": "diferenciacao_valor",
+        "estado": "proposta",
+        "propostas": [
+          "criterio_matar"
+        ]
+      },
+      "_leia": "Aposta ainda 'proposta', com o criterio de matar escrito pelo modelo e nao confirmado: por isso payload.propostas o lista. A regua avisa ao publicar, e a v2 nao o herda sem confirmacao."
+    },
+    {
+      "_leia": "OKR e o objetivo: frase, nao numero. serve aponta escolha ou aposta. O numero mora nas alcas kr que apontam para ele.",
+      "kind": "okr",
+      "slug": "okr-base-que-paga",
+      "texto": "A base de lojas passa a pagar pelo que usa",
+      "payload": {
+        "serve": "cg-integracao-em-um-dia",
+        "estado": "ativo"
+      }
+    },
+    {
+      "_leia": "KR. objetivo aponta o okr pai. baseline, meta, unidade e direcao sao obrigatorios; direcao e sobe, desce ou binario. leitura e o slug da leitura que o one page envia: sem ele, o briefing diz 'KR sem leitura ligada'. O texto e outcome, nunca entrega.",
+      "kind": "kr",
+      "slug": "kr-ativacoes-mes",
+      "texto": "Lojas ativadas por mês sobem de 120 para 200",
+      "payload": {
+        "objetivo": "okr-base-que-paga",
+        "baseline": "120",
+        "meta": "200",
+        "unidade": "lojas/mês",
+        "direcao": "sobe",
+        "leitura": "ativacoes-mes",
+        "prazo": "2026-12-31",
+        "estado": "ativo"
+      }
+    },
+    {
+      "kind": "kr",
+      "slug": "kr-churn-cotacao",
+      "texto": "Cancelamento mensal de lojas cai de 6% para 3%",
+      "payload": {
+        "objetivo": "okr-base-que-paga",
+        "baseline": "6%",
+        "meta": "3%",
+        "unidade": "percent",
+        "direcao": "desce",
+        "leitura": "churn-mensal",
+        "prazo": "2026-12-31",
+        "estado": "ativo"
+      }
+    },
+    {
+      "_leia": "PREMISSA: o que tem de ser verdade para a escolha ou aposta em 'sobre' valer. teste diz como se verifica, com data. Premissa sem teste e esperanca. Refutada e o sinal mais forte para reabrir a escolha no conselho.",
+      "kind": "premissa",
+      "slug": "prem-industria-paga-por-loja",
+      "texto": "A indústria paga por loja ativa a partir de 2 mil lojas na base",
+      "payload": {
+        "sobre": "cg-integracao-em-um-dia",
+        "teste": "Duas propostas de indústria com preço por loja aceitas até 2026-11-30",
+        "prazo": "2026-11-30",
+        "estado": "aberta"
+      }
+    },
+    {
+      "kind": "premissa",
+      "slug": "prem-loja-fotografa-o-bloco",
+      "texto": "A loja pequena prefere fotografar o bloco a digitar o pedido",
+      "payload": {
+        "sobre": "ap-pedido-por-foto",
+        "teste": "Ao menos 25 das 40 lojas da coorte enviando foto na segunda semana",
+        "prazo": "2026-11-15",
+        "estado": "aberta"
+      }
+    },
+    {
+      "_leia": "DECISAO: a mesma alca do one page, com os seis generos e as mesmas exigencias. Genero 'pergunta' EXIGE escala_para com ao menos um destinatario.",
+      "kind": "decisao",
+      "slug": "quem-arbitra-preco-do-plus",
+      "texto": "Quem arbitra o preço do plano pago quando o comercial fecha abaixo da tabela?",
+      "genero": "pergunta",
+      "escala_para": [
+        "ceo"
+      ],
+      "payload": {
+        "sobre": "cg-integracao-em-um-dia"
+      }
+    },
+    {
+      "_leia": "Genero 'risco' EXIGE payload.impacto.",
+      "kind": "decisao",
+      "slug": "onboarding-fora-do-sprint",
+      "texto": "O onboarding em 30 minutos está desenhado e fora do sprint",
+      "genero": "risco",
+      "payload": {
+        "impacto": "Sem ele o KR de ativações não tem como dobrar sem contratar",
+        "quem_resolve": "liderança de produto, no comitê de 2026-10-16",
+        "sobre": "cap-onboarding-sem-gente"
+      }
+    },
+    {
+      "_leia": "Genero 'proximo_passo' nao exige campo extra. Na pagina, o que nao pede resposta de ninguem (proximo passo, nota de metodo, dependencia, decisao de roadmap) sai recolhido; perguntas e riscos ficam a vista.",
+      "kind": "decisao",
+      "slug": "rodada-de-preco-por-loja",
+      "texto": "Abrir a rodada com três indústrias sobre o preço por loja ativa em novembro",
+      "genero": "proximo_passo",
+      "payload": {
+        "quem": "liderança comercial",
+        "sobre": "prem-industria-paga-por-loja"
+      }
+    }
+  ],
+  "_itens_kinds": "Os seis kinds validos sao: escolha, aposta, okr, kr, premissa, decisao. Item com outro kind e recusado dizendo qual.",
+  "leituras": [],
+  "_leituras": "Vazio de proposito. Indicador e do one page: a leitura de KR entra la, pelo slug em payload.leitura, e o render desta pagina a mostra quando recebe a cadeia do one page.",
+  "canais": [],
+  "_propostas": "Campo preenchido pelo modelo e ainda nao confirmado pela lideranca entra marcado em payload.propostas (lista com os nomes dos campos). A pagina mostra a pilula, a regua avisa ao publicar, e a revisao seguinte NAO herda o campo: a alca fica invalida ate alguem dizer com as proprias palavras. Prefixo no texto nao serve: some na primeira edicao."
+}

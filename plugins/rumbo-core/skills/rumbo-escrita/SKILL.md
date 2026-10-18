@@ -3,7 +3,7 @@ name: rumbo-escrita
 description: >-
   Normas de escrita da Rumbo. Aplique sempre que produzir ou revisar qualquer texto
   que saia em nome da Rumbo ou de um cliente: e-mail, mensagem, post, comunicado
-  interno, proposta, documento, one-pager ou slide. Use também quando pedirem para
+  interno, proposta, documento ou slide. Use também quando pedirem para
   "revisar o texto", "melhorar a escrita", "ver se está no padrão", "tirar cara de
   IA", ou quando reclamarem que um texto "parece escrito por IA". Skill genérica: se
   o pedido for de um cliente específico e existir skill derivada dele, ela é que roda.
@@ -19,6 +19,7 @@ nomeado. Quando roda a partir de uma derivada, o binding vem dela.
 Leia, nesta ordem:
 
 1. `${CLAUDE_PLUGIN_ROOT}/metodo/_principios.md`
+   e `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`, que diz como guiar a conversa
 2. `${CLAUDE_PLUGIN_ROOT}/metodo/escrita.md`
 
 Consulte `${CLAUDE_PLUGIN_ROOT}/metodo/escrita-antes-e-depois.md` quando precisar
@@ -60,6 +61,19 @@ node ${CLAUDE_PLUGIN_ROOT}/scripts/configurar.mjs --casa <id> --nome "<Nome>" \
   [--fonte-corpo "..."] [--simbolo simbolo.svg] [--logo-claro logo.png] \
   [--logo-escuro logo-branco.png] [--tom "..."] [--ressalva "..."]
 ```
+
+## Conduzir como conversa
+
+A conversa segue `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`: o roteiro antes da
+primeira pergunta, uma etapa por mensagem com uma pergunta só, e o rascunho
+mostrado antes de qualquer arquivo final. O roteiro é o mapa:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-escrita/scripts/estado.mjs --time <id>
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-escrita/scripts/estado.mjs --time <id> --concluir entradas
+```
+
+As etapas do mapa são os passos do Fluxo abaixo, na mesma ordem, e o número que você diz à pessoa é o do mapa. Quando outra skill aplica a escrita no meio do fluxo dela, não abra este mapa: ele é para quando revisar ou escrever um texto é o pedido em si.
 
 ## Fluxo
 

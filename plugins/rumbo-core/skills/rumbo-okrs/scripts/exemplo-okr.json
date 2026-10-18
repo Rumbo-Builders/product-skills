@@ -1,0 +1,45 @@
+{
+  "_leia": "Rascunho de UM objetivo com os KRs dele, no vocabulario do metodo, antes de gravar no sistema da casa. Casa ficticia, a mesma do exemplo da estrategia: o objetivo serve uma escolha de la (rode o validar com --cascata). Copie a forma, nao os valores. O que vai para as tools sai deste rascunho pelo traduzir.mjs do modulo.",
+  "itens": [
+    {
+      "_leia": "OBJETIVO e frase, sem numero, e serve uma escolha ou uma aposta (uma ou mais). escopo e casa ou squad. rota e no_ritmo, em_risco ou fora_de_rota, sempre com rota_motivo na voz do dono.",
+      "kind": "okr",
+      "slug": "okr-loja-ativa-sem-vendedor",
+      "texto": "A loja pequena entra e compra sem precisar do vendedor",
+      "payload": {
+        "serve": "cap-onboarding-sem-gente",
+        "escopo": "squad",
+        "rota": "no_ritmo",
+        "rota_motivo": "Ativação em 30 minutos saiu para a coorte piloto e o número de outubro subiu"
+      }
+    },
+    {
+      "_leia": "KR e outcome: o que o cliente faz, nunca o que o time entrega. baseline, meta, unidade e direcao sao campos. leitura e o slug que o one page do squad envia; sem ela, ninguem persegue o KR.",
+      "kind": "kr",
+      "slug": "kr-ativacoes-sem-vendedor",
+      "texto": "Lojas ativadas no mês sem hora de vendedor",
+      "payload": {
+        "objetivo": "okr-loja-ativa-sem-vendedor",
+        "baseline": "40",
+        "meta": "120",
+        "unidade": "lojas por mês",
+        "direcao": "sobe",
+        "leitura": "ativacoes-sem-vendedor",
+        "prazo": "2026-12-31"
+      }
+    },
+    {
+      "_leia": "KR binario de comportamento do cliente e outcome. KR binario de entrega nao e.",
+      "kind": "kr",
+      "slug": "kr-distribuidora-renova",
+      "texto": "Ao menos uma distribuidora renova o contrato citando a ativação sem vendedor",
+      "payload": {
+        "objetivo": "okr-loja-ativa-sem-vendedor",
+        "baseline": "não",
+        "meta": "sim",
+        "unidade": "binário",
+        "direcao": "binario"
+      }
+    }
+  ]
+}

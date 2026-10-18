@@ -21,8 +21,13 @@
  *   metrica_ref      some inteiro. Essa alca quem cria e o servidor, ao
  *                    congelar as leituras; mandar de volta e recusado.
  *
- * Herda: o corpo, as decisoes com o genero, os objetivos com meta e base, e o
- * apontamento para a versao do roadmap.
+ *   realizado        some das metas do mes e da verba do mes corrente em diante,
+ *   contagem         e a contagem some do funil: e a leitura desta semana.
+ *
+ * Herda: o corpo, as decisoes com o genero, os objetivos com meta e base, o
+ * apontamento para a versao do roadmap, o desenho do time (meta.desenho), e a
+ * estrutura dos blocos: acoes com o status (a confirmar na conversa), checklist
+ * com o feito, verba com o aprovado, metas do mes com o alvo, frentes.
  *
  * Uso:
  *   node base.mjs --time <id>                  da ultima publicada
@@ -30,11 +35,14 @@
  *   node base.mjs --time <id> --branco         esqueleto vazio
  *   node base.mjs --time <id> --de arq.json    de um artefato ja em disco
  *
- * Ambiente: RUMBO_ONEPAGE_API, RUMBO_ONEPAGE_TOKEN
+ * Ambiente: RUMBO_ONEPAGE_API e RUMBO_ONEPAGE_TOKEN, ou as variantes com o
+ * sufixo de RUMBO_ORIGEM (ver scripts/origem.mjs na raiz do plugin).
  */
 
+import { exigirId } from "../../../scripts/pagina.mjs";
 import { writeFileSync, readFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
+import { buscar as buscarNaOrigem, origem } from "../../../scripts/origem.mjs";
 
 function args(argv) {
   const out = {};
@@ -55,16 +63,8 @@ function args(argv) {
 
 const opts = args(process.argv);
 const time = opts.time || opts.squad;
+exigirId(time, "base");
 const saida = opts.saida || ".rumbo";
-
-function cabecalhos(extra = {}) {
-  const h = { Accept: "application/json", ...extra };
-  const token = process.env.RUMBO_ONEPAGE_TOKEN;
-  if (!token) return h;
-  const nome = process.env.RUMBO_ONEPAGE_AUTH_HEADER || "Authorization";
-  h[nome] = nome.toLowerCase() === "authorization" ? `Bearer ${token}` : token;
-  return h;
-}
 
 /** Esqueleto de envelope. E o mesmo para quem parte do zero e para quem herda. */
 export function esqueleto(time) {
@@ -96,6 +96,10 @@ export function herdar(artefato, time) {
   const roadmapVersao =
     artefato.meta?.roadmapVersao ?? artefato.roadmap?.version ?? null;
   if (roadmapVersao) env.meta.roadmapVersao = roadmapVersao;
+  // O desenho e do time, e muda raramente: herda inteiro. Com o sistema da casa,
+  // quem manda e o do squad, e o servidor ignora este.
+  if (artefato.meta?.desenho) env.meta.desenho = artefato.meta.desenho;
+  if (artefato.meta?.verba_total != null) env.meta.verba_total = artefato.meta.verba_total;
 
   if (artefato.insight) {
     retirado.push(
@@ -129,6 +133,17 @@ export function herdar(artefato, time) {
       delete payload.progressoPct;
       numerosLimpos++;
     }
+    // A leitura da semana passada nao atravessa: realizado do mes que ainda esta
+    // aberto, e a contagem do funil, sao numero de agora.
+    const mesAberto = new Date().toISOString().slice(0, 7);
+    if ((item.kind === "meta_mes" || item.kind === "verba") && payload.realizado !== undefined && String(payload.periodo) >= mesAberto) {
+      delete payload.realizado;
+      numerosLimpos++;
+    }
+    if (item.kind === "funil" && payload.contagem !== undefined) {
+      delete payload.contagem;
+      numerosLimpos++;
+    }
     if (Object.keys(payload).length > 0) novo.payload = payload;
 
     const escala = item.escalaPara ?? item.escala_para ?? [];
@@ -139,7 +154,7 @@ export function herdar(artefato, time) {
 
   if (numerosLimpos)
     retirado.push(
-      `${numerosLimpos} valor(es) atual(is) de objetivo: numero herdado e dado velho publicado como novo`,
+      `${numerosLimpos} valor(es) da semana passada (atual de objetivo, realizado do mes aberto, contagem do funil): numero herdado e dado velho publicado como novo`,
     );
   if (escaladasLimpas)
     retirado.push(
@@ -154,22 +169,19 @@ export function herdar(artefato, time) {
 }
 
 async function buscar(caminho) {
-  const base = process.env.RUMBO_ONEPAGE_API;
-  if (!base) {
+  const o = origem();
+  if (!o.api) {
     console.error(
-      "Falta RUMBO_ONEPAGE_API no ambiente. Sem origem, use --branco ou --de <arquivo>.",
+      "Sem origem no ambiente (RUMBO_ONEPAGE_API ou a variante de RUMBO_ORIGEM). Use --branco ou --de <arquivo>.",
     );
     process.exit(1);
   }
-  const r = await fetch(`${base.replace(/\/$/, "")}${caminho}`, {
-    headers: cabecalhos(),
-  });
-  if (r.status === 404) return null;
-  if (!r.ok) {
-    console.error(`Falhou (${r.status}) em ${caminho}`);
+  try {
+    return await buscarNaOrigem(caminho, o);
+  } catch (e) {
+    console.error(`Falhou em ${caminho}: ${e.message}`);
     process.exit(1);
   }
-  return r.json();
 }
 
 // ---------------------------------------------------------------------------

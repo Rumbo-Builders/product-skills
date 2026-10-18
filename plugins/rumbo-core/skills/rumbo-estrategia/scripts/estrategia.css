@@ -1,0 +1,180 @@
+/* O que so a estrategia desenha: a cascata, as premissas, as apostas e os KRs.
+   O layout da pagina (cabecalho, abas, prosa, acao e decisao, versoes) vem de
+   `scripts/pagina.css`, no plugin, carregado antes deste arquivo.
+
+   Nenhuma cor literal aqui. Estado nunca depende so de cor: toda marca de
+   estado leva a palavra, e o que saiu vai riscado. */
+
+/* --------------------------------------------------------------------------
+   cascata
+   -------------------------------------------------------------------------- */
+
+.cascata { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e4); }
+
+/* Cada estagio e uma linha: o rotulo a esquerda, as escolhas a direita. A
+   cascata le de cima para baixo, e a coluna do rotulo e o que faz a ordem dos
+   cinco estagios aparecer sem numero. */
+.estagio {
+  display: grid; grid-template-columns: 9rem 1fr; gap: var(--e4);
+  align-items: start;
+  padding-top: var(--e4); border-top: 1px solid var(--regua);
+}
+.estagio:first-child { border-top: 0; padding-top: 0; }
+.estagio-rotulo {
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--tinta); padding-top: var(--e2);
+}
+.estagio-pergunta {
+  display: block; margin-top: var(--e1);
+  font-size: 0.75rem; font-weight: 400; text-transform: none; letter-spacing: 0;
+  color: var(--apagado);
+}
+.estagio-corpo { display: grid; gap: var(--e3); }
+
+.escolha {
+  display: grid; gap: var(--e2);
+  background: var(--superficie);
+  border: 1px solid var(--regua); border-left: 3px solid var(--regua-forte);
+  border-radius: var(--raio);
+  padding: var(--e4);
+}
+.escolha-texto { margin: 0; font-size: 1.0625rem; font-weight: 600; color: var(--tinta); letter-spacing: -0.01em; }
+.renuncia { margin: 0; font-size: 0.9375rem; color: var(--texto); }
+.renuncia b, .aposta dt, .kr-rotulo, .recorte {
+  font-weight: 600; color: var(--apagado);
+  font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em;
+}
+.renuncia b { margin-right: var(--e2); }
+/* O rotulo do recorte do onde jogar, com o nome que a casa da a ele. */
+.recorte { display: block; margin-bottom: 2px; }
+.fonte { margin: 0; font-size: 0.8125rem; color: var(--apagado); }
+.fonte code { font-family: var(--fonte-mono); font-size: 0.75rem; }
+
+.marcas { display: flex; flex-wrap: wrap; gap: var(--e2); }
+.marca-estado {
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--apagado); border: 1px solid var(--regua-forte); border-radius: 999px;
+  padding: 1px var(--e2);
+}
+
+/* O elo mais fraco ganha o destaque que o one page da ao risco: barra de
+   atencao e fundo. A palavra vai junto, na marca. */
+.escolha.elo { border-left-color: var(--atencao); background: var(--atencao-fundo); }
+.escolha.elo .elo-rotulo { color: var(--atencao); border-color: var(--atencao); }
+.escolha.revisada { border-left-color: var(--destaque); }
+/* A decisao de largar e informacao: a escolha abandonada continua visivel,
+   riscada e com a palavra. Apagar a linha esconde o dado do ciclo. */
+.escolha.abandonada { opacity: 0.72; border-left-color: var(--regua); }
+.escolha.abandonada .escolha-texto { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); }
+
+/* --------------------------------------------------------------------------
+   premissas
+   -------------------------------------------------------------------------- */
+
+.premissas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e3); }
+.premissa { display: flex; gap: var(--e3); align-items: baseline; font-size: 0.9375rem; }
+.premissa-corpo { display: grid; gap: var(--e1); }
+.premissa-corpo b { font-weight: 600; color: var(--tinta); }
+.premissa.refutada .premissa-corpo b { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); }
+.premissa .teste { font-size: 0.875rem; color: var(--apagado); }
+
+/* Pilula de estado, com a palavra dentro. A cor acompanha; nunca substitui. */
+.estado {
+  flex: none; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px var(--e2); border-radius: var(--raio);
+  background: var(--superficie-2); color: var(--apagado); border: 1px solid var(--regua);
+  white-space: nowrap;
+}
+.estado.refutada, .estado.morta { color: var(--grave); border-color: var(--grave); }
+.estado.confirmada, .estado.validada, .estado.concluida { color: var(--bom); border-color: var(--bom); }
+.estado.ativa { color: var(--tinta); border-color: var(--tinta); }
+
+/* --------------------------------------------------------------------------
+   apostas
+   -------------------------------------------------------------------------- */
+
+.grupo-apostas { margin-bottom: var(--e5); }
+.grupo-apostas:last-child { margin-bottom: 0; }
+.grupo-apostas > h3 { margin-bottom: var(--e1); }
+.grupo-estagio { margin: 0 0 var(--e3); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--apagado); }
+
+.apostas-lista { display: grid; gap: var(--e3); grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+.aposta {
+  display: grid; gap: var(--e3);
+  background: var(--superficie);
+  border: 1px solid var(--regua); border-left: 3px solid var(--regua-forte);
+  border-radius: var(--raio);
+  padding: var(--e4);
+}
+.aposta-cabeca { display: flex; flex-wrap: wrap; gap: var(--e2); align-items: baseline; }
+.aposta-cabeca b { flex: 1 1 auto; font-weight: 600; color: var(--tinta); font-size: 1rem; }
+.quadrante {
+  font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px var(--e2); border-radius: 999px;
+  color: var(--tinta); border: 1px solid var(--tinta); white-space: nowrap;
+}
+.aposta.ativa { border-left-color: var(--tinta); }
+.aposta.validada, .aposta.concluida { border-left-color: var(--bom); }
+.aposta.morta { border-left-color: var(--grave); opacity: 0.72; }
+/* O elo mais fraco pode ser uma aposta, e o cartao dela ganha o mesmo destaque
+   que a escolha ganharia. A palavra vai junto, na marca. */
+.aposta.elo { border-left-color: var(--atencao); background: var(--atencao-fundo); }
+.aposta.elo .elo-rotulo { color: var(--atencao); border-color: var(--atencao); }
+.aposta.morta .aposta-cabeca b { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); }
+
+.aposta dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: var(--e1) var(--e3); font-size: 0.875rem; }
+.aposta dt { padding-top: 2px; }
+.aposta dd { margin: 0; }
+.aposta dd .leitura { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+.aposta dd .leitura .atual { font-weight: 600; color: var(--tinta); }
+
+/* --------------------------------------------------------------------------
+   objetivos e KRs
+   -------------------------------------------------------------------------- */
+
+.objetivo-estrategia { margin-bottom: var(--e5); }
+.objetivo-estrategia:last-child { margin-bottom: 0; }
+.objetivo-estrategia > h3 { margin-bottom: var(--e1); }
+.objetivo-estrategia > .fonte { margin-bottom: var(--e3); }
+
+.krs { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.9375rem; }
+.krs th, .krs td { padding: var(--e3); border-bottom: 1px solid var(--regua); text-align: left; vertical-align: top; }
+.krs thead th { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--apagado); background: var(--superficie-2); }
+.krs tbody tr:last-child td { border-bottom: 0; }
+.krs .n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.krs .atual { font-weight: 600; color: var(--tinta); }
+.krs .quando { display: block; font-size: 0.75rem; color: var(--apagado); font-weight: 400; }
+.krs .sem-leitura { color: var(--apagado); font-style: italic; }
+
+@media (max-width: 40rem) {
+  .estagio { grid-template-columns: 1fr; gap: var(--e2); }
+  .apostas-lista { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   proposta do modelo, situacao, e o painel de decisao agrupado
+   -------------------------------------------------------------------------- */
+
+/* O que o modelo propos e a lideranca nao confirmou leva pilula propria, com a
+   palavra. Ela so sai quando a lista `propostas` da alca esvazia. */
+.marca-estado.proposta { color: var(--atencao); border-color: var(--atencao); border-style: dashed; text-transform: none; letter-spacing: 0; }
+
+/* A situacao e a capacidade observada contra a declarada. Tres valores, e a
+   forma acompanha a palavra: cheio, tracejado, vazio. */
+.marca-estado.situacao.existe { color: var(--bom); border-color: var(--bom); }
+.marca-estado.situacao.em_construcao { border-style: dashed; }
+.marca-estado.situacao.nao_existe { color: var(--grave); border-color: var(--grave); }
+
+.premissa.elo { background: var(--atencao-fundo); border-left: 3px solid var(--atencao); padding: var(--e3); border-radius: var(--raio); }
+.premissa.elo .elo-rotulo { color: var(--atencao); border-color: var(--atencao); }
+.premissa-corpo .marcas { margin-bottom: var(--e1); }
+.objetivo-estrategia .marcas { display: flex; margin-bottom: var(--e3); }
+.krs .marcas { display: flex; margin-top: var(--e1); }
+
+.perguntas { display: grid; gap: var(--e4); }
+.grupo-perguntas > h3 { margin-bottom: var(--e3); }
+.grupo-perguntas + .grupo-perguntas { margin-top: var(--e4); }
+.recolhido { margin-top: var(--e4); }
+.recolhido > summary { cursor: pointer; color: var(--apagado); font-size: 0.875rem; padding: var(--e2) 0; }
+.recolhido > summary:hover { color: var(--texto); }
+.recolhido[open] > summary { margin-bottom: var(--e3); }

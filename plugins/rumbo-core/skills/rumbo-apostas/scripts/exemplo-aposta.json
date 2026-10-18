@@ -1,0 +1,29 @@
+{
+  "_leia": "Rascunho de UMA aposta, no vocabulario do metodo, antes de gravar no sistema da casa. Casa ficticia, a mesma do exemplo da estrategia: as escolhas que a aposta serve vem de la (rode o validar com --cascata). Copie a forma, nao os valores. O que vai para o sistema da casa sai deste rascunho pelo traduzir.mjs do modulo, que monta os campos das tools e lista o que falta perguntar.",
+  "itens": [
+    {
+      "_leia": "serve aponta uma ou mais escolhas da cascata publicada. hipotese em se, entao, porque. criterio_matar com data AAAA-MM-DD: ele vira o primeiro marco. quadrante pela regra de ouro, quando a casa usa. propostas lista o que voce propos e a pessoa ainda nao confirmou.",
+      "kind": "aposta",
+      "slug": "ap-cotacao-pelo-whatsapp",
+      "texto": "Cotação pelo WhatsApp da distribuidora",
+      "payload": {
+        "serve": "cap-onboarding-sem-gente",
+        "problema": "O dono da loja pequena não abre o app para cotar: manda foto da lista no WhatsApp do vendedor, e o pedido nunca entra na plataforma.",
+        "hipotese": "Se a cotação responder no próprio WhatsApp da distribuidora, então metade das lojas da coorte fecha o primeiro pedido sem vendedor, porque o dono já está lá e não precisa aprender nada novo.",
+        "indicador": "Lojas da coorte com primeiro pedido fechado sem vendedor (%)",
+        "criterio_matar": "Menos de 20% da coorte fechando pedido pelo WhatsApp até 2026-12-15",
+        "horizonte": "2026-12-31",
+        "quadrante": "apostas_risco",
+        "estado": "proposta",
+        "marcos": [
+          { "texto": "Coorte de 40 lojas ligada ao número da distribuidora", "data": "2026-11-10" },
+          { "texto": "Decisão de matar ou seguir", "data": "2026-12-15" }
+        ],
+        "resultados": [
+          { "texto": "Metade da coorte com primeiro pedido sem vendedor", "metrica": "% da coorte", "inicio": "2026-11-10", "fim": "2026-12-15" }
+        ],
+        "propostas": ["quadrante"]
+      }
+    }
+  ]
+}

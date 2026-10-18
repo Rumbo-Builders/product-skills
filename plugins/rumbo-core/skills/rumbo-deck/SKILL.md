@@ -4,7 +4,8 @@ description: >-
   Constrói apresentações em padrão de consultoria: storyline de títulos de ação,
   infográficos desenhados em pptxgenjs em vez de gráfico nativo, e QA que reprova o
   build. Use sempre que for criar, revisar ou estender um deck, ou quando pedirem
-  "apresentação", "slides", "deck", "pptx" ou "one-pager". A identidade visual vem do
+  "apresentação", "slides", "deck" ou "pptx". One pager de status de time é da
+  skill rumbo-one-page. A identidade visual vem do
   tema do cliente, nunca desta skill. Skill genérica: se o pedido for de um cliente
   específico e existir skill derivada dele, ela é que roda.
 ---
@@ -18,6 +19,7 @@ Skill de método. O motor é cliente-agnóstico; cor, fonte e logo vêm de um **
 Leia, nesta ordem:
 
 1. `${CLAUDE_PLUGIN_ROOT}/metodo/_principios.md`
+   e `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`, que diz como guiar a conversa
 2. `${CLAUDE_PLUGIN_ROOT}/metodo/deck.md`
 3. `${CLAUDE_PLUGIN_ROOT}/metodo/deck-infograficos.md`, quando for escolher o formato
    de um quadro
@@ -59,6 +61,19 @@ node ${CLAUDE_PLUGIN_ROOT}/scripts/configurar.mjs --casa <id> --nome "<Nome>" \
   [--fonte-corpo "..."] [--simbolo simbolo.svg] [--logo-claro logo.png] \
   [--logo-escuro logo-branco.png] [--tom "..."] [--ressalva "..."]
 ```
+
+## Conduzir como conversa
+
+A conversa segue `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`: o roteiro antes da
+primeira pergunta, uma etapa por mensagem com uma pergunta só, e o rascunho
+mostrado antes de qualquer arquivo final. O roteiro é o mapa:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-deck/scripts/estado.mjs --time <id>
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-deck/scripts/estado.mjs --time <id> --concluir pedido
+```
+
+As etapas do mapa são os passos do Fluxo abaixo, na mesma ordem, e o número que você diz à pessoa é o do mapa.
 
 ## Fluxo
 

@@ -14,6 +14,11 @@ name: Sem vazamento de cliente
 #
 #   gh secret set NOMES_DE_CLIENTE --repo Rumbo-Builders/product-skills
 #
+# A LISTA PRECISA DAS VARIAÇÕES DE CADA NOME. A busca é por substring exata:
+# "Nome do Cliente" não casa com "nome-do-cliente" num caminho de arquivo, nem
+# com a sigla. Um nome já escapou assim. Ponha na lista o nome, a forma com
+# hífen e a sigla, separados por vírgula.
+#
 # DUAS LIMITAÇÕES CONHECIDAS, e as duas dependem de gente:
 #
 # 1. A busca é por substring, sem fronteira de palavra. Nome curto de cliente
@@ -30,11 +35,16 @@ on:
   push:
     branches: [main]
 
+# So leitura: o job confere texto, e nao precisa escrever em nada do repositorio.
+permissions:
+  contents: read
+
 jobs:
   nomes:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Fixada por SHA (v4.2.2): tag de action pode ser movida, commit nao.
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: Nenhum nome de cliente no repositório
         env:

@@ -77,6 +77,13 @@ O que continua sendo recusa, sem exceção:
 
 ## Estrutura da saída
 
+**A estrutura abaixo é a do time de produto, e é o desenho de partida.** Times de
+marketing, jurídico, financeiro, comercial e operações têm outra forma: um núcleo
+que todo one page tem (insight, objetivos, ação e decisão, procedência) e os blocos
+que o time escolhe, como ações para chegar lá, meta mês a mês, verba, checklist e
+funil. O catálogo, o desenho por time e a régua de cada bloco estão em
+`one-page-blocos.md`.
+
 Cinco blocos, nesta ordem. Bloco vazio é permitido e às vezes é a resposta certa.
 
 1. **Cabeçalho.** Quem publica e quando.
@@ -95,6 +102,9 @@ tudo a virar percentual produz número falso.
 Objetivo abandonado **permanece visível, riscado**. Apagar a linha esconde a
 decisão de abandonar, que costuma ser a informação mais valiosa do trimestre.
 
+Com uma estratégia publicada, o objetivo aponta o KR que destaca: `payload.kr`
+com o slug do KR. Sem estratégia publicada, nada muda, e o item segue como está.
+
 ## O roadmap
 
 O roadmap é **definição de quem conduz o produto**, não do sistema. Dois modos,
@@ -106,7 +116,9 @@ Uma matriz de faixas por colunas de tempo.
 
 - As **faixas** podem ser quaisquer, mas a preferência é **faixa de objetivo**,
   ligada logicamente à meta que o time persegue. Faixa que não se liga a nada
-  costuma ser trabalho que ninguém pediu.
+  costuma ser trabalho que ninguém pediu. Com uma estratégia publicada, a faixa
+  aponta a aposta que a justifica por `aposta_slug`; `aposta` em texto livre
+  continua valendo para casa sem estratégia publicada.
 - As **colunas** são unidades de calendário. A preferência é a unidade curta
   (semana ou quinzena), porque coluna longa esconde atraso.
 - A célula é texto livre, e a granularidade varia legitimamente entre times. Não

@@ -1,0 +1,320 @@
+{
+  "_leia": "Envelope de exemplo do ONE PAGE de um time de MARKETING. Casa ficticia, a mesma do exemplo de produto. Mostra o desenho por time (meta.desenho) e os blocos que nao sao de produto: KRs agrupados por objetivo e a trilha mensal (meta_mes), indicadores de saude, acoes para chegar la, verba e outras frentes. Este arquivo e a documentacao real do formato: o que ele nao mostra, o modelo infere errado. O catalogo dos blocos esta em metodo/one-page-blocos.md.",
+  "squad": "marketing",
+  "kind": "one_page",
+  "status": "published",
+  "year": 2026,
+  "quarter": 4,
+  "insight": "O custo por cadastro caiu pela metade com a mídia no Google, e a meta de outubro fechou acima do previsto.",
+  "meta": {
+    "_desenho": "O desenho do time, no formato do contrato. Com o sistema da casa ele e configuracao do squad, e o servidor congela o vigente na versao (o que vier aqui e ignorado). Sem servidor, vem do .rumbo/one-page.config.json e viaja em cada versao, para a versao antiga mostrar o desenho dela.",
+    "desenho": {
+      "tipo": "marketing",
+      "abas": [
+        {
+          "slug": "one-page",
+          "titulo": "One page",
+          "blocos": [
+            {
+              "tipo": "nucleo"
+            },
+            {
+              "tipo": "texto"
+            },
+            {
+              "tipo": "indicadores",
+              "titulo": "Leitura da semana"
+            },
+            {
+              "tipo": "trilha_mensal"
+            },
+            {
+              "tipo": "saude"
+            }
+          ]
+        },
+        {
+          "slug": "acoes",
+          "titulo": "Ações para chegar lá",
+          "blocos": [
+            {
+              "tipo": "acoes"
+            },
+            {
+              "tipo": "verba"
+            }
+          ]
+        },
+        {
+          "slug": "outras",
+          "titulo": "Outras frentes",
+          "blocos": [
+            {
+              "tipo": "outras_frentes"
+            }
+          ]
+        }
+      ]
+    },
+    "verba_total": 18000,
+    "_verba_total": "O total aprovado no periodo. A regua confere que a soma do aprovado nas alcas de verba fecha com ele.",
+    "farol": "verde",
+    "farol_motivo": "Cadastros acima da meta de outubro e custo por cadastro em queda"
+  },
+  "body_md": "O cadastro de outubro chegou a {{cadastros-mes}}, puxado pela campanha de busca. A presença em evento ficou para novembro, e é por isso que o objetivo de referência ainda não andou.\n",
+  "itens": [
+    {
+      "_leia": "OKR: a alca e o resultado-chave medido, com baseline, meta, unidade, direcao e atual. payload.objetivo { slug, titulo } agrupa na tela os KRs do mesmo objetivo; quando os OKRs vem do sistema da casa, e o objetivo de la. rota e rota_motivo sao o status, na voz do dono.",
+      "kind": "okr",
+      "slug": "kr-falas-em-evento",
+      "texto": "Falas em evento do setor com a marca no palco",
+      "payload": {
+        "objetivo": {
+          "slug": "o1-referencia-no-setor",
+          "titulo": "Ser a referência em pedido sem planilha para a loja pequena"
+        },
+        "baseline": "0",
+        "meta": "3",
+        "unidade": "falas no trimestre",
+        "direcao": "sobe",
+        "atual": "0",
+        "rota": "no_ritmo",
+        "rota_motivo": "Duas falas confirmadas em novembro"
+      }
+    },
+    {
+      "_leia": "META_MES: a trilha mensal do KR, uma alca por mes. kr aponta a alca okr, periodo e AAAA-MM, alvo e numero ou exatamente 'a definir' (vira lacuna no briefing, com o dono). realizado, quando ja existe, leva fonte.",
+      "kind": "meta_mes",
+      "slug": "kr-falas-em-evento-2026-10",
+      "texto": "Falas em evento do setor com a marca no palco",
+      "payload": {
+        "kr": "kr-falas-em-evento",
+        "periodo": "2026-10",
+        "alvo": 0,
+        "realizado": 0,
+        "fonte": "Amplitude"
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-falas-em-evento-2026-11",
+      "texto": "Falas em evento do setor com a marca no palco",
+      "payload": {
+        "kr": "kr-falas-em-evento",
+        "periodo": "2026-11",
+        "alvo": 2
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-falas-em-evento-2026-12",
+      "texto": "Falas em evento do setor com a marca no palco",
+      "payload": {
+        "kr": "kr-falas-em-evento",
+        "periodo": "2026-12",
+        "alvo": 3
+      }
+    },
+    {
+      "kind": "okr",
+      "slug": "kr-cadastros-mes",
+      "texto": "Lojas cadastradas no mês",
+      "payload": {
+        "objetivo": {
+          "slug": "o2-cadastros",
+          "titulo": "Trazer lojas para dentro da plataforma"
+        },
+        "baseline": "120",
+        "meta": "400",
+        "unidade": "cadastros por mês",
+        "direcao": "sobe",
+        "leitura": "cadastros-mes",
+        "atual": "236",
+        "rota": "no_ritmo",
+        "rota_motivo": "Outubro fechou acima da meta"
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-cadastros-mes-2026-10",
+      "texto": "Lojas cadastradas no mês",
+      "payload": {
+        "kr": "kr-cadastros-mes",
+        "periodo": "2026-10",
+        "alvo": 200,
+        "realizado": 236,
+        "fonte": "Amplitude"
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-cadastros-mes-2026-11",
+      "texto": "Lojas cadastradas no mês",
+      "payload": {
+        "kr": "kr-cadastros-mes",
+        "periodo": "2026-11",
+        "alvo": 300
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-cadastros-mes-2026-12",
+      "texto": "Lojas cadastradas no mês",
+      "payload": {
+        "kr": "kr-cadastros-mes",
+        "periodo": "2026-12",
+        "alvo": 400
+      }
+    },
+    {
+      "_leia": "ACAO: prazo (AAAA-MM-DD ou AAAA-MM), status no vocabulario fechado (realizado, confirmado, em_andamento, planejado, a_propor, negociado, bloqueado, cancelado) e kr com o slug da alca okr que ela move. Acao sem kr e outra frente. Cancelada fica, riscada.",
+      "kind": "acao",
+      "slug": "acao-campanha-busca",
+      "texto": "Campanha de busca para dono de loja",
+      "payload": {
+        "prazo": "2026-10",
+        "status": "realizado",
+        "kr": "kr-cadastros-mes",
+        "dono": "Coordenação de mídia"
+      }
+    },
+    {
+      "kind": "acao",
+      "slug": "acao-fala-feira-varejo",
+      "texto": "Fala na feira regional do varejo",
+      "payload": {
+        "prazo": "2026-11-12",
+        "status": "confirmado",
+        "kr": "kr-falas-em-evento"
+      }
+    },
+    {
+      "kind": "acao",
+      "slug": "acao-caso-de-cliente",
+      "texto": "Caso de cliente com a distribuidora piloto",
+      "payload": {
+        "prazo": "2026-12",
+        "status": "a_propor",
+        "kr": "kr-falas-em-evento"
+      }
+    },
+    {
+      "_leia": "VERBA: uma alca por rubrica e por periodo (AAAA-MM). aprovado e numero, e fonte e obrigatoria (de onde vem o aprovado, ou o realizado). A soma do aprovado fecha com meta.verba_total, quando declarado, com tolerancia de 0,01.",
+      "kind": "verba",
+      "slug": "verba-google-out",
+      "texto": "Google",
+      "payload": {
+        "periodo": "2026-10",
+        "aprovado": 4000,
+        "realizado": 3820,
+        "fonte": "painel de mídia, 31/10"
+      }
+    },
+    {
+      "kind": "verba",
+      "slug": "verba-google-nov",
+      "texto": "Google",
+      "payload": {
+        "periodo": "2026-11",
+        "aprovado": 4000,
+        "fonte": "orçamento aprovado do trimestre"
+      }
+    },
+    {
+      "kind": "verba",
+      "slug": "verba-google-dez",
+      "texto": "Google",
+      "payload": {
+        "periodo": "2026-12",
+        "aprovado": 4000,
+        "fonte": "orçamento aprovado do trimestre"
+      }
+    },
+    {
+      "kind": "verba",
+      "slug": "verba-meta-out",
+      "texto": "Meta",
+      "payload": {
+        "periodo": "2026-10",
+        "aprovado": 2000,
+        "realizado": 2000,
+        "fonte": "painel de mídia, 31/10"
+      }
+    },
+    {
+      "kind": "verba",
+      "slug": "verba-meta-nov",
+      "texto": "Meta",
+      "payload": {
+        "periodo": "2026-11",
+        "aprovado": 2000,
+        "fonte": "orçamento aprovado do trimestre"
+      }
+    },
+    {
+      "kind": "verba",
+      "slug": "verba-meta-dez",
+      "texto": "Meta",
+      "payload": {
+        "periodo": "2026-12",
+        "aprovado": 2000,
+        "fonte": "orçamento aprovado do trimestre"
+      }
+    },
+    {
+      "_leia": "FRENTE: o que anda e nao serve objetivo nenhum. Curto. Se a lista cresce, falta um objetivo.",
+      "kind": "frente",
+      "slug": "frente-apresentacao-comercial",
+      "texto": "Apresentação comercial para distribuidoras, a pedido do time de vendas",
+      "payload": {
+        "dono": "Time de marketing"
+      }
+    },
+    {
+      "kind": "decisao",
+      "slug": "verba-de-dezembro",
+      "texto": "Mantemos a verba de dezembro no Google ou movemos metade para o evento?",
+      "genero": "pergunta",
+      "escala_para": [
+        "Liderança de marketing"
+      ],
+      "payload": {
+        "sobre": "kr-cadastros-mes"
+      }
+    }
+  ],
+  "leituras": [
+    {
+      "slug": "cadastros-mes",
+      "periodo": "2026-10",
+      "valor_num": 236,
+      "unidade": "cadastros",
+      "fonte": "Amplitude",
+      "nome": "Cadastros no mês",
+      "sobe_e_bom": true,
+      "observacao": "Acima da meta de outubro, puxado pela busca"
+    },
+    {
+      "slug": "custo-por-cadastro",
+      "periodo": "2026-10",
+      "valor_num": 24.7,
+      "unidade": "brl",
+      "fonte": "painel de mídia",
+      "nome": "Custo por cadastro",
+      "sobe_e_bom": false,
+      "observacao": "Metade do de setembro"
+    },
+    {
+      "_leia": "categoria 'saude' leva a leitura para o bloco de saude, e nao para a tabela de indicadores.",
+      "slug": "seguidores-linkedin",
+      "periodo": "2026-10",
+      "valor_num": 1840,
+      "unidade": "seguidores",
+      "fonte": "LinkedIn",
+      "nome": "Seguidores no LinkedIn",
+      "sobe_e_bom": true,
+      "categoria": "saude"
+    }
+  ],
+  "canais": []
+}
