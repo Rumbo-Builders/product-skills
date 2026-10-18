@@ -23,7 +23,9 @@ fi
 FALHOU=0
 
 echo "== estrutura =="
-if ! node -e "JSON.parse(require('fs').readFileSync('$ENV_JSON','utf8'))" 2>/dev/null; then
+# O nome do arquivo vai por argumento, nunca dentro do codigo: um nome com aspa
+# viraria codigo executado.
+if ! node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$ENV_JSON" 2>/dev/null; then
   echo "FALHA: '$ENV_JSON' nao e JSON valido."
   exit 1
 fi
@@ -105,6 +107,40 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# O desenho do time e os blocos
+# ---------------------------------------------------------------------------
+#
+# A regra mora em blocos.mjs, a mesma lista que o render desenha e que o briefing
+# usa para os sinais. Sem meta.desenho vale o desenho de produto, que e o de sempre.
+
+echo "== desenho e blocos =="
+BLOCOS_MJS="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/blocos.mjs"
+SAIDA_BL=$(node --input-type=module -e "
+import { readFileSync } from 'node:fs';
+const { validarBlocos } = await import(process.argv[1]);
+const env = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const r = validarBlocos(env);
+r.problemas.forEach((p) => console.log('FALHA: ' + p));
+r.avisos.forEach((a) => console.log('aviso: ' + a));
+" "$BLOCOS_MJS" "$ENV_JSON")
+STATUS_BL=$?
+if [ "$STATUS_BL" != "0" ]; then
+  echo "FALHA: a checagem de blocos nao rodou (node saiu com $STATUS_BL)."
+  echo "       Nao trate isso como aprovado: nada foi conferido."
+  FALHOU=1
+else
+  NFALHA=$(printf '%s\n' "$SAIDA_BL" | grep -c '^FALHA: ' || true)
+  if [ "$NFALHA" -gt 0 ]; then
+    echo "FALHA: $NFALHA problema(s) de desenho ou de bloco."
+    printf '%s\n' "$SAIDA_BL" | grep '^FALHA: ' | sed 's/^FALHA: /  - /'
+    FALHOU=1
+  else
+    echo "ok: desenho e blocos integros"
+  fi
+  printf '%s\n' "$SAIDA_BL" | grep '^aviso: ' | sed 's/^/  /' || true
+fi
+
+# ---------------------------------------------------------------------------
 # Digito solto no bloco de indicadores
 # ---------------------------------------------------------------------------
 
@@ -168,11 +204,16 @@ if [ "$KIND" = "one_page" ]; then
     echo "ok: nenhuma tabela escrita a mao"
   fi
 
+  # Roadmap so e cobrado de quem tem o bloco no desenho: marketing e juridico nao tem.
   RM=$(node -e "
 const e=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));
-console.log((e.meta&&e.meta.roadmapVersao)?'sim':'nao');
+const d=e.meta&&e.meta.desenho;
+const usa=!d||(d.abas||[]).some(a=>(a.blocos||[]).some(b=>b.tipo==='roadmap'));
+console.log(!usa?'nao-usa':(e.meta&&e.meta.roadmapVersao)?'sim':'nao');
 " "$ENV_JSON")
-  if [ "$RM" = "nao" ]; then
+  if [ "$RM" = "nao-usa" ]; then
+    echo "ok: o desenho do time nao tem roadmap"
+  elif [ "$RM" = "nao" ]; then
     echo "aviso: one page sem meta.roadmapVersao. A secao de roadmap vai aparecer vazia."
   else
     echo "ok: aponta uma versao de roadmap"
@@ -184,6 +225,15 @@ fi
 # ---------------------------------------------------------------------------
 
 echo "== regras da casa =="
+# No corpo E no texto das alcas: acao, checklist e verba sao lidas tanto quanto o
+# corpo, e o travessao passaria justamente ali. Campos _ de documentacao ficam fora.
+CORPO=$(node -e "
+const e=JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'));
+const out=[e.body_md||'', e.body_md_enxuto||'', e.insight||''];
+const anda=(v)=>{ if(typeof v==='string') out.push(v); else if(Array.isArray(v)) v.forEach(anda); else if(v&&typeof v==='object') for(const [k,x] of Object.entries(v)) if(!k.startsWith('_')) anda(x); };
+(e.itens||[]).forEach(anda);
+console.log(out.join('\n'));
+" "$ENV_JSON")
 DASH=$(printf '%s' "$CORPO" | grep -c "—" || true)
 if [ "$DASH" -gt 0 ]; then
   echo "FALHA: $DASH travessao(oes). Regra da casa: nenhum."
@@ -200,10 +250,12 @@ else
   echo "ok: nenhuma pontuacao em serie"
 fi
 
-VOC=$(printf '%s' "$CORPO" | grep -ciE "alavanc|leverage|vale destacar|vale ressaltar|em suma|de forma holistica|sinergia|game changer" || true)
+# A lista mora em scripts/regras.cjs, a mesma das outras reguas.
+VOCAB="$(node "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../scripts" && pwd)/regras.cjs" --vocab)"
+VOC=$(printf '%s' "$CORPO" | grep -ciE "$VOCAB" || true)
 if [ "$VOC" -gt 0 ]; then
   echo "FALHA: $VOC ocorrencia(s) de vocabulario proibido."
-  printf '%s' "$CORPO" | grep -niE "alavanc|leverage|vale destacar|vale ressaltar|em suma|de forma holistica|sinergia|game changer" | head -5 | sed 's/^/  /'
+  printf '%s' "$CORPO" | grep -niE "$VOCAB" | head -5 | sed 's/^/  /'
   FALHOU=1
 else
   echo "ok: vocabulario limpo"

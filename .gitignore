@@ -3,3 +3,9 @@
 .env
 .env.*
 .rumbo/
+
+# Saídas de render e de QA: PDF, imagens de conferência, deck gerado.
+render/
+Saida.pdf
+Saida.pptx
+Exemplo.pptx

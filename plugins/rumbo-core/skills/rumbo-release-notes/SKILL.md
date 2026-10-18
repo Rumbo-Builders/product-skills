@@ -18,6 +18,7 @@ Quando roda a partir de uma derivada, o binding vem dela.
 Leia, nesta ordem:
 
 1. `${CLAUDE_PLUGIN_ROOT}/metodo/_principios.md`
+   e `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`, que diz como guiar a conversa
 2. `${CLAUDE_PLUGIN_ROOT}/metodo/release-notes.md`
 3. `${CLAUDE_PLUGIN_ROOT}/metodo/escrita.md`, para a estrutura do texto
 
@@ -55,6 +56,19 @@ node ${CLAUDE_PLUGIN_ROOT}/scripts/configurar.mjs --casa <id> --nome "<Nome>" \
   [--fonte-corpo "..."] [--simbolo simbolo.svg] [--logo-claro logo.png] \
   [--logo-escuro logo-branco.png] [--tom "..."] [--ressalva "..."]
 ```
+
+## Conduzir como conversa
+
+A conversa segue `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`: o roteiro antes da
+primeira pergunta, uma etapa por mensagem com uma pergunta só, e o rascunho
+mostrado antes de qualquer arquivo final. O roteiro é o mapa:
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-release-notes/scripts/estado.mjs --time <id>
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-release-notes/scripts/estado.mjs --time <id> --concluir janela
+```
+
+As etapas do mapa são os passos do Fluxo abaixo, na mesma ordem, e o número que você diz à pessoa é o do mapa.
 
 ## Fluxo
 

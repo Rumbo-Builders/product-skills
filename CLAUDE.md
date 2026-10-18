@@ -35,7 +35,13 @@ Se você está escrevendo algo e não sabe em qual das três ele cai, use o test
 plugins/rumbo-core/
   metodo/            prosa: a PI. Um assunto por arquivo, e material de apoio
                      ao lado (escrita.md, escrita-antes-e-depois.md)
-  scripts/           o que serve MAIS DE UMA skill. Hoje só o configurar.mjs
+  scripts/           o que serve MAIS DE UMA skill: o configurar.mjs, e o que
+                     toda página versionada compartilha (pagina.mjs, pagina.css,
+                     tema-neutro.css, etapas.mjs), e a régua de aposta, objetivo
+                     e KR (regras.cjs, validar-alcas.mjs)
+  modulos/<origem>/  camada opcional que só liga quando a sessão tem as tools
+                     daquela origem (MODULO.md + scripts). Sem elas, nenhuma
+                     skill muda de comportamento
   skills/<skill>/
     SKILL.md         só o fluxo da conversa
     scripts/         o que roda: motor, tema, QA
@@ -47,6 +53,13 @@ primeira vez está lá porque o que ele grava (cor, fonte, logo, tom) é lido pe
 deck, pelo one page, pelas release notes e pela escrita. Script compartilhado
 morando dentro de uma skill é a mesma doença do método copiado: um dia alguém
 mexe nele por causa do one page e o deck muda de cor.
+
+Pelo mesmo motivo, o esqueleto da página versionada (título, seletor de versão,
+abas, bloco de histórico), o markdown mínimo, o painel de ação e decisão e o
+motor do mapa de etapas moram em `scripts/pagina.mjs`, `pagina.css` e
+`etapas.mjs`: o one page e a estratégia importam de lá. O que fica com cada skill
+é o que só ela desenha (a grade e os indicadores num, a cascata e as apostas no
+outro) e o próprio mapa de etapas.
 
 Divisão de trabalho: **`metodo/` é o que se lê, `scripts/` é o que roda, `SKILL.md`
 é o que conduz.** Se o SKILL.md está explicando o método, ele engordou: o texto
@@ -82,6 +95,10 @@ node rumbo-one-page/scripts/contexto.mjs --time <id> [--ano 2026] [--trimestre 3
 bash rumbo-one-page/scripts/validar.sh envelope.json
 node rumbo-one-page/scripts/publicar.mjs envelope.json --rascunho   # ou --publicar
 
+# one page de qualquer time: o modo diz o roteiro, o desenho diz os blocos
+node rumbo-one-page/scripts/estado.mjs --time <id> --modo desenhar|semana|leitura|reformar
+node rumbo-one-page/scripts/render.mjs --esqueleto marketing --saida .rumbo/esqueleto.html
+
 # ...ou, sem origem que fale o contrato, o caminho sem servidor
 node rumbo-one-page/scripts/contexto-local.mjs --anterior anterior.json \
   --movimento movimento.json --triagem triagem.json
@@ -92,17 +109,48 @@ node rumbo-one-page/scripts/render.mjs --one-page envelope.json \
 bash rumbo-release-notes/scripts/coletar.sh <repo> 2026-08-27 [2026-09-03] [branch]
 bash rumbo-release-notes/scripts/gerar.sh notas.html Saida.pdf
 
+# estratégia: herança → briefing → régua → página versionada, sem servidor
+node rumbo-estrategia/scripts/estado.mjs --time <casa>
+node rumbo-estrategia/scripts/base.mjs --time <casa> [--branco | --de .rumbo/anterior-estrategia.json]
+node rumbo-estrategia/scripts/contexto.mjs --anterior .rumbo/anterior-estrategia.json \
+  --fontes fontes.json [--one-page .rumbo/anterior.json] [--ciclo 2026-h2]
+bash rumbo-estrategia/scripts/validar.sh envelope-estrategia.json [--anterior .rumbo/anterior-estrategia.json]
+node rumbo-estrategia/scripts/render.mjs --estrategia envelope-estrategia.json \
+  --anterior .rumbo/anterior-estrategia.json [--one-page .rumbo/anterior.json] --saida .rumbo/estrategia.html
+
+# apostas e OKRs: um rascunho por vez → régua → as chamadas do sistema da casa
+node rumbo-apostas/scripts/estado.mjs --time <casa> --modo nova|editar|acompanhar
+node rumbo-okrs/scripts/estado.mjs --time <casa> --modo novo|editar|acompanhar
+node ../scripts/validar-alcas.mjs .rumbo/aposta-<slug>.json --cascata .rumbo/anterior-estrategia.json
+node ../modulos/productops/traduzir.mjs .rumbo/aposta-<slug>.json --tatico \
+  --cascata-de .rumbo/anterior-estrategia.json
+
 # régua de texto, em qualquer arquivo (os greps completos estão em _principios.md)
 grep -nE "—|[!?]{2,}" arquivo.md
 ```
 
-O mais próximo de um teste que este repo tem são dois exemplos, e eles servem de
-smoke test. Rode os dois depois de mexer no motor do deck ou em qualquer régua:
+O mais próximo de um teste que este repo tem são dois exemplos e quatro testes de
+fumaça. Rode todos depois de mexer no motor do deck, em `scripts/pagina.mjs`, em
+`scripts/regras.cjs` ou em qualquer régua. As fumaças do one page e da estratégia
+também envenenam todo texto dos exemplos e reprovam se algo sair cru na página:
 
 ```bash
 node rumbo-deck/scripts/exemplo.js                                  # → Exemplo.pptx
 bash rumbo-one-page/scripts/validar.sh rumbo-one-page/scripts/exemplo-envelope.json
+bash rumbo-estrategia/scripts/fumaca.sh                             # régua, render em duas versões, estado
+bash rumbo-apostas/scripts/fumaca.sh                                # régua do rascunho, três mapas, tradutor
+bash rumbo-okrs/scripts/fumaca.sh                                   # idem, para objetivo e KR
+bash rumbo-one-page/scripts/fumaca.sh                               # desenho e blocos por tipo de time, modos, esqueleto
 ```
+
+Mexeu em `scripts/regras.cjs`, rode as quatro fumaças: a régua de aposta e de KR é
+a mesma no envelope da estratégia e no rascunho avulso.
+
+O `fumaca.sh` aprova o exemplo da estratégia, reprova cada violação da régua numa
+cópia mutada, uma por vez, e confere que a v1 fica intacta sob a v2 na página.
+Régua que afrouxa sem ninguém perceber é o que ele existe para pegar. Depois de
+mexer no `pagina.mjs`, renderize também a demo de `docs/demo/` e compare com a
+anterior: o HTML fora do `<style>` tem que sair igual.
 
 Nenhuma dependência está declarada, e nenhuma vem com o repo: `pptxgenjs` para o
 deck, LibreOffice e poppler (`pdftoppm`, `pdftotext`) para renderizar e conferir,
@@ -116,7 +164,17 @@ comentário no meio de `validar.sh` existe porque isso já aconteceu aqui.
 
 ## O que roda: arquitetura dos scripts
 
-Três fluxos, e os três com a mesma forma: determinístico onde dá, e o humano olha o
+**Três degraus, e nenhum é exigido.** Sem nada configurado, a LLM conduz e os scripts
+trabalham com arquivo local: o briefing local, o render da página, o `extrair.mjs`
+que tira da página publicada a versão anterior. Com `RUMBO_ONEPAGE_API` e
+`RUMBO_ONEPAGE_TOKEN` (ou as variantes com o sufixo de `RUMBO_ORIGEM`), os scripts
+buscam o dossiê e publicam pela origem; toda chamada passa por `origem.mjs`
+(`pedir`), que só envia a chave por https, não segue redirecionamento e mascara a
+chave em erro. Com as tools do ProductOps na sessão, o `MODULO.md` liga, por uma
+regra só. `publicar.mjs --publicar` com destinatário ou canal recusa sem
+`--comunicar`, que só se passa depois da lista confirmada.
+
+Os fluxos têm a mesma forma: determinístico onde dá, e o humano olha o
 que a máquina não vê.
 
 **Deck.** `base.js` é o motor sobre `pptxgenjs`, cliente-agnóstico: `criar(tema)`
@@ -142,10 +200,50 @@ e tabela markdown escrita à mão. `publicar.mjs` exige `--rascunho` ou `--publi
 sem modo padrão, porque publicar comunica e aviso não se despublica. Ambiente:
 `RUMBO_ONEPAGE_API` e `RUMBO_ONEPAGE_TOKEN`.
 
+**One page de qualquer time.** O desenho do time (abas, blocos, títulos) é dado,
+não HTML: `meta.desenho` sem servidor, configuração do squad com ele. O catálogo, a
+régua de cada bloco e os sinais da semana moram em `rumbo-one-page/scripts/blocos.mjs`,
+que o `validar.sh`, o `render.mjs` e os dois briefings importam; os desenhos de
+partida por tipo de time, em `desenhos.json`. O `estado.mjs` monta o roteiro da
+semana dos blocos do desenho, e o `render.mjs` desenha bloco a bloco quando há
+desenho, e o layout de sempre quando não há (a demo sai igual, com a linha da
+assinatura no rodapé, desligável por `"assinatura": false`). O contrato com o
+ProductOps (blocos, alças `meta_mes`, `acao`, `verba`, `checklist`, `funil`,
+`frente`, e `okr` com `payload.objetivo`) é o dos exemplos de envelope.
+
 **Release notes.** `coletar.sh` traz os commits da janela com o corpo inteiro, porque
 o porquê está no corpo e a triagem é trabalho do método, não do script. O modelo
 escreve o HTML sobre `modelo.html` e `base.css`, e `gerar.sh` imprime pelo Chrome
 headless e renderiza em JPG para conferência.
+
+**Estratégia. O mesmo desenho do one page, com servidor ou sem.** `base.mjs` herda a
+cascata, as apostas, os OKRs e as premissas da versão anterior e retira o que é
+desta revisão (insight, elo mais fraco, marca de revisão, escalada). `contexto.mjs`
+lê a anterior, a lista de fontes normalizada e, se houver, a cadeia do one page, e
+escreve o briefing: idade de cada fonte, escolhas com sinal (premissa refutada,
+aposta morta, KR fora de rota, fonte velha), horizontes vencidos, cobertura e diff
+por slug. **O modelo nunca lê os JSON, e o que o briefing decide ele não redecide:
+revisão percorre todas as etapas e pole; o sinal diz por onde começar, não o que
+pular.** O roteiro que o usuário vê é o mapa do `estado.mjs`, um estágio por etapa e
+a validação com IA no fim. `validar.sh` reprova escolha sem fonte (a renúncia é
+opcional, só onde é essencial), cadeia que não fecha (`serve` só sobe um estágio), aposta sem critério de
+matar, KR sem baseline ou direção, premissa sem teste, publicação sem insight ou
+elo mais fraco, e as regras da casa no corpo e no texto das alças. `render.mjs`
+monta a página de duas abas (cascata; apostas e resultados) e congela na versão a
+cascata inteira e a última leitura de cada KR vinda do one page. O que o modelo
+propôs e a liderança não confirmou viaja em `propostas`, campo e não prefixo: a
+página mostra a pílula, a régua avisa ao publicar, e `base.mjs` não herda o campo na
+revisão seguinte. O exemplo é a documentação do envelope, e `fumaca.sh` é a régua da
+régua.
+
+**Apostas e OKRs. Um objeto por vez, no sistema da casa.** `rumbo-apostas` e
+`rumbo-okrs` guiam criar, editar e acompanhar, cada modo com o próprio mapa no
+`estado.mjs`. O rascunho é JSON no vocabulário do método; `validar-alcas.mjs`
+aplica a régua de `regras.cjs`, a mesma que o `validar.sh` da estratégia usa para
+as alças do envelope; e o `traduzir.mjs` do módulo, com `--cascata-de`, monta os
+campos das tools a partir do rascunho e da cascata publicada. Ninguém grava sem
+mostrar o rascunho e ouvir o sim. A forma de conduzir, comum a todas as skills,
+mora em `metodo/conducao.md`.
 
 ---
 

@@ -29,137 +29,63 @@
  * Omitir --roadmap significa "o roadmap nao mudou nesta semana": o one page
  * aponta a mesma versao de novo, e o contador dele nao anda.
  *
- * DOIS ARQUIVOS DE CONFIGURACAO, e a divisao e a mesma das camadas do metodo.
- * `marca.json` e da CASA e vale para todas as skills: nome, cor, fonte, logo,
- * logo. `one-page.config.json` e so deste artefato: modo do roadmap,
- * granularidade, de onde vem o movimento. Cor escrita nos dois diverge.
- *
- * Sem marca nem tema ele roda no tema neutro, que nao e a identidade de ninguem.
- * Rode `scripts/configurar.mjs`, na raiz do plugin, uma vez.
+ * O que toda pagina do core tem (esqueleto, seletor de versao, marca, tema,
+ * markdown, insight, painel de acao e decisao) vem de `scripts/pagina.mjs`, no
+ * plugin. Aqui fica o que so o one page sabe desenhar: a serie de leituras, a
+ * grade do roadmap nos dois cortes, e a cadeia com o roadmap projetado.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { preset } from "./blocos.mjs";
+import {
+  args, lerJson, esc, nada, num, sinal, data, md,
+  blocoInsight, blocoProsa, decisoes, linkDeFontes,
+  carregarCasa, blocoMarca, trilha, avisoVersao, montarPagina, urlSegura,
+} from "../../../scripts/pagina.mjs";
 
 // ---------------------------------------------------------------------------
-// argumentos e arquivos do plugin
+// argumentos e arquivos
 // ---------------------------------------------------------------------------
-
-function args(argv) {
-  const out = {};
-  for (let i = 2; i < argv.length; i++) {
-    if (!argv[i].startsWith("--")) continue;
-    const chave = argv[i].slice(2);
-    const proximo = argv[i + 1];
-    if (proximo && !proximo.startsWith("--")) { out[chave] = proximo; i++; }
-    else out[chave] = true;
-  }
-  return out;
-}
 
 const opts = args(process.argv);
 const saida = opts.saida || ".rumbo/artefato.html";
 
-function ler(caminho, obrigatorio = false) {
-  if (!caminho || caminho === true || !existsSync(caminho)) {
-    if (obrigatorio) {
-      console.error(`[render] falta ${caminho || "o arquivo"}.`);
-      process.exit(1);
-    }
-    return null;
-  }
-  try { return JSON.parse(readFileSync(caminho, "utf8")); }
-  catch (e) { console.error(`[render] ${caminho} nao e JSON valido: ${e.message}`); process.exit(1); }
+/** O CSS que e so deste artefato, resolvido a partir deste script. */
+const onePageCss = readFileSync(new URL("./one-page.css", import.meta.url), "utf8");
+
+/** Identidade da casa (marca, tema, simbolo) e o ajuste que e so deste artefato. */
+const { marca, config, tema, simbolo, paginaCss } = carregarCasa(opts, {
+  configPadrao: ".rumbo/one-page.config.json",
+  rotulo: "render",
+});
+
+/* --esqueleto <tipo>: o desenho proposto, com dado de exemplo, para a pessoa ver a
+   pagina antes de qualquer numero (modo desenhar). O desenho e o do config, quando
+   ja ha um, ou o de partida do tipo; o dado e o do exemplo mais proximo. Nada aqui
+   e versao: a pagina sai sem historico, e com o aviso de que e esqueleto. */
+const esqueleto = typeof opts.esqueleto === "string" ? opts.esqueleto : null;
+function envelopeDeEsqueleto(tipo) {
+  const exemplo = ["marketing", "juridico"].includes(tipo) ? `exemplo-envelope-${tipo}.json`
+    : tipo === "financeiro" ? "exemplo-envelope-juridico.json"
+    : tipo === "produto" ? "exemplo-envelope.json" : "exemplo-envelope-marketing.json";
+  const env = JSON.parse(readFileSync(new URL(`./${exemplo}`, import.meta.url), "utf8"));
+  env.meta = { ...(env.meta ?? {}), desenho: config.desenho ?? preset(tipo) ?? preset("produto") };
+  env.squad = tipo;
+  // O funil nao tem exemplo proprio: tres estagios de mostra, so para o esqueleto.
+  const usa = (t) => env.meta.desenho.abas.some((a) => a.blocos.some((b) => b.tipo === t));
+  if (usa("funil") && !env.itens.some((i) => i.kind === "funil"))
+    env.itens.push(
+      { kind: "funil", slug: "f-contato", texto: "Contato feito", payload: { ordem: 1, contagem: 23, regra: "reunião marcada com o decisor" } },
+      { kind: "funil", slug: "f-proposta", texto: "Proposta enviada", payload: { ordem: 2, contagem: 8, regra: "proposta com preço entregue" } },
+      { kind: "funil", slug: "f-fechado", texto: "Contrato assinado", payload: { ordem: 3, contagem: 2, regra: "contrato assinado pelas duas partes" } },
+    );
+  return env;
 }
-
-/** Arquivos do proprio plugin, resolvidos a partir deste script: assim o
- *  renderizador funciona tanto instalado quanto rodado do repositorio. */
-const daqui = (rel) => readFileSync(new URL(rel, import.meta.url), "utf8");
-
-const modelo = daqui("./modelo.html");
-const motor = daqui("./base.css");
-
-/** Identidade da casa, compartilhada com o deck e as release notes. */
-const marca = ler(opts.marca ?? ".rumbo/marca.json") ?? {};
-/** Ajuste que e so deste artefato. Opcional: o render tem default para tudo. */
-const config = ler(opts.config ?? ".rumbo/one-page.config.json") ?? {};
-
-/** Tema da casa se houver; o neutro se nao. O neutro nao e identidade de
- *  ninguem, e existe para o documento sair legivel antes da configuracao. */
-const caminhoTema = opts.tema ?? ".rumbo/tema.css";
-const tema = existsSync(caminhoTema) ? readFileSync(caminhoTema, "utf8") : daqui("./tema-neutro.css");
-if (!existsSync(caminhoTema)) {
-  console.error("[render] aviso: sem tema configurado, saindo no neutro. Rode scripts/configurar.mjs para gerar o seu.");
-}
-
-/** Simbolo opcional. Sem ele o cabecalho sai so com o nome, e isso e valido. */
-const caminhoSimbolo = marca.logo?.simbolo;
-const simbolo =
-  caminhoSimbolo && existsSync(caminhoSimbolo)
-    ? readFileSync(caminhoSimbolo, "utf8").replace(/<!--[\s\S]*?-->/g, "").trim()
-    : "";
-
-const novoOnePage = ler(opts["one-page"], true);
-const novoRoadmap = ler(opts.roadmap);
-const anterior = ler(opts.anterior) ?? {};
-
-// ---------------------------------------------------------------------------
-// texto
-// ---------------------------------------------------------------------------
-
-const esc = (s) =>
-  String(s ?? "")
-    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-
-const nada = "nao informado";
-
-function num(v, casas = 1) {
-  if (v == null || v === "" || Number.isNaN(Number(v))) return nada;
-  return Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: casas });
-}
-const sinal = (v, casas = 1) =>
-  v == null || Number.isNaN(v) ? nada : `${v > 0 ? "+" : v < 0 ? "-" : ""}${num(Math.abs(v), casas)}`;
-
-function data(d) {
-  if (!d) return nada;
-  const x = new Date(d);
-  return Number.isNaN(x.getTime()) ? String(d) : x.toLocaleDateString("pt-BR");
-}
-
-/** Markdown minimo: titulo, paragrafo, lista, negrito, codigo. Nada de tabela,
- *  de proposito: tabela no corpo e o erro que a regua reprova antes de chegar aqui. */
-function md(texto) {
-  const linhas = String(texto ?? "").split("\n");
-  const fora = [];
-  let paragrafo = [];
-  let lista = [];
-
-  const inline = (s) =>
-    esc(s)
-      .replace(/`([^`]+)`/g, "<code>$1</code>")
-      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-
-  const fechaParagrafo = () => {
-    if (paragrafo.length) { fora.push(`<p>${inline(paragrafo.join(" "))}</p>`); paragrafo = []; }
-  };
-  const fechaLista = () => {
-    if (lista.length) { fora.push(`<ul>${lista.map((i) => `<li>${inline(i)}</li>`).join("")}</ul>`); lista = []; }
-  };
-
-  for (const l of linhas) {
-    const t = l.trim();
-    if (!t) { fechaParagrafo(); fechaLista(); continue; }
-    const h = t.match(/^(#{2,4})\s+(.*)$/);
-    if (h) { fechaParagrafo(); fechaLista(); fora.push(`<h3>${inline(h[2])}</h3>`); continue; }
-    const li = t.match(/^[-*]\s+(.*)$/);
-    if (li) { fechaParagrafo(); lista.push(li[1]); continue; }
-    fechaLista();
-    paragrafo.push(t);
-  }
-  fechaParagrafo(); fechaLista();
-  return fora.join("\n");
-}
+const novoOnePage = esqueleto ? envelopeDeEsqueleto(esqueleto) : lerJson(opts["one-page"], true);
+const novoRoadmap = esqueleto ? null : lerJson(opts.roadmap);
+// --anterior pedido e ausente falha: virar v1 em silencio apagaria o historico da pagina.
+const anterior = esqueleto ? {} : (typeof opts.anterior === "string" ? lerJson(opts.anterior, true) : null) ?? {};
 
 // ---------------------------------------------------------------------------
 // leituras: a serie de cada indicador, com a variacao apurada
@@ -310,8 +236,9 @@ function chips(item) {
       const fechada = !!q.concluida_em || /done|closed|completed/i.test(q.estado ?? "");
       const classes = ["chip", critica ? "critica" : "", fechada ? "fechada" : ""].filter(Boolean).join(" ");
       const titulo = esc(`${q.titulo ?? ""}${q.prioridade ? ` (${q.prioridade})` : ""}${q.estado ? `, ${q.estado}` : ""}`);
-      return q.url
-        ? `<a class="${classes}" href="${esc(q.url)}" target="_blank" rel="noopener" title="${titulo}">${esc(q.id ?? "")}</a>`
+      const url = urlSegura(q.url);
+      return url
+        ? `<a class="${classes}" href="${esc(url)}" target="_blank" rel="noopener" title="${titulo}">${esc(q.id ?? "")}</a>`
         : `<span class="${classes}" title="${titulo}">${esc(q.id ?? "")}</span>`;
     })
     .join("")}</span>`;
@@ -450,31 +377,6 @@ function grade(env, comChips) {
 // one page
 // ---------------------------------------------------------------------------
 
-/**
- * O insight e a tese da versao, e ele le como manchete: duas linhas. Tres ja o
- * transformam em paragrafo grande, e a tese perde o peso de abertura.
- *
- * CSS nao sabe quantos caracteres o texto tem, e por isso quem decide o teto do
- * corpo e o renderizador, do mesmo jeito que ele conta paragrafos antes de marcar
- * .prosa-duas. A conta: na folha cheia cabem cerca de 1750 caracteres-vezes-pixel
- * por linha, entao duas linhas pedem `2 * 1750 / caracteres` pixels de corpo.
- *
- * O piso e o teto vem do clamp, que continua mandando na tela estreita: abaixo de
- * mil pixels de folha, duas linhas exigiriam um corpo pequeno demais para uma
- * manchete, e ali ela volta a ocupar tres.
- */
-const TETO_INSIGHT = 34.4; // 2,15rem, o tamanho de manchete curta
-const MIN_INSIGHT = 22;    // abaixo disto deixa de ler como manchete
-
-function blocoInsight(texto) {
-  if (!texto || !String(texto).trim()) return "";
-  const n = String(texto).trim().length;
-  const teto = Math.max(MIN_INSIGHT, Math.min(TETO_INSIGHT, (2 * 1750) / n));
-  return `<div class="bloco insight-cerca" style="--insight-teto: ${teto.toFixed(1)}px">
-      <p class="insight">${esc(texto)}</p>
-    </div>`;
-}
-
 function objetivos(itens) {
   const okrs = itens.filter((i) => i.kind === "okr");
   if (!okrs.length) return "";
@@ -494,82 +396,9 @@ function objetivos(itens) {
   </div>`;
 }
 
-const GENEROS = {
-  decisao_roadmap: "Decisão que move o roadmap",
-  risco: "Risco",
-  pergunta: "Pergunta aberta",
-  nota_metodo: "Nota de método",
-  dependencia: "Dependência externa",
-  proximo_passo: "Próximo passo",
-};
-
-/** Devolve so o miolo: quem embrulha e o chamador, porque este bloco divide a
- *  linha com a tabela de indicadores e nao pode trazer bloco proprio. */
-function decisoes(itens) {
-  const lista = itens.filter((i) => i.kind === "decisao");
-  if (!lista.length)
-    return `<p class="vazio">Nenhuma decisão nesta versão, e isso está declarado.</p>`;
-
-  // Ordem do metodo: o que exige resposta de alguem vem primeiro.
-  const ordem = ["pergunta", "decisao_roadmap", "risco", "dependencia", "nota_metodo", "proximo_passo"];
-  lista.sort((a, b) => ordem.indexOf(a.genero) - ordem.indexOf(b.genero));
-
-  return `<ul class="decisoes">${lista
-      .map((d) => {
-        const p = d.payload ?? {};
-        const exige = [];
-        if (d.afeta_roadmap_slug) exige.push(`<span><b>Move</b> ${esc(d.afeta_roadmap_slug)}</span>`);
-        if (p.impacto) exige.push(`<span><b>Impacto</b> ${esc(p.impacto)}</span>`);
-        /* O caminho mora DENTRO do item que ele resolve. Solto numa linha propria
-           ele obrigava o leitor a ligar dois blocos por conta, e quem le rapido
-           ligava errado: o passo aparecia como iniciativa sem causa. */
-        if (p.caminho) exige.push(`<span><b>Caminho</b> ${esc(p.caminho)}</span>`);
-        if (p.quem_resolve) exige.push(`<span><b>Resolve</b> ${esc(p.quem_resolve)}</span>`);
-        if (p.afeta_indicador) exige.push(`<span><b>Afeta</b> ${esc(p.afeta_indicador)}</span>`);
-        if (p.prazo) exige.push(`<span><b>Prazo</b> ${data(p.prazo)}</span>`);
-        if (p.quem) exige.push(`<span><b>Com</b> ${esc(p.quem)}</span>`);
-        if ((d.escala_para ?? []).length)
-          exige.push(`<span class="para">Para ${esc(d.escala_para.join(", "))}</span>`);
-        return `<li class="decisao ${esc(d.genero ?? "")}">
-          <span class="genero">${esc(GENEROS[d.genero] ?? d.genero ?? "Item")}</span>
-          <p>${esc(d.texto)}</p>
-          ${exige.length ? `<span class="exige">${exige.join("")}</span>` : ""}
-        </li>`;
-      })
-      .join("")}</ul>`;
-}
-
 /**
- * A tabela entra DENTRO da secao de indicadores da prosa, logo apos os paragrafos
- * dela. Renderizar as duas como blocos irmaos punha "Indicadores" na tela duas
- * vezes seguidas, e separava a tabela do texto que existe para explica-la.
- *
- * O titulo procurado e o mesmo que a regua do metodo usa para achar digito solto:
- * se o corpo nao tiver secao de indicador, a tabela cai no fim, rotulada.
- */
-/**
- * Bloco de prosa, com a decisao de coluna unica ou duas colunas tomada AQUI e nao
- * no CSS. Duas colunas preenchem a folha e preservam a medida de leitura, mas um
- * bloco de um paragrafo virava duas colunas de duas linhas, que le pior que o
- * paragrafo inteiro. CSS nao conta paragrafo; o renderizador conta.
- */
-function blocoProsa(html) {
-  if (!html.trim()) return "";
-  // Lista ocupa a folha inteira em coluna unica: bullet e curto, entao a medida
-  // longa nao atrapalha, e partir uma lista em duas colunas quebra a sequencia
-  // que o leitor esta seguindo.
-  if (/<ul>|<ol>/.test(html)) return `<div class="bloco prosa prosa-larga">${html}</div>`;
-
-  // Dois paragrafos ja se distribuem bem, um em cada coluna. O caso ruim e o de
-  // um so, que a coluna parte no meio da frase.
-  const paragrafos = (html.match(/<p>/g) ?? []).length;
-  return `<div class="bloco prosa${paragrafos >= 2 ? " prosa-duas" : ""}">${html}</div>`;
-}
-
-/**
- * Indicadores e acao e decisao voltaram a ocupar a linha inteira, uma sob a
- * outra. A tabela cabe sem espremer a observacao, e os cartoes de decisao usam
- * a largura para caber tres por linha, que e onde eles param de ser uma pilha.
+ * Indicadores e acao e decisao ocupam a linha inteira, uma sob a outra. A
+ * tabela cabe sem espremer a observacao, e os cartoes de decisao usam a largura.
  *
  * O titulo da secao pertence a este bloco. Se o corpo trouxer uma secao chamada
  * "Indicadores", o titulo dela sai, senao a tela mostra o mesmo titulo duas vezes.
@@ -597,7 +426,7 @@ function subtituloIndicadores(porSlug) {
     so === "manual"
       ? um ? ", apurado à mão" : ", todos apurados à mão"
       : so
-        ? um ? `, de origem ${so}` : `, todos de origem ${so}`
+        ? um ? `, de origem ${esc(so)}` : `, todos de origem ${esc(so)}`
         : "";
   return `${porExtenso(n)} ${um ? "indicador" : "indicadores"}${origem}.`;
 }
@@ -625,7 +454,7 @@ function painelOnePage(env, roadmapProjetado, porSlug) {
     ${blocoInsight(env.insight)}
     ${objetivos(env.itens ?? [])}
     <div class="bloco">
-      <h2>Roadmap, corte enxuto${roadmapProjetado ? ` (v${roadmapProjetado.__versao ?? env.meta?.roadmapVersao ?? "?"})` : ""}</h2>
+      <h2>Roadmap, corte enxuto${roadmapProjetado ? ` (v${Number(roadmapProjetado.__versao ?? env.meta?.roadmapVersao) || "?"})` : ""}</h2>
       ${grade(roadmapProjetado, false)}
     </div>
     ${secoesFinais(corpo, tabelaIndicadores(porSlug), env.itens ?? [], porSlug)}
@@ -648,19 +477,232 @@ function painelRoadmap(env) {
   </section>`;
 }
 
+
+// ---------------------------------------------------------------------------
+// o desenho do time: abas e blocos que o time escolheu
+// ---------------------------------------------------------------------------
+//
+// Envelope com meta.desenho e desenhado bloco a bloco, na ordem do time. Sem ele,
+// o caminho e o de sempre, logo abaixo, e a pagina de produto sai identica. O
+// catalogo e a regua estao em blocos.mjs e em metodo/one-page-blocos.md.
+
+const TITULO_PADRAO = {
+  objetivos: "Objetivos", decisoes: "Ação e decisão", indicadores: "Indicadores que importam",
+  saude: "Indicadores de saúde", trilha_mensal: "Meta mês a mês", roadmap: "Roadmap",
+  acoes: "Ações para chegar lá", verba: "Verba", checklist: "Checklist",
+  funil: "Funil", outras_frentes: "Outras frentes",
+};
+const ROTULO_ROTA = { no_ritmo: "no ritmo", em_risco: "em risco", fora_de_rota: "fora de rota" };
+const ROTULO_STATUS = {
+  realizado: "realizado", confirmado: "confirmado", em_andamento: "em andamento", planejado: "planejado",
+  a_propor: "a propor", negociado: "negociado", bloqueado: "bloqueado", cancelado: "cancelado",
+};
+const MESES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+const mesCurto = (per) => {
+  const [a, m] = String(per ?? "").split("-").map(Number);
+  return m && MESES[m - 1] ? `${MESES[m - 1]}/${esc(String(a).slice(2))}` : esc(per ?? nada);
+};
+/** Prazo legivel: mes vira "nov/26", dia vira "12/11". */
+const prazoTexto = (v) => {
+  const [a, m, d] = String(v ?? "").split("-");
+  if (d) return esc(`${d}/${m}`);
+  return m ? mesCurto(`${a}-${m}`) : esc(v ?? nada);
+};
+const reais = (v) => (typeof v === "number" ? `R$ ${v.toLocaleString("pt-BR", { maximumFractionDigits: 2 })}` : nada);
+const aDefinir = (v) => typeof v === "string" && v.trim().toLowerCase() === "a definir";
+const alvoTexto = (v) => (aDefinir(v) ? `<span class="a-definir">a definir</span>` : esc(v ?? nada));
+const bloco = (titulo, corpo, sub = "") =>
+  `<div class="bloco">
+      <h2>${esc(titulo)}</h2>${sub ? `\n      <p class="subtitulo">${sub}</p>` : ""}
+      ${corpo}
+    </div>`;
+
+/** KRs agrupados por objetivo. Sem payload.objetivo em nenhum, vale o card de sempre. */
+function blocoObjetivos(itens, titulo) {
+  const okrs = itens.filter((i) => i.kind === "okr");
+  if (!okrs.some((o) => o.payload?.objetivo)) return objetivos(itens).replace("<h2>Objetivos em destaque</h2>", `<h2>${esc(titulo)}</h2>`);
+  const grupos = new Map();
+  for (const o of okrs) {
+    const ob = o.payload?.objetivo ?? { slug: o.slug, titulo: o.texto };
+    if (!grupos.has(ob.slug)) grupos.set(ob.slug, { ob, krs: [] });
+    grupos.get(ob.slug).krs.push(o);
+  }
+  const html = [...grupos.values()].map(({ ob, krs }, n) => {
+    const rota = krs.find((k) => k.payload?.rota)?.payload;
+    return `<section class="objetivo-grupo">
+        <header class="objetivo-cab">
+          <span class="objetivo-cod">O${n + 1}</span>
+          <h3 class="objetivo-titulo">${esc(ob.titulo)}</h3>
+          ${rota?.rota ? `<span class="rota ${esc(rota.rota)}">${esc(ROTULO_ROTA[rota.rota] ?? rota.rota)}</span>` : ""}
+        </header>
+        ${rota?.rota_motivo ? `<p class="rota-motivo">${esc(rota.rota_motivo)}</p>` : ""}
+        <ul class="krs">${krs.map((k) => {
+          const p = k.payload ?? {};
+          return `<li class="kr">
+            <span class="kr-nome">${esc(k.texto)}</span>
+            <span class="kr-meta"><span class="de">${esc(p.baseline ?? nada)}</span><span class="seta" aria-hidden="true">→</span><span class="para">${alvoTexto(p.meta)}</span></span>
+            <span class="kr-unidade">${esc(p.unidade ?? "")}${p.atual != null ? ` · atual <b>${esc(p.atual)}</b>` : ""}</span>
+          </li>`;
+        }).join("")}</ul>
+      </section>`;
+  }).join("");
+  return bloco(titulo, `<div class="objetivos-grupos">${html}</div>`);
+}
+
+/** A meta de cada mes de cada KR, com o realizado. "a definir" aparece escrito, nunca vazio. */
+function blocoTrilha(itens, titulo) {
+  const metas = itens.filter((i) => i.kind === "meta_mes");
+  if (!metas.length) return bloco(titulo, `<p class="vazio">Nenhuma meta mensal nesta versão.</p>`);
+  const meses = [...new Set(metas.map((m) => m.payload?.periodo))].sort();
+  const krs = [...new Set(metas.map((m) => m.payload?.kr))];
+  const nome = (slug) => itens.find((i) => i.slug === slug)?.texto ?? slug;
+  const linhas = krs.map((kr) => `<tr><th scope="row">${esc(nome(kr))}</th>${meses.map((mes) => {
+    const m = metas.find((x) => x.payload?.kr === kr && x.payload?.periodo === mes)?.payload;
+    if (!m) return `<td class="n">${nada}</td>`;
+    const real = m.realizado != null ? `<span class="real-mes">${esc(m.realizado)}</span>` : "";
+    return `<td class="n">${real}${real ? `<span class="de-meta">de ${alvoTexto(m.alvo)}</span>` : alvoTexto(m.alvo)}</td>`;
+  }).join("")}</tr>`).join("");
+  return bloco(titulo, `<div class="rolagem"><table class="trilha">
+      <thead><tr><th>Resultado-chave</th>${meses.map((m) => `<th class="n">${mesCurto(m)}</th>`).join("")}</tr></thead>
+      <tbody>${linhas}</tbody>
+    </table></div>`, "Realizado sobre a meta de cada mês. Sem realizado, a célula mostra só a meta.");
+}
+
+function blocoAcoes(itens, titulo) {
+  const acoes = itens.filter((i) => i.kind === "acao");
+  if (!acoes.length) return bloco(titulo, `<p class="vazio">Nenhuma ação nesta versão.</p>`);
+  const nome = (slug) => itens.find((i) => i.slug === slug)?.texto;
+  const linhas = acoes.map((a) => {
+    const p = a.payload ?? {};
+    return `<tr class="acao-linha st-${esc(p.status ?? "")}">
+        <td class="acao-txt"><b>${esc(a.texto)}</b>${p.dono ? `<span>${esc(p.dono)}</span>` : ""}</td>
+        <td class="n">${prazoTexto(p.prazo)}</td>
+        <td class="kr-ref">${p.kr ? esc(curtoTexto(nome(p.kr) ?? p.kr)) : `<span class="vazio">sem KR</span>`}</td>
+        <td><span class="status ${esc(p.status ?? "")}">${esc(ROTULO_STATUS[p.status] ?? p.status ?? nada)}</span></td>
+      </tr>`;
+  }).join("");
+  return bloco(titulo, `<div class="rolagem"><table class="acoes">
+      <thead><tr><th>Ação</th><th>Prazo</th><th>Move</th><th>Status</th></tr></thead>
+      <tbody>${linhas}</tbody>
+    </table></div>`);
+}
+
+function blocoVerba(env, titulo) {
+  const verbas = (env.itens ?? []).filter((i) => i.kind === "verba");
+  if (!verbas.length) return bloco(titulo, `<p class="vazio">Nenhuma verba nesta versão.</p>`);
+  const meses = [...new Set(verbas.map((v) => v.payload?.periodo))].sort();
+  const rubricas = [...new Set(verbas.map((v) => v.texto))];
+  const de = (r, m) => verbas.find((v) => v.texto === r && v.payload?.periodo === m)?.payload;
+  const linhas = rubricas.map((r) => `<tr><th scope="row">${esc(r)}</th>${meses.map((m) => {
+    const p = de(r, m);
+    if (!p) return `<td class="n">${nada}</td>`;
+    return `<td class="n">${reais(p.aprovado)}${p.realizado != null ? `<span class="de-meta">realizado ${reais(p.realizado)}</span>` : ""}</td>`;
+  }).join("")}<td class="n total">${reais(verbas.filter((v) => v.texto === r).reduce((s, v) => s + (v.payload?.aprovado ?? 0), 0))}</td></tr>`).join("");
+  const porMes = meses.map((m) => reais(verbas.filter((v) => v.payload?.periodo === m).reduce((s, v) => s + (v.payload?.aprovado ?? 0), 0)));
+  const total = verbas.reduce((s, v) => s + (v.payload?.aprovado ?? 0), 0);
+  const fontes = [...new Set(verbas.map((v) => v.payload?.fonte).filter(Boolean))];
+  return bloco(titulo, `<div class="rolagem"><table class="verba">
+      <thead><tr><th>Rubrica</th>${meses.map((m) => `<th class="n">${mesCurto(m)}</th>`).join("")}<th class="n">Total</th></tr></thead>
+      <tbody>${linhas}</tbody>
+      <tfoot><tr><td>Total aprovado</td>${porMes.map((v) => `<td class="n">${v}</td>`).join("")}<td class="n">${reais(total)}</td></tr></tfoot>
+    </table></div>
+    ${fontes.length ? `<p class="legenda">Fonte: ${fontes.map(esc).join("; ")}.</p>` : ""}`);
+}
+
+function blocoChecklist(itens, titulo) {
+  const lista = itens.filter((i) => i.kind === "checklist");
+  if (!lista.length) return bloco(titulo, `<p class="vazio">Nenhum item nesta versão.</p>`);
+  return bloco(titulo, `<ul class="checklist">${lista.map((c) => {
+    const p = c.payload ?? {};
+    return `<li class="${p.feito ? "feito" : "pendente"}">
+        <span class="marca-check" aria-hidden="true">${p.feito ? "✓" : ""}</span>
+        <span class="check-corpo"><b>${esc(c.texto)}</b><span>${p.feito ? "feito" : "pendente"} · ${esc(p.dono ?? nada)} · até ${prazoTexto(p.prazo)}</span></span>
+      </li>`;
+  }).join("")}</ul>`);
+}
+
+function blocoFunil(itens, titulo) {
+  const estagios = itens.filter((i) => i.kind === "funil").sort((a, b) => (a.payload?.ordem ?? 0) - (b.payload?.ordem ?? 0));
+  if (!estagios.length) return bloco(titulo, `<p class="vazio">Nenhum estágio nesta versão.</p>`);
+  return bloco(titulo, `<ol class="funil">${estagios.map((e) => `<li>
+      <span class="funil-n">${esc(e.payload?.contagem ?? nada)}</span>
+      <span class="funil-corpo"><b>${esc(e.texto)}</b><span>${esc(e.payload?.regra ?? "")}</span></span>
+    </li>`).join("")}</ol>`);
+}
+
+function blocoFrentes(itens, titulo) {
+  const frentes = itens.filter((i) => i.kind === "frente");
+  if (!frentes.length) return bloco(titulo, `<p class="vazio">Nenhuma outra frente nesta versão.</p>`);
+  return bloco(titulo, `<ul class="frentes">${frentes.map((f) => `<li><b>${esc(f.texto)}</b>${f.payload?.dono ? `<span>${esc(f.payload.dono)}</span>` : ""}</li>`).join("")}</ul>`);
+}
+
+/** Leituras de saude: o nome, o valor de agora e os ultimos da serie. */
+function blocoSaude(porSlug, titulo) {
+  const series = [...porSlug.values()].filter((s) => s[0]?.categoria === "saude");
+  if (!series.length) return bloco(titulo, `<p class="vazio">Nenhum indicador de saúde nesta versão.</p>`);
+  return bloco(titulo, `<ul class="saude">${series.map((s) => `<li>
+      <span class="nome">${esc(s[0].nome ?? s[0].slug)}</span>
+      <span class="valor">${valorDe(s[0])}</span>
+      <span class="trilha-saude">${s.slice(0, 4).reverse().map((l) => `${esc(String(l.periodo ?? ""))} <b>${valorDe(l)}</b>`).join(" · ")}</span>
+      <span class="det">origem: ${esc(s[0].fonte ?? nada)}</span>
+    </li>`).join("")}</ul>`);
+}
+
+const curtoTexto = (t) => (String(t).length > 48 ? `${String(t).slice(0, 45)}…` : String(t));
+
+/** Um bloco do desenho, desenhado com o dado da versao. */
+function desenharBloco(b, env, rm, porSlug, corpo) {
+  const titulo = b.titulo ?? TITULO_PADRAO[b.tipo] ?? b.tipo;
+  const itens = env.itens ?? [];
+  switch (b.tipo) {
+    case "insight": return blocoInsight(env.insight);
+    case "objetivos": return blocoObjetivos(itens, b.titulo ?? "Objetivos");
+    case "decisoes": return bloco(titulo, decisoes(itens), "O que se decidiu, o que trava, e o que precisa de resposta.");
+    case "indicadores": {
+      const sem = new Map([...porSlug].filter(([, s]) => s[0]?.categoria !== "saude"));
+      const sub = subtituloIndicadores(sem);
+      return bloco(titulo, `${tabelaIndicadores(sem)}
+      <p class="legenda">Valores congelados nesta versão. Não mudam quando a leitura mudar depois.</p>`, sub ? `${sub.charAt(0).toUpperCase()}${sub.slice(1)}` : "");
+    }
+    case "saude": return blocoSaude(porSlug, titulo);
+    case "trilha_mensal": return blocoTrilha(itens, titulo);
+    case "roadmap": {
+      const det = b.corte === "detalhado";
+      const t = b.titulo ?? `Roadmap, corte ${det ? "detalhado" : "enxuto"}${rm ? ` (v${Number(rm.__versao ?? env.meta?.roadmapVersao) || "?"})` : ""}`;
+      return `${bloco(t, rm ? grade(rm, det) : `<p class="vazio">Nenhum roadmap publicado ainda.</p>`)}${det && rm ? estacionamento(rm.itens ?? []) : ""}`;
+    }
+    case "acoes": return blocoAcoes(itens, titulo);
+    case "verba": return blocoVerba(env, titulo);
+    case "checklist": return blocoChecklist(itens, titulo);
+    case "funil": return blocoFunil(itens, titulo);
+    case "outras_frentes": return blocoFrentes(itens, titulo);
+    case "texto": return blocoProsa(corpo);
+    default: return "";
+  }
+}
+
+/** Os paineis de uma versao, um por aba do desenho DELA, e um aviso nas abas que ela nao tinha. */
+function paineisDoDesenho(env, rm, porSlug, slugsAtuais) {
+  const corpo = marcadores(md(env.body_md ?? ""), porSlug);
+  const desenho = env.meta.desenho;
+  const proprias = (desenho.abas ?? []).map((aba, n) => {
+    const blocos = aba.blocos.flatMap((b) => (b.tipo === "nucleo" ? [{ tipo: "insight" }, { tipo: "objetivos" }, { tipo: "decisoes" }] : [b]));
+    return `<section class="painel" role="tabpanel" data-alvo="${esc(aba.slug)}" aria-labelledby="aba-${esc(aba.slug)}"${n ? " hidden" : ""}>
+    ${blocos.map((b) => desenharBloco(b, env, rm, porSlug, corpo)).join("\n    ")}
+  </section>`;
+  });
+  const faltam = slugsAtuais.filter((s) => !(desenho.abas ?? []).some((a) => a.slug === s));
+  return [...proprias, ...faltam.map((s) => `<section class="painel" role="tabpanel" data-alvo="${esc(s)}" hidden>
+    <p class="vazio">Esta aba não existia nesta versão.</p>
+  </section>`)].join("\n    ");
+}
+
 // ---------------------------------------------------------------------------
 // cadeia de versoes
 // ---------------------------------------------------------------------------
 
-const trilhaAnterior = (tipo) => {
-  const t = anterior[tipo] ?? {};
-  const historico = Array.isArray(t.historico) ? t.historico : [];
-  const atual = t.atual ?? null;
-  return { historico, atual, versao: atual?.versao ?? historico.at(-1)?.versao ?? 0 };
-};
-
-const antesOnePage = trilhaAnterior("one_page");
-const antesRoadmap = trilhaAnterior("roadmap");
+const antesOnePage = trilha(anterior, "one_page");
+const antesRoadmap = trilha(anterior, "roadmap");
 const agora = new Date();
 
 // Sem --roadmap, o roadmap nao mudou: reaproveita o publicado e o contador nao anda.
@@ -709,6 +751,22 @@ const cadeia = {
 // Da mais nova para a mais antiga: quem abre quer a de agora.
 const versoes = [cadeia.one_page.atual, ...cadeia.one_page.historico].sort((a, b) => b.versao - a.versao);
 
+/* As abas da pagina sao as do desenho da versao mais nova. Versao antiga com
+   outro desenho mostra as dela, e um aviso nas abas que nao tinha. */
+const desenhoAtual = novoOnePage.meta?.desenho;
+const abasDaPagina = desenhoAtual
+  ? desenhoAtual.abas.map((a) => ({ id: a.slug, rotulo: a.titulo }))
+  : [
+      { id: "one-page", rotulo: "One page" },
+      { id: "roadmap", rotulo: "Roadmap detalhado" },
+    ];
+/* Versao antiga sem desenho, sob uma pagina com desenho, ainda precisa das abas
+   de sempre para ser lida. */
+for (const v of [...cadeia.one_page.historico])
+  if (desenhoAtual && !(v.envelope ?? v).meta?.desenho)
+    for (const a of [{ id: "one-page", rotulo: "One page" }, { id: "roadmap", rotulo: "Roadmap detalhado" }])
+      if (!abasDaPagina.some((x) => x.id === a.id)) abasDaPagina.push(a);
+
 const blocos = versoes
   .map((v) => {
     const env = v.envelope ?? v;
@@ -718,10 +776,17 @@ const blocos = versoes
       cadeia.one_page.historico.filter((h) => h.versao < v.versao),
     );
     const antiga = v.versao !== onePageAtual.versao;
+    // Versao com desenho sai bloco a bloco, no desenho que ela congelou; sem desenho, o layout de sempre.
+    const paineis = env.meta?.desenho
+      ? paineisDoDesenho(env, rm, porSlug, abasDaPagina.map((x) => x.id))
+      : `${painelOnePage(env, rm, porSlug)}
+    ${painelRoadmap(rm)}`;
+    const avisoEsqueleto = esqueleto
+      ? `<div class="aviso-versao"><b>Esqueleto</b><span>O desenho proposto, com dado de exemplo. Nenhum número aqui é do time.</span></div>`
+      : "";
     return `  <div class="versao" data-versao="${v.versao}"${antiga ? " hidden" : ""}>
-    ${antiga ? `<div class="aviso-versao"><b>v${v.versao}</b><span>Voce esta lendo uma versao anterior, publicada em ${data(v.publicado_em)}. Ela e imutavel, e mostra o roadmap que projetou na epoca.</span></div>` : ""}
-    ${painelOnePage(env, rm, porSlug)}
-    ${painelRoadmap(rm)}
+    ${avisoEsqueleto}${antiga ? avisoVersao(v.versao, v.publicado_em, "Ela e imutavel, e mostra o desenho e o roadmap que tinha na epoca.") : ""}
+    ${paineis}
   </div>`;
   })
   .join("\n");
@@ -732,48 +797,39 @@ const opcoes = versoes
 
 const periodo = novoOnePage.year && novoOnePage.quarter ? `${novoOnePage.year} Q${novoOnePage.quarter}` : "";
 
-/**
- * O Google Fonts e o unico host de fonte que a pagina publicada aceita. Familia
- * do sistema nao vai para o link: pedir "Georgia" de la devolve 404 e a pagina
- * espera por nada. Nome que nao existir la cai no fallback em silencio, e por
- * isso o primeiro render se confere no navegador.
- */
-const DO_SISTEMA = /^(system-ui|-apple-system|georgia|arial|helvetica|times|times new roman|courier|verdana|tahoma|sans-serif|serif|monospace|ui-monospace)$/i;
-
-function linkDeFontes(fontes = {}) {
-  const familias = [
-    fontes.titulo ? [fontes.titulo, "wght@500;600"] : null,
-    fontes.corpo ? [fontes.corpo, "wght@400;500;600;700"] : null,
-  ]
-    .filter(Boolean)
-    .filter(([nome]) => !DO_SISTEMA.test(String(nome).trim()))
-    .map(([nome, pesos]) => `family=${encodeURIComponent(String(nome).trim()).replace(/%20/g, "+")}:${pesos}`);
-
-  if (!familias.length) return "";
-  return `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?${familias.join("&")}&display=swap">`;
-}
-
-function blocoMarca() {
-  return `${simbolo}\n      <b>${esc(marca.nome ?? marca.casa ?? "")}</b>`;
-}
-
 /* O titulo nomeia a aba e o cartao na galeria, e por isso e o nome da casa e nao
    uma frase. Ele fica estavel entre republicacoes: titulo que muda le como pagina
    outra. */
+/* Com desenho de outro time, o padrao leva o nome do time, e nao "do Produto". */
 const tituloDoArtefato =
-  opts.titulo || config.titulo || `One Page ${marca.nome ?? marca.casa ?? "do Produto"}`;
+  opts.titulo || config.titulo ||
+  (desenhoAtual && desenhoAtual.tipo !== "produto"
+    ? `One Page ${novoOnePage.squad ? novoOnePage.squad.charAt(0).toUpperCase() + novoOnePage.squad.slice(1) : desenhoAtual.tipo} ${marca.nome ?? ""}`.trim()
+    : `One Page ${marca.nome ?? marca.casa ?? "do Produto"}`);
 
+/* A assinatura da Rumbo, discreta, no rodape. O link que circula e da casa, e e a
+   marca dela que ele mostra; a linha so diz de onde veio, e a casa desliga com
+   "assinatura": false no one-page.config.json ou no marca.json. */
+function assinatura() {
+  if (config.assinatura === false || marca.assinatura === false) return "";
+  return `<footer class="assinatura">Feito com o método Rumbo</footer>`;
+}
 
-const html = modelo
-  .replace("__TITULO__", esc(tituloDoArtefato))
-  .replace("__FONTES__", linkDeFontes(marca.fontes))
-  .replace("__ESTILO__", `${tema}\n\n${motor}`)
-  .replace("__MARCA__", blocoMarca())
-  .replace("__OPCOES__", opcoes)
-  .replace("__PERIODO__", esc(periodo))
-  .replace("__VERSOES__", blocos)
-  .replace("__ENVELOPES__", JSON.stringify(cadeia, null, 2).replace(/<\//g, "<\\/"));
+/* UMA URL, DUAS ABAS, e a ordem importa. One page primeiro, porque e o
+   documento. O detalhado depois, porque e o que menos gente abre e o que mais
+   rola de lado. */
+const html = montarPagina({
+  titulo: tituloDoArtefato,
+  fontes: linkDeFontes(marca.fontes),
+  estilo: `${tema}\n\n${paginaCss}\n\n${onePageCss}`,
+  marcaHtml: blocoMarca(marca, simbolo),
+  opcoes,
+  periodo,
+  abas: abasDaPagina,
+  versoesHtml: blocos,
+  rodape: assinatura(),
+  envelopes: cadeia,
+});
 
 mkdirSync(dirname(saida), { recursive: true });
 writeFileSync(saida, html, "utf8");

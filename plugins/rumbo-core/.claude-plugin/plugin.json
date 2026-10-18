@@ -1,7 +1,7 @@
 {
   "name": "rumbo-core",
-  "version": "0.7.0",
-  "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck, release notes, one page) e a regua de qualidade que elas aplicam. Uma configuracao de primeira vez grava o perfil da casa (tom, cor, fonte, logo) e todas as skills leem dele. O one page publica com servidor ou sem. Os plugins de cliente delegam para as skills deste plugin.",
+  "version": "0.12.0",
+  "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck, release notes, one page, estrategia, apostas, okrs) e a regua de qualidade que elas aplicam. Uma configuracao de primeira vez grava o perfil da casa (tom, cor, fonte, logo) e todas as skills leem dele. O one page e a estrategia publicam sem servidor, numa pagina versionada; apostas e OKRs se editam um a um no sistema da casa. Toda skill guia a conversa etapa por etapa, e o one page tem o desenho de cada time (produto, marketing, juridico, financeiro, comercial). Os plugins de cliente delegam para as skills deste plugin.",
   "author": {
     "name": "Rumbo"
   },
@@ -13,6 +13,10 @@
     "release-notes",
     "rumbo",
     "one-page",
-    "roadmap"
+    "roadmap",
+    "estrategia",
+    "okr",
+    "apostas",
+    "playing-to-win"
   ]
 }

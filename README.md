@@ -1,8 +1,8 @@
 # product-skills
 
 Skills de Claude Code que produzem os artefatos de um time de produto no padrão de uma
-consultoria: o one page semanal, o deck de decisão, as release notes e qualquer texto que
-saia em nome da empresa.
+consultoria: a estratégia do ciclo, o one page semanal, o deck de decisão, as release
+notes e qualquer texto que saia em nome da empresa.
 
 Você conversa normalmente. A skill dispara pelo que você escreve, pergunta o que não tem
 como adivinhar, mostra um rascunho, e só publica quando você mandar.
@@ -78,12 +78,17 @@ As outras skills entram do mesmo jeito, pelo que você escreve:
 > quais foram as novidades do produto entre 27/08 e hoje
 >
 > monta o deck da reunião de terça com esse conteúdo
+>
+> vamos fechar a estratégia do semestre, aqui está a ata do conselho
 
-## As quatro skills
+## As sete skills
 
 | Skill | Dispara quando pedem | Produz |
 |---|---|---|
-| `rumbo-one-page` | one page, status do squad, "o que mudou essa semana", pauta do 1:1 | uma página com one page e roadmap, versionada, em rascunho antes de publicar |
+| `rumbo-estrategia` | estratégia do ciclo, "me guia na estratégia", cascata, aspiração, onde jogar, como ganhar, pauta do conselho | uma página com a cascata, as premissas e o elo mais fraco, versionada por conselho, conduzida etapa por etapa |
+| `rumbo-apostas` | nova aposta, editar a aposta, matar a aposta, revisão semanal das apostas | a aposta criada, polida ou acompanhada no sistema da casa, ou o rascunho validado para a próxima revisão da estratégia |
+| `rumbo-okrs` | criar OKR, revisar os KRs, objetivo em risco, acompanhar os OKRs do squad | o objetivo e os KRs criados, polidos ou acompanhados, com KR de outcome e status com o motivo do dono |
+| `rumbo-one-page` | one page, status do squad, "o que mudou essa semana", pauta do 1:1, one page de marketing, jurídico ou comercial | uma página versionada na marca da casa, com o desenho do time: roadmap para produto; ações, meta mês a mês, verba, checklist ou funil para os outros |
 | `rumbo-deck` | apresentação, slides, deck, pptx, one-pager | `.pptx` em padrão de consultoria, com storyline de títulos de ação e infográficos desenhados |
 | `rumbo-release-notes` | release notes, novidades da semana, "o que mudou no produto" | PDF para público não técnico, a partir dos commits da janela |
 | `rumbo-escrita` | revisar texto, "tirar cara de IA", "ver se está no padrão" | o texto reescrito, com a regra que justifica cada mudança |
@@ -146,7 +151,8 @@ que recebe o artefato, a skill publica nele. Se não tem, ela **monta a página 
 e o histórico das versões vive dentro dela.
 
 Cada versão guarda uma cópia das grades que projetou, então publicar um roadmap novo não
-muda o que uma versão já publicada mostra.
+muda o que uma versão já publicada mostra. A estratégia do ciclo publica do mesmo jeito,
+numa página própria, e congela a cascata inteira e a última leitura de cada KR.
 
 **A régua é a mesma dos dois jeitos.** Com servidor ou sem, o envelope é o mesmo, os seis
 géneros de decisão são os mesmos, e a mesma verificação reprova número inventado, tabela
@@ -155,8 +161,15 @@ escrita à mão e pergunta sem destinatário. O destino barato não é o destino
 **O que precisa estar na máquina:** `pptxgenjs` para o deck, LibreOffice e poppler para
 renderizar e conferir o `.pptx`, Chrome ou Chromium para o PDF das release notes. A
 configuração da casa e o one page sem servidor não precisam de nada além do `node`. Sem
-essas ferramentas os scripts avisam e param, e o que não foi conferido é reportado como
-não conferido.
+essas ferramentas o script avisa que não conferiu e sai sem reprovar: leia a saída
+inteira, porque o que não foi conferido é dito, e não pode ser reportado como aprovado.
+
+**Três degraus, nenhum exigido.** Sem nada configurado, o agente conduz e os scripts
+trabalham com arquivo local, e a página é publicada por você. Com uma origem que fala o
+contrato (`RUMBO_ONEPAGE_API` e `RUMBO_ONEPAGE_TOKEN`), os scripts buscam e publicam por
+ela, só por https. Com as tools do sistema da casa na sessão, entram apostas, OKRs,
+desenho do time e análise. As skills rodam em outros agentes também: `${CLAUDE_PLUGIN_ROOT}`
+é a raiz do plugin, e sem a ferramenta de publicar página o agente entrega o HTML.
 
 ## Como construir o seu
 
@@ -223,8 +236,12 @@ binding. Sem o `rumbo-core` instalado, a derivada não tem para onde delegar.
 
 ```
 plugins/rumbo-core/
-  metodo/          a PI: princípios, escrita, deck, release notes, one page
-  scripts/         o que serve mais de uma skill: hoje a configuração da casa
+  metodo/          a PI: princípios, condução, escrita, deck, release notes,
+                   one page e os blocos de cada time, estratégia, apostas, OKR
+  scripts/         o que serve mais de uma skill: a configuração da casa, e o
+                   esqueleto, o CSS e o mapa de etapas das páginas versionadas,
+                   a régua comum, a origem e o extrator da versão anterior
+  modulos/         camada opcional por sistema da casa, que só liga com as tools
   skills/          o fluxo de cada conversa, e os scripts que rodam
 templates/         esqueletos para copiar: método novo, skill nova, plugin de cliente
 docs/demo/         a fonte da demo publicada, toda fictícia
@@ -236,7 +253,7 @@ que conduz.
 
 ## Estado
 
-Quatro métodos escritos e as skills genéricas correspondentes. Nenhum binding de cliente
+Sete métodos escritos, a condução comum a todos, e as skills genéricas correspondentes. Nenhum binding de cliente
 mora aqui, e nenhum jamais morou: eles saíram antes do primeiro commit, de propósito. O
 que entra no histórico do git não sai mais.
 

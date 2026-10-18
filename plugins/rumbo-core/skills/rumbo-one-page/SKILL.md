@@ -2,8 +2,9 @@
 name: rumbo-one-page
 description: >-
   Cria ou atualiza o one page semanal de um time de produto, com roadmap,
-  indicadores e ação e decisão, e publica o artefato. Use quando pedirem one
-  page, one pager, atualizar o roadmap do time, "o que mudou essa semana",
+  objetivos, indicadores e ação e decisão, guiando a conversa etapa por etapa,
+  e publica o artefato. Use quando pedirem one page, one pager, "me guia no one
+  page", atualizar o one page, atualizar o roadmap do time, "o que mudou essa semana",
   preparar a pauta do 1:1 de produto, atualizar os indicadores do squad, ou
   quando disserem que precisam publicar o status do produto. Skill genérica: se
   o pedido for de um time específico e existir skill derivada dele, ela é que
@@ -20,9 +21,13 @@ Quando roda a partir de uma derivada, o binding vem dela.
 Leia, nesta ordem:
 
 1. `${CLAUDE_PLUGIN_ROOT}/metodo/_principios.md`
-2. `${CLAUDE_PLUGIN_ROOT}/metodo/one-page.md`, que traz a estrutura, os seis
+2. `${CLAUDE_PLUGIN_ROOT}/metodo/conducao.md`: como guiar a conversa, etapa por
+   etapa. Vale o fluxo inteiro.
+3. `${CLAUDE_PLUGIN_ROOT}/metodo/one-page.md`, que traz a estrutura, os seis
    géneros de decisão, os dois modos de roadmap e o contrato do dossiê
-3. `${CLAUDE_PLUGIN_ROOT}/metodo/escrita.md`, para a redação
+4. `${CLAUDE_PLUGIN_ROOT}/metodo/one-page-blocos.md`: o núcleo, o desenho de cada
+   time e o catálogo de blocos (ações, trilha mensal, verba, checklist, funil)
+5. `${CLAUDE_PLUGIN_ROOT}/metodo/escrita.md`, para a redação
 
 **Você não calcula número.** Escrever um número plausível neste documento é o
 pior defeito possível, porque ele circula e alguém decide com base nele.
@@ -90,6 +95,12 @@ no método antes de escolher.
 O segundo é o padrão para quem chega sem infraestrutura. **A régua é a mesma nos
 dois**, e é isso que impede o destino barato de virar o destino ruim.
 
+**Módulo ProductOps, só se as tools estiverem na sessão.** Pela regra única,
+o módulo está ligado quando qualquer tool do ProductOps aparece entre as suas, com o nome puro ou com prefixo de servidor (`mcp__<servidor>__ciclo_ativo`); a regra inteira está em `MODULO.md`, "Quando ligar". Ligado, leia a seção "No one page" de
+`${CLAUDE_PLUGIN_ROOT}/modulos/productops/MODULO.md` antes do passo 2: o desenho do
+squad, os OKRs dele, os sinais apurados e o que andou nas apostas vêm de lá. Sem as tools, ignore este parágrafo e
+não fale dele.
+
 ## Primeira vez: configure antes de escrever
 
 Se não existe `.rumbo/marca.json` na pasta de trabalho e não há binding, **pare e
@@ -126,11 +137,87 @@ original fica reservado para preenchimento. Quem enxerga bem nunca percebe o
 defeito, e por isso ele precisa ser dito em voz alta.
 
 O que é só deste artefato, e não da casa, vai num `.rumbo/one-page.config.json`
-opcional: `roadmap.modo`, `roadmap.granularidade`, `movimento.origem` e um
-`titulo` próprio. Sem ele o render usa os defaults.
+opcional: o `desenho` do time, o `tom` do time, `roadmap.modo`,
+`roadmap.granularidade`, `movimento.origem`, um `titulo` próprio e
+`"assinatura": false` para tirar a linha da Rumbo do rodapé. Sem ele o render usa
+os defaults, e o desenho de produto.
+
+**O tom do time ajusta o registro, dentro da régua da casa.** Marketing escreve
+mais direto, jurídico mais formal: o `tom` do config diz como, em uma ou duas
+frases, e você o lê na etapa do corpo. Travessão, ênfase gráfica e vocabulário de
+consultoria continuam reprovando em qualquer tom.
 
 Sem configuração nenhuma o documento sai no tema neutro, que **não é a identidade
 de ninguém** e existe só para a página ser legível antes da primeira conversa.
+
+## Quatro modos
+
+O one page não é só de time de produto. Cada time tem um **desenho**: as abas, os
+blocos de cada aba e os títulos (`metodo/one-page-blocos.md`). O modo diz o que a
+conversa faz com ele. Se o pedido não disser, pergunte, com uma regra só: **time
+sem one page ainda é `desenhar`; time com one page é `semana`.**
+
+| Modo | Quando | O que a conversa faz |
+|---|---|---|
+| `desenhar` | o primeiro one page de um time | o desenho antes de qualquer número, e um esqueleto para ver |
+| `semana` | a atualização de toda semana | uma etapa por bloco que o time escolheu |
+| `leitura` | semana sem mudança de estrutura | só os números, o que mudou e a frase |
+| `reformar` | o time quer outra forma | muda o desenho, sem reescrever o conteúdo |
+
+```bash
+node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/estado.mjs --time <id> --modo desenhar|semana|leitura|reformar
+```
+
+**O desenho vem do sistema da casa, quando há.** Com o módulo, leia o desenho do
+squad (o `MODULO.md` diz a tool) e grave-o em `.rumbo/one-page.config.json`, campo
+`desenho`, antes de abrir o mapa da semana: o roteiro sai dos blocos dele. Sem o
+módulo, o desenho mora nesse config.
+
+### Desenhar (`--modo desenhar`)
+
+1. **O time.** Que time é, quem lê o one page, em que rito.
+2. **O que se decide.** O que quem lê precisa decidir toda semana. É dessa resposta
+   que sai o desenho, não do tipo do time.
+3. **A proposta.** O desenho de partida do tipo (`scripts/desenhos.json`), mostrado
+   como lista de abas e blocos, com uma frase de por que cada bloco está ali.
+4. **Cada bloco**, um por mensagem quando houver dúvida: fica, sai, troca de nome.
+   A regra é a do método: bloco só entra se alguém o lê toda semana. Insight,
+   objetivos e ação e decisão ficam na primeira aba sempre.
+5. **As abas**: títulos, ordem, e onde cada bloco mora.
+6. **O tom do time**, em uma ou duas frases, para o `tom` do config.
+7. **O esqueleto.** Grave o desenho em `.rumbo/one-page.config.json` e renderize:
+
+   ```bash
+   node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/render.mjs --esqueleto <tipo> \
+     --saida .rumbo/esqueleto.html
+   ```
+
+   Ele desenha o desenho com dado de exemplo, na marca da casa, com o aviso de que
+   nenhum número é do time. Mostre a página à pessoa e espere: é aqui que ela vê se
+   o desenho cabe nela.
+8. **Gravar o desenho.** Com o módulo, no squad, depois do sim. Sem ele, o config
+   já é o desenho.
+9. **A primeira versão** segue pelo modo `semana`, em branco.
+
+### Semana (`--modo semana`)
+
+O Fluxo abaixo. As etapas de bloco (5 em diante) são as do desenho do time, na
+ordem dele: o mapa já sai montado, e o time de jurídico não passa pelo roadmap.
+
+### Leitura (`--modo leitura`)
+
+Para a semana em que nada estrutural mudou: herde a última publicada, peça os
+números da semana com a origem de cada um, pergunte o que mudou (status de ação,
+prazo, uma decisão nova) e escreva a frase. A régua, a conferência e a publicação
+são as de sempre. Se no meio aparecer mudança de estrutura, pare e diga que é
+`semana`.
+
+### Reformar (`--modo reformar`)
+
+Mostre o desenho de hoje inteiro, uma vez. Pergunte o que sai, o que entra e o que
+muda de nome, renderize o esqueleto com o desenho novo e grave depois do sim. O
+desenho novo vale **da próxima versão em diante**; as versões publicadas continuam
+mostrando o desenho que tinham.
 
 ## Conduzir, e deixar ver
 
@@ -155,6 +242,14 @@ Isso existe porque o roteiro só vivia nesta prosa, e prosa não sobrevive a
 sessão longa: um PM montou e remontou o mesmo documento sem nunca saber em que
 ponto estava, nem em que ponto a coisa ficava irreversível. Marcar etapa não é
 burocracia: é o que permite retomar amanhã.
+
+**O mapa é o roteiro que a pessoa vê.** Mostre-o antes da primeira pergunta, e
+diga o número de cada etapa ao entrar nela. A condução segue
+`metodo/conducao.md`: uma etapa por mensagem, uma pergunta só no fim, e na
+atualização, depois de mostrar uma vez o one page da semana passada inteiro e
+curto, cada seção em Hoje (o que a versão anterior dizia), Proposta (o que muda
+nesta semana), Por quê e Fonte. Sem tabela larga na conversa: a tabela é do
+render.
 
 O mapa mora em `scripts/estado.mjs`, numa lista só, e as etapas de lá são as
 deste Fluxo, uma a uma, pelo mesmo id. Mudou a granularidade, mudou a lista, e
@@ -206,8 +301,9 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
      --anterior anterior.json --movimento movimento.json --triagem triagem.json
    ```
 
-   Ele não busca nada: recebe a versão anterior, extraída do bloco embutido na
-   página publicada, e o movimento do período, que **você monta** lendo a
+   Ele não busca nada: recebe a versão anterior, extraída da página publicada com
+   `node ${CLAUDE_PLUGIN_ROOT}/scripts/extrair.mjs pagina.html` (grava
+   `.rumbo/anterior.json`), e o movimento do período, que **você monta** lendo a
    ferramenta onde o trabalho do time vive. O formato está em
    `scripts/exemplo-movimento.json`.
 
@@ -228,7 +324,7 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
    desperdiça a apuração: na semana seguinte ela não existe mais, e você pergunta
    de novo.
 
-4. **Confirmar o roadmap, e publicá-lo primeiro** (etapa `roadmap`). Carregue o anterior e pergunte
+4. **Confirmar o roadmap, e publicá-lo primeiro** (etapa `roadmap`, só quando o desenho do time tem o bloco de roadmap). Carregue o anterior e pergunte
    o que mudou, em vez de pedir para descrever de novo. Se o modo ou a
    granularidade mudarem, é escolha de quem conduz, e vale da versão em diante.
 
@@ -247,23 +343,63 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
    "outros" é declarada como as demais, e `payload.issues` anexa as ocorrências
    de cada célula. Adivinhar essa forma já custou quatro tentativas às cegas.
 
-5. **Escrever** (etapa `escrita`). A narrativa é sua; os números não. Envie cada leitura com o
-   rótulo legível e, quando houver julgamento, a observação: é ela que vira a
-   última coluna da tabela, e é onde mora a frase do tipo "ruim e melhorando".
-   Classifique cada item de ação e decisão em um dos seis géneros, e preencha o
-   que aquele género exige.
+5. **Os blocos do time**, um por etapa, na ordem do desenho. O briefing traz, em
+   "Desenho do time e por onde começar", os sinais de cada bloco: comece por eles,
+   dentro da etapa do bloco, nunca como diagnóstico na abertura.
 
-   O corpo do one page é a **narrativa que a tabela não conta**. Se você não tem
-   nada a dizer além do que os números já mostram, deixe curto.
+   - **Objetivos** (etapa `objetivos`). Um por mensagem: a leitura nova de cada KR,
+     de quando é, e se o status do objetivo ainda é verdade. Status é do dono:
+     proponha, e pergunte. Com o sistema da casa, os KRs vêm de lá e não se
+     redigitam, e mudar o status é a `rumbo-okrs`, modo `acompanhar`, só daquele
+     objetivo; volte ao one page em seguida.
+   - **Trilha mensal** (etapa `trilha`). A meta do mês corrente contra o realizado,
+     KR a KR. "A definir" é pergunta ao dono: quem define, e até quando.
+   - **Indicadores e saúde** (etapas `indicadores` e `saude`). As leituras da
+     semana, em lista: o valor, a variação que o briefing já apurou, e a observação
+     que você propõe ("ruim e melhorando"). Saúde é leitura com
+     `categoria: "saude"`. Número sem origem é pergunta, nunca estimativa.
+   - **Ações** (etapa `acoes`). As vencidas primeiro: andou, mudou de prazo, ou
+     cai? Depois as novas. Cada uma com prazo, status do vocabulário e o KR que
+     move. Cancelada fica, riscada.
+   - **Verba** (etapa `verba`). O realizado do mês com a fonte, contra o aprovado.
+   - **Checklist** (etapa `checklist`). O que foi feito, o que venceu, com o dono.
+   - **Funil** (etapa `funil`). A contagem de cada estágio, com a regra e a fonte.
+   - **Outras frentes** (etapa `frentes`). Curto. Se a lista cresce, pergunte se
+     falta um objetivo.
 
-6. **Escrever o insight central** (etapa `insight`). Uma frase: o que é essencial e o que mudou.
+   Use os exemplos como forma: `scripts/exemplo-envelope.json` para produto,
+   `exemplo-envelope-marketing.json` e `exemplo-envelope-juridico.json` para os
+   outros blocos.
+
+6. **As apostas do time** (etapa `apostas`). Com o sistema da casa: o que andou
+   em cada aposta do squad desde a semana passada, em uma linha cada. Critério de
+   matar vencido ou marco atrasado vira pergunta, e mudar status é a
+   `rumbo-apostas`, modo `acompanhar`. Sem apostas no sistema, a etapa salta.
+
+7. **Ação e decisão** (etapa `decisoes`). As da versão anterior, uma a uma:
+   fecha, segue (para quem, de novo), ou vira outra coisa. Depois, as que
+   surgiram nas etapas 5 e 6. Classifique cada item em um dos seis géneros, e
+   preencha o que aquele género exige.
+
+8. **O corpo** (etapa `escrita`). A narrativa é sua; os números não. O corpo do
+   one page é a **narrativa que a tabela não conta**. Se você não tem nada a dizer
+   além do que os números já mostram, deixe curto. Você escreve, a pessoa revisa,
+   no registro do `tom` do time quando o config tem um.
+
+9. **O insight e o farol** (etapa `insight`). Uma frase: o que é essencial e o que mudou.
    Se você não consegue escrevê-la, o documento ainda não está pronto.
 
-7. **Mostrar antes de publicar** (etapa `conferir`). Devolva o rascunho na conversa e espere
+   **O farol do squad** vai junto: `meta.farol` com `verde`, `amarelo` ou
+   `vermelho`, e `meta.farol_motivo` numa frase. É o que o acompanhamento de
+   squads mostra no card. É julgamento de quem conduz o squad: **pergunte, não
+   infira** de indicador ou de risco aberto. Sem resposta, omita os dois campos;
+   o card fica "sem status", que é honesto.
+
+10. **Mostrar antes de publicar** (etapa `conferir`). Devolva o rascunho na conversa e espere
    convergência. Publicar texto não aprovado é desperdício, e a publicação
    comunica.
 
-8. **Validar** (etapa `validar`).
+11. **Validar** (etapa `validar`).
 
    ```bash
    bash ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/validar.sh envelope.json
@@ -273,15 +409,18 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
    item de roadmap sem identificador, decisão sem o campo do género, e as regras
    de escrita da casa.
 
-9. **Publicar em duas etapas** (etapa `publicar`).
+12. **Publicar em duas etapas** (etapa `publicar`).
 
    ```bash
    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/publicar.mjs envelope.json --rascunho
-   # confira a URL devolvida, depois:
+   # confira a URL devolvida. Sem destinatario nem canal no envelope:
    node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/publicar.mjs envelope.json --publicar
    ```
 
-   Rascunho não comunica nada. **Publique com `canais` vazio**: a versão fica
+   Rascunho não comunica nada. **Com alguém em `escala_para` ou canal no
+   envelope, o `--publicar` recusa e lista quem receberia**: a publicação passa
+   para a etapa seguinte, depois da lista confirmada, com `--comunicar`. Sem
+   destinatário nenhum, **publique com `canais` vazio**: a versão fica
    gravada e nenhuma mensagem sai. Quem escolhe canal e destinatários é quem
    publica, na etapa seguinte, item por item.
 
@@ -302,7 +441,9 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
    link que já circulou.
 
    Depois de publicada, a página é a entrada da semana seguinte: o bloco
-   `rumbo-envelopes` dentro dela é o que alimenta o `--anterior` do próximo ciclo.
+   `rumbo-envelopes` dentro dela é o que alimenta o `--anterior` do próximo ciclo,
+   pelo `extrair.mjs`. **Sem a ferramenta de publicar página** (fora do Claude, por
+   exemplo), entregue o caminho do HTML: quem publica é a pessoa, e na mesma URL.
 
    **Leia o `gravado` da resposta.** Ele diz quantas alças entraram por tipo,
    quais marcadores foram congelados com que rótulo e observação, e — em
@@ -310,7 +451,7 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
    vazio é a resposta boa; qualquer coisa ali é campo com nome errado sumindo em
    silêncio.
 
-10. **Canal, privados e mensagem** (etapa `comunicar`).
+13. **Canal, privados e mensagem** (etapa `comunicar`).
 
     ```bash
     node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/comunicar.mjs --envelope envelope.json --time <id>
@@ -333,14 +474,20 @@ guardar convida a reaproveitar leitura velha na semana seguinte.
     node ${CLAUDE_PLUGIN_ROOT}/skills/rumbo-one-page/scripts/comunicar.mjs --envelope envelope.json --time <id> --sem-canal
     ```
 
-    Confirmado, aí sim `publicar.mjs --publicar` envia. Aviso enviado não se
+    Confirmado item por item, aí sim
+    `publicar.mjs envelope.json --publicar --comunicar` publica e envia. Aviso enviado não se
     desfaz, e é por isso que esta etapa é a última e não a primeira.
 
     A mensagem mostrada é reconstrução fiel do conteúdo, não os bytes literais:
     quem compõe é a origem, no envio. Se o que ela vai dizer importa mais que o
     conteúdo, o lugar de mudar é a origem, não aqui.
 
-11. **O que o binding acrescenta** (etapa `binding`).
+    **Sem origem, ninguém envia nada por você.** A publicação é o link da página.
+    Mostre a mesma lista (quem recebe, por que, em que canal) e o texto pronto
+    para a pessoa colar, uma mensagem por destinatário quando forem perguntas. Ela
+    envia; você não. Sem resposta à lista, a etapa fica aberta.
+
+14. **O que o binding acrescenta** (etapa `binding`).
 
     O método para aqui. Um binding pode declarar passos próprios depois da
     comunicação, e é onde entra o que só existe na casa de um cliente: abrir

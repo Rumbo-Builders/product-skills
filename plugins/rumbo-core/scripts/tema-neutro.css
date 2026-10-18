@@ -1,4 +1,7 @@
-/* Tema neutro do artefato de produto.
+/* Tema neutro das paginas versionadas do core: one page e estrategia.
+
+   Mora no plugin, e nao numa skill, porque toda pagina que o core renderiza
+   cai nele quando a casa ainda nao configurou a sua marca.
 
    ESTE TEMA NAO E A IDENTIDADE DE NINGUEM. Ele existe para o documento sair
    legivel antes de alguem ter configurado marca, e para servir de referencia do

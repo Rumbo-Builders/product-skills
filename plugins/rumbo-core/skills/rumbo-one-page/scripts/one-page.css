@@ -1,0 +1,224 @@
+/* O que so o one page desenha: objetivos em destaque, a grade do roadmap e a
+   tabela de indicadores. O layout da pagina (cabecalho, abas, prosa, acao e
+   decisao, versoes) vem de `scripts/pagina.css`, no plugin, carregado antes
+   deste arquivo.
+
+   Nenhuma cor literal aqui. Se aparecer um hex neste arquivo, ele deixou de ser
+   motor e virou tema. */
+
+/* --------------------------------------------------------------------------
+   objetivos em destaque
+   -------------------------------------------------------------------------- */
+
+/* Os cards dividem a linha em partes iguais e a linha inteira e usada. O teto de
+   24rem que existia aqui antes cabia dois por linha e jogava o terceiro objetivo
+   sozinho numa segunda linha, com metade dela vazia.
+
+   O teto continua fazendo falta num caso, e so nele: com um objetivo so, esticar
+   o card sobre a folha inteira e pior que deixa-lo do tamanho que precisa. Por
+   isso o limite virou max-width do bloco, contado pelo renderizador. */
+.objetivos { display: grid; gap: var(--e4); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); list-style: none; margin: 0; padding: 0; }
+.objetivos[data-n="1"] { max-width: 24rem; }
+.objetivo { background: var(--superficie); border: 1px solid var(--regua); border-radius: var(--raio); padding: var(--e4); }
+.objetivo .valor {
+  display: block;
+  font-size: 1.75rem; font-weight: 700; line-height: 1.1;
+  letter-spacing: -0.03em; color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: var(--e2);
+}
+.objetivo .enunciado { font-size: 0.9375rem; color: var(--texto); }
+.objetivo.abandonado { opacity: 0.72; }
+/* A decisao de largar e informacao: o objetivo abandonado continua visivel,
+   riscado. Apagar a linha esconde o que costuma ser o dado do trimestre. */
+.objetivo.abandonado .enunciado { text-decoration: line-through; text-decoration-thickness: 1px; }
+.objetivo.abandonado .valor { color: var(--apagado); }
+.objetivo .nota { display: block; margin-top: var(--e2); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--apagado); }
+
+/* --------------------------------------------------------------------------
+   roadmap
+   -------------------------------------------------------------------------- */
+
+.grade { border-collapse: collapse; width: 100%; min-width: 44rem; }
+.grade th, .grade td { border-right: 1px solid var(--regua); border-bottom: 1px solid var(--regua); padding: var(--e3); vertical-align: top; text-align: left; }
+.grade th:last-child, .grade td:last-child { border-right: 0; }
+.grade tr:last-child td { border-bottom: 0; }
+.grade thead th {
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--apagado); background: var(--superficie-2); white-space: nowrap;
+}
+.grade thead th.agora { color: var(--tinta); }
+.grade thead th.agora::after { content: ""; display: block; height: 2px; background: var(--destaque); margin-top: var(--e2); margin-bottom: calc(var(--e2) * -1 - 2px); }
+.grade td.agora { background: var(--superficie-2); }
+.grade .faixa {
+  width: 12rem; font-weight: 600; font-size: 0.9375rem; color: var(--tinta);
+  background: var(--superficie-2); position: sticky; left: 0;
+}
+.grade .faixa .aposta { display: block; font-weight: 400; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+.grade .faixa.outros { color: var(--apagado); }
+
+.celula { font-size: 0.9375rem; }
+.celula + .celula { margin-top: var(--e3); padding-top: var(--e3); border-top: 1px dashed var(--regua); }
+.celula.risco { border-left: 3px solid var(--atencao); padding-left: var(--e3); margin-left: calc(var(--e3) * -1); }
+
+/* Planejado e ainda nao comecado. Italico e cor apagada dizem "previsto" sem
+   precisar da palavra na celula, que ja e curta. */
+.celula.previsto { font-style: italic; color: var(--apagado); }
+
+/* Fora do escopo. Riscado, apagado e um corpo menor: continua legivel, para de
+   competir com o que esta de pe, e o leitor ve que houve uma decisao ali.
+   O risco nunca depende so da cor: a linha do risco e forma, nao tinta. */
+.celula.cortado { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); font-size: 0.875rem; }
+
+/* O alvo fica sob o texto da celula, apagado: ele e a regua, nao o trabalho. */
+.alvo { display: block; margin-top: var(--e1); font-size: 0.75rem; color: var(--apagado); font-variant-numeric: tabular-nums; }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--e1); margin-top: var(--e2); }
+.chip {
+  display: inline-flex; align-items: center; gap: var(--e1);
+  font-family: var(--fonte-mono); font-size: 0.6875rem;
+  padding: 2px var(--e2); border-radius: 999px;
+  border: 1px solid var(--regua-forte); color: var(--apagado);
+  text-decoration: none; white-space: nowrap;
+}
+.chip:hover { border-color: var(--tinta); color: var(--tinta); }
+.chip.critica { border-color: var(--atencao); color: var(--atencao); }
+.chip.fechada { text-decoration: line-through; }
+
+.nnl { display: grid; gap: var(--e4); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.coluna-nnl { background: var(--superficie); border: 1px solid var(--regua); border-radius: var(--raio); padding: var(--e4); }
+.coluna-nnl > h3 { margin-top: 0; }
+.coluna-nnl ul { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e3); }
+.coluna-nnl li { font-size: 0.9375rem; }
+.criterio { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+
+.estacionamento { display: grid; gap: var(--e3); list-style: none; margin: 0; padding: 0; }
+.estacionamento li { display: flex; gap: var(--e3); align-items: baseline; font-size: 0.9375rem; }
+.parado-corpo { display: grid; gap: var(--e1); }
+.parado-corpo b { font-weight: 600; color: var(--tinta); }
+.parado-desc { color: var(--texto); font-size: 0.875rem; }
+.tipo {
+  flex: none; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.07em;
+  padding: 2px var(--e2); border-radius: var(--raio);
+  background: var(--superficie-2); color: var(--apagado); border: 1px solid var(--regua);
+}
+
+/* --------------------------------------------------------------------------
+   indicadores
+   -------------------------------------------------------------------------- */
+
+.indicadores { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: 0.9375rem; }
+.indicadores th, .indicadores td { padding: var(--e3); border-bottom: 1px solid var(--regua); text-align: left; vertical-align: top; }
+.indicadores thead th { font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--apagado); background: var(--superficie-2); }
+.indicadores tbody tr:last-child td { border-bottom: 0; }
+.indicadores .n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.indicadores .atual { font-weight: 600; color: var(--tinta); }
+/* A variacao e a data moram na celula do valor, e nao em colunas proprias: duas
+   colunas a menos deixam o nome e a observacao respirarem, que e onde esta o
+   julgamento. */
+.indicadores .delta { font-size: 0.8125rem; font-weight: 600; }
+.indicadores .quando { font-size: 0.75rem; color: var(--apagado); font-weight: 400; }
+.indicadores .meta-leitura { font-size: 0.75rem; color: var(--apagado); font-weight: 400; }
+.indicadores .nome { font-weight: 500; }
+.indicadores .def { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: var(--e1); }
+.indicadores .obs { color: var(--apagado); font-size: 0.875rem; }
+
+/* A direcao e semantica, nao o sinal: quem cruza subiu com sobe_e_bom e o script. */
+.dir { font-weight: 600; }
+.dir.melhorou { color: var(--bom); }
+.dir.piorou   { color: var(--grave); }
+.dir.estavel  { color: var(--apagado); }
+
+.marcador { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--tinta); }
+
+
+@media (max-width: 40rem) {
+  .grade .faixa { position: static; }
+}
+
+/* --------------------------------------------------------------------------
+   blocos do desenho do time (metodo/one-page-blocos.md)
+   Nenhuma cor literal: tudo vem do tema da casa. Estado nunca so por cor: a
+   palavra vai junto, e o cancelado e riscado.
+   -------------------------------------------------------------------------- */
+
+.objetivos-grupos { display: grid; gap: var(--e6); }
+.objetivo-grupo { border-top: 2px solid var(--tinta); padding-top: var(--e4); }
+.objetivo-cab { display: flex; align-items: baseline; gap: var(--e3); flex-wrap: wrap; }
+.objetivo-cod { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.1em; color: var(--apagado); }
+.objetivo-titulo { margin: 0; flex: 1 1 18rem; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; color: var(--tinta); line-height: 1.25; }
+.rota-motivo { margin: var(--e2) 0 0; font-size: 0.875rem; color: var(--apagado); }
+.rota, .status {
+  display: inline-block; white-space: nowrap;
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 2px var(--e2); border-radius: 999px; border: 1px solid currentColor;
+}
+.rota.no_ritmo, .status.realizado { color: var(--bom); background: var(--bom-fundo); }
+.rota.em_risco, .status.bloqueado, .status.a_propor { color: var(--atencao); background: var(--atencao-fundo); }
+.rota.fora_de_rota { color: var(--grave); background: var(--grave-fundo); }
+.status.confirmado, .status.negociado, .status.em_andamento { color: var(--tinta); }
+.status.planejado, .status.cancelado { color: var(--apagado); border-style: dashed; }
+
+.krs { display: grid; gap: var(--e3); grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr)); list-style: none; margin: var(--e4) 0 0; padding: 0; }
+.kr { background: var(--superficie); border: 1px solid var(--regua); border-radius: var(--raio); padding: var(--e4); display: flex; flex-direction: column; gap: var(--e2); }
+.kr-nome { font-size: 0.9375rem; font-weight: 500; line-height: 1.35; }
+.kr-meta { margin-top: auto; display: flex; align-items: baseline; gap: var(--e2); flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.kr-meta .de { font-size: 0.875rem; color: var(--apagado); }
+.kr-meta .seta { color: var(--apagado); }
+.kr-meta .para { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em; color: var(--tinta); line-height: 1.1; }
+.kr-unidade { font-size: 0.75rem; color: var(--apagado); }
+.kr-unidade b { color: var(--texto); font-weight: 600; }
+
+/* "a definir" e lacuna declarada: italico e a palavra, nunca a celula vazia. */
+.a-definir { font-style: italic; font-weight: 500; color: var(--atencao); font-size: 0.875rem; letter-spacing: 0; }
+
+.trilha, .acoes, .verba { border-collapse: collapse; width: 100%; min-width: 30rem; font-size: 0.9375rem; }
+.trilha th, .trilha td, .acoes th, .acoes td, .verba th, .verba td {
+  padding: var(--e3) var(--e4); border-bottom: 1px solid var(--regua); text-align: left; vertical-align: top;
+}
+.trilha thead th, .acoes thead th, .verba thead th {
+  font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--apagado); background: var(--superficie-2); white-space: nowrap;
+}
+.trilha tbody th, .verba tbody th { font-weight: 500; }
+.trilha .n, .verba .n, .acoes .n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.verba .n { text-align: right; }
+.real-mes { display: block; font-weight: 700; color: var(--tinta); }
+.de-meta { display: block; font-size: 0.75rem; color: var(--apagado); }
+.verba tfoot td { font-weight: 700; color: var(--tinta); border-bottom: 0; }
+.verba .total { font-weight: 600; }
+
+.acoes .acao-txt b { display: block; font-weight: 600; color: var(--tinta); }
+.acoes .acao-txt span { display: block; font-size: 0.8125rem; color: var(--apagado); margin-top: 2px; }
+.acoes .kr-ref { font-size: 0.8125rem; color: var(--apagado); }
+.acoes tr.st-cancelado .acao-txt b { text-decoration: line-through; text-decoration-thickness: 1px; color: var(--apagado); }
+
+.checklist, .frentes, .saude, .funil { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e3); }
+.checklist li { display: flex; gap: var(--e3); align-items: baseline; }
+.marca-check {
+  flex: none; width: 1.1rem; height: 1.1rem; border-radius: var(--raio);
+  border: 1.5px solid var(--regua-forte); display: inline-grid; place-items: center;
+  font-size: 0.75rem; font-weight: 700; color: var(--papel);
+}
+.checklist li.feito .marca-check { background: var(--bom); border-color: var(--bom); }
+.check-corpo b { display: block; font-weight: 600; color: var(--tinta); }
+.check-corpo span { display: block; font-size: 0.8125rem; color: var(--apagado); }
+
+.frentes li { background: var(--superficie); border: 1px solid var(--regua); border-left: 3px solid var(--acento, var(--tinta)); border-radius: var(--raio); padding: var(--e3) var(--e4); }
+.frentes b { display: block; font-weight: 600; color: var(--tinta); }
+.frentes span { font-size: 0.8125rem; color: var(--apagado); }
+
+.saude { grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.saude li { background: var(--superficie-2); border-radius: var(--raio); padding: var(--e3) var(--e4); display: grid; gap: 2px; }
+.saude .nome { font-size: 0.875rem; font-weight: 600; color: var(--tinta); }
+.saude .valor { font-size: 1.35rem; font-weight: 700; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.saude .trilha-saude, .saude .det { font-size: 0.75rem; color: var(--apagado); font-variant-numeric: tabular-nums; }
+.saude .trilha-saude b { color: var(--texto); font-weight: 600; }
+
+.funil li { display: flex; gap: var(--e4); align-items: baseline; border-bottom: 1px solid var(--regua); padding-bottom: var(--e3); }
+.funil-n { flex: none; min-width: 3.5rem; font-size: 1.5rem; font-weight: 700; color: var(--tinta); font-variant-numeric: tabular-nums; }
+.funil-corpo b { display: block; font-weight: 600; }
+.funil-corpo span { font-size: 0.8125rem; color: var(--apagado); }
+
+/* A assinatura da Rumbo: uma linha, apagada, sem logo. A pagina e da casa. */
+.assinatura { margin-top: var(--e7); padding-top: var(--e4); border-top: 1px solid var(--regua); font-size: 0.75rem; color: var(--apagado); }

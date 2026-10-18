@@ -76,12 +76,10 @@ if command -v pdftotext >/dev/null 2>&1; then
     echo "ok: nenhuma pontuação em série"
   fi
 
-  VOCAB='alavanc|leverage|vale (destacar|ressaltar)|em suma|de forma holística|sinergia|game changer|desbloquear potencial|mergulhar fundo|no cenário atual|é importante notar'
-  if [ -n "${RUMBO_VOCAB_EXTRA:-}" ] && [ -f "${RUMBO_VOCAB_EXTRA}" ]; then
-    EXTRA="$(grep -v '^[[:space:]]*$' "$RUMBO_VOCAB_EXTRA" | grep -v '^#' | paste -sd'|' -)"
-    [ -n "$EXTRA" ] && VOCAB="$VOCAB|$EXTRA"
-    echo "     (vocabulário estendido por $RUMBO_VOCAB_EXTRA)"
-  fi
+  # A lista mora em scripts/regras.cjs, a mesma das outras reguas, e ja soma o
+  # RUMBO_VOCAB_EXTRA do cliente.
+  VOCAB="$(node "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../scripts" && pwd)/regras.cjs" --vocab)"
+  [ -n "${RUMBO_VOCAB_EXTRA:-}" ] && echo "     (vocabulário estendido por $RUMBO_VOCAB_EXTRA)"
   VOC=$(printf '%s' "$TXT" | grep -ciE "$VOCAB")
   if [ "$VOC" -gt 0 ]; then
     echo "FALHA: $VOC ocorrência(s) de vocabulário proibido."

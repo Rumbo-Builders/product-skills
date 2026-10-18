@@ -9,13 +9,13 @@
   "plugins": [
     {
       "name": "rumbo-core",
-      "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck) e a regua de qualidade que elas aplicam.",
+      "description": "Metodo Rumbo: skills genericas e cliente-agnosticas (escrita, deck, release notes, one page, estrategia, apostas, okrs) e a regua de qualidade que elas aplicam.",
       "author": {
         "name": "Rumbo"
       },
       "category": "productivity",
       "source": "./plugins/rumbo-core",
-      "version": "0.7.0"
+      "version": "0.12.0"
     }
   ]
 }

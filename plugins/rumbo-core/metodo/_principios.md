@@ -93,8 +93,11 @@ critério rodando. As três regras duras e o vocabulário são verificáveis:
 ```bash
 grep -n "—" arquivo.md
 grep -nE "[!?]{2,}" arquivo.md
-grep -niE "alavanc|leverage|vale (destacar|ressaltar)|em suma|de forma holística|sinergia|game changer|desbloquear potencial|mergulhar fundo|no cenário atual|é importante notar" arquivo.md
+grep -niE "$(node plugins/rumbo-core/scripts/regras.cjs --vocab)" arquivo.md
 ```
+
+A lista que roda mora em `scripts/regras.cjs`, com acento opcional em cada termo, e
+as réguas de todas as skills leem dela. Mudou a lista acima, mude lá também.
 
 ## Regra de desempate
 

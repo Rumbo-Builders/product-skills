@@ -7,9 +7,11 @@
   "quarter": 3,
   "insight": "Primeira publicacao: o objetivo aqui e so validar a ligacao entre a skill, a API e a pagina.",
   "meta": {
-    "roadmapVersao": 1
+    "roadmapVersao": 1,
+    "farol": "amarelo",
+    "farol_motivo": "Pilotos andando, mas a segunda campanha ainda depende de uma rede"
   },
-  "_meta": "roadmapVersao aponta a versao do artefato de roadmap que este one page PROJETA. Sem ele a secao de roadmap sai vazia. O one page nunca redigita a grade.",
+  "_meta": "roadmapVersao aponta a versao do artefato de roadmap que este one page PROJETA. Sem ele a secao de roadmap sai vazia. O one page nunca redigita a grade. farol (verde, amarelo, vermelho) e farol_motivo sao o status do squad declarado por quem conduz: opcionais, e a skill pergunta, nao infere.",
   "body_md": "## Indicadores\n\nExemplo de leitura chegou a {{exemplo-adocao}}, variacao de {{exemplo-adocao.delta_pct}} sobre o periodo anterior.\n\n## Ação e decisão\n\nOs itens estruturados estao no bloco `itens`, e aparecem na lateral da pagina.\n",
   "itens": [
     {

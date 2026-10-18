@@ -1,0 +1,183 @@
+{
+  "_leia": "Envelope de exemplo do ONE PAGE de um time de JURIDICO E FINANCEIRO. Casa ficticia. Mostra a checklist de conformidade, as acoes, e o que fazer com meta que ninguem definiu: ela aparece como 'a definir' e vira lacuna no briefing, com o dono. O catalogo dos blocos esta em metodo/one-page-blocos.md.",
+  "squad": "juridico",
+  "kind": "one_page",
+  "year": 2026,
+  "quarter": 4,
+  "insight": "O programa de integridade saiu do papel: o código de conduta foi aprovado, e o treinamento começa em novembro.",
+  "meta": {
+    "desenho": {
+      "tipo": "juridico",
+      "abas": [
+        {
+          "slug": "one-page",
+          "titulo": "One page",
+          "blocos": [
+            {
+              "tipo": "nucleo"
+            },
+            {
+              "tipo": "texto"
+            },
+            {
+              "tipo": "indicadores",
+              "titulo": "Leitura da semana"
+            },
+            {
+              "tipo": "trilha_mensal"
+            }
+          ]
+        },
+        {
+          "slug": "acoes",
+          "titulo": "Ações para chegar lá",
+          "blocos": [
+            {
+              "tipo": "checklist",
+              "titulo": "Programa de integridade"
+            },
+            {
+              "tipo": "acoes"
+            }
+          ]
+        },
+        {
+          "slug": "outras",
+          "titulo": "Outras frentes",
+          "blocos": [
+            {
+              "tipo": "outras_frentes"
+            }
+          ]
+        }
+      ]
+    },
+    "_desenho": "O desenho do time, no formato do contrato. Com o sistema da casa ele e configuracao do squad, e o servidor congela o vigente na versao (o que vier aqui e ignorado). Sem servidor, vem do .rumbo/one-page.config.json e viaja em cada versao, para a versao antiga mostrar o desenho dela."
+  },
+  "body_md": "O código de conduta foi aprovado na diretoria. O orçamento do trimestre segue sem teto definido, e é a pergunta desta semana.\n",
+  "itens": [
+    {
+      "_leia": "OKR: a alca e o resultado-chave medido, com baseline, meta, unidade, direcao e atual. payload.objetivo { slug, titulo } agrupa na tela os KRs do mesmo objetivo; quando os OKRs vem do sistema da casa, e o objetivo de la. rota e rota_motivo sao o status, na voz do dono.",
+      "kind": "okr",
+      "slug": "kr-orcamento-realizado",
+      "texto": "Orçamento realizado dentro do teto aprovado",
+      "payload": {
+        "objetivo": {
+          "slug": "o1-controle-de-caixa",
+          "titulo": "Controlar o caixa mês a mês"
+        },
+        "baseline": "sem teto",
+        "meta": "a definir",
+        "unidade": "% do teto",
+        "direcao": "desce",
+        "rota": "em_risco",
+        "rota_motivo": "Sem teto de orçamento aprovado, não há contra o que medir"
+      }
+    },
+    {
+      "_leia": "META_MES: a trilha mensal do KR, uma alca por mes. kr aponta a alca okr, periodo e AAAA-MM, alvo e numero ou exatamente 'a definir' (vira lacuna no briefing, com o dono). realizado, quando ja existe, leva fonte.",
+      "kind": "meta_mes",
+      "slug": "kr-orcamento-realizado-2026-10",
+      "texto": "Orçamento realizado dentro do teto aprovado",
+      "payload": {
+        "kr": "kr-orcamento-realizado",
+        "periodo": "2026-10",
+        "alvo": "a definir"
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-orcamento-realizado-2026-11",
+      "texto": "Orçamento realizado dentro do teto aprovado",
+      "payload": {
+        "kr": "kr-orcamento-realizado",
+        "periodo": "2026-11",
+        "alvo": "a definir"
+      }
+    },
+    {
+      "kind": "meta_mes",
+      "slug": "kr-orcamento-realizado-2026-12",
+      "texto": "Orçamento realizado dentro do teto aprovado",
+      "payload": {
+        "kr": "kr-orcamento-realizado",
+        "periodo": "2026-12",
+        "alvo": "a definir"
+      }
+    },
+    {
+      "kind": "okr",
+      "slug": "kr-treinados-com-aceite",
+      "texto": "Pessoas treinadas com aceite do código de conduta",
+      "payload": {
+        "objetivo": {
+          "slug": "o2-integridade",
+          "titulo": "Estruturar o programa de integridade e os controles internos"
+        },
+        "baseline": "0",
+        "meta": "100",
+        "unidade": "% do time",
+        "direcao": "sobe",
+        "leitura": "treinados-aceite",
+        "rota": "no_ritmo",
+        "rota_motivo": "Código aprovado no prazo"
+      }
+    },
+    {
+      "_leia": "CHECKLIST: item, dono e prazo; feito e verdadeiro ou falso. 'Em andamento' nao existe aqui: isso e acao.",
+      "kind": "checklist",
+      "slug": "chk-codigo-de-conduta",
+      "texto": "Código de conduta aprovado pela diretoria",
+      "payload": {
+        "dono": "Coordenação jurídica",
+        "prazo": "2026-10-15",
+        "feito": true
+      }
+    },
+    {
+      "kind": "checklist",
+      "slug": "chk-canal-de-denuncia",
+      "texto": "Canal de denúncia no ar",
+      "payload": {
+        "dono": "Coordenação jurídica",
+        "prazo": "2026-11-30",
+        "feito": false
+      }
+    },
+    {
+      "kind": "acao",
+      "slug": "acao-treinamento",
+      "texto": "Treinamento do código para o time inteiro",
+      "payload": {
+        "prazo": "2026-11",
+        "status": "planejado",
+        "kr": "kr-treinados-com-aceite"
+      }
+    },
+    {
+      "kind": "decisao",
+      "slug": "teto-do-orcamento",
+      "texto": "Qual é o teto de orçamento do trimestre?",
+      "genero": "pergunta",
+      "escala_para": [
+        "Diretoria financeira"
+      ],
+      "payload": {
+        "sobre": "kr-orcamento-realizado"
+      }
+    }
+  ],
+  "leituras": [
+    {
+      "slug": "treinados-aceite",
+      "periodo": "2026-10",
+      "valor_num": 0,
+      "unidade": "percent",
+      "fonte": "manual",
+      "nome": "Treinados com aceite",
+      "sobe_e_bom": true,
+      "observacao": "Treinamento começa em novembro"
+    }
+  ],
+  "canais": []
+}
