@@ -1,7 +1,7 @@
 name: Sem vazamento de cliente
 
 # Este repositório é público, e o método é cliente-agnóstico por regra:
-# "nada aqui pode nomear um cliente, uma pessoa ou uma ferramenta" (CLAUDE.md).
+# "nada aqui pode nomear um cliente, uma pessoa ou uma ferramenta" (AGENTS.md).
 #
 # A regra já falhou uma vez. No primeiro commit, `metodo/release-notes.md`
 # citava um cliente pelo nome junto com um número interno dele, e o README
@@ -26,7 +26,7 @@ name: Sem vazamento de cliente
 #    "solução"). Quando acontecer, o conserto é renomear no texto, não afrouxar
 #    a checagem: falso positivo aqui custa um minuto, falso negativo custa um
 #    vazamento.
-# 2. Os exemplos do CLAUDE.md usam a "Acme" como cliente fictício. Se um dia a
+# 2. Os exemplos do AGENTS.md usam a "Acme" como cliente fictício. Se um dia a
 #    Acme virar cliente de verdade, esta checagem acusa os exemplos. Troque o
 #    nome fictício, não a regra.
 
@@ -45,6 +45,9 @@ jobs:
     steps:
       # Fixada por SHA (v4.2.2): tag de action pode ser movida, commit nao.
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Manifestos do Claude Code e do Codex batem
+        run: node .github/conferir-manifestos.mjs
 
       - name: Nenhum nome de cliente no repositório
         env:

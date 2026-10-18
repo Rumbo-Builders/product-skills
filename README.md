@@ -1,7 +1,7 @@
 # product-skills
 
-Skills de Claude Code que produzem os artefatos de um time de produto no padrão de uma
-consultoria: a estratégia do ciclo, o one page semanal, o deck de decisão, as release
+Skills para agentes de código (Claude Code, Codex e outros que leem `SKILL.md`) que
+produzem os artefatos de um time de produto no padrão de uma consultoria: a estratégia do ciclo, o one page semanal, o deck de decisão, as release
 notes e qualquer texto que saia em nome da empresa.
 
 Você conversa normalmente. A skill dispara pelo que você escreve, pergunta o que não tem
@@ -36,12 +36,31 @@ Do zero ao seu primeiro artefato publicado, sem escrever uma linha de skill.
 
 ### 1. Instale
 
+No **Claude Code**:
+
 ```
 /plugin marketplace add Rumbo-Builders/product-skills
 /plugin install rumbo-core@rumbo
 ```
 
-Precisa do `node` na máquina, e nada mais para começar.
+No **Codex**:
+
+```bash
+codex plugin marketplace add Rumbo-Builders/product-skills
+codex plugin add rumbo-core@rumbo
+```
+
+Abra uma sessão nova depois de instalar. Nos dois, precisa do `node` na máquina, e nada
+mais para começar.
+
+**Em outro agente**, que leia `SKILL.md` mas não tenha marketplace, aponte para a pasta
+`plugins/rumbo-core/skills/` deste repositório. Cada SKILL.md diz, logo abaixo do título,
+onde estão os arquivos que ele usa.
+
+**O sistema da casa, se houver.** O ProductOps entra por MCP, com a chave numa variável
+de ambiente: no Claude Code, pelo `.mcp.json` do plugin do cliente; no Codex, com
+`codex mcp add productops --url <base>/api/mcp --bearer-token-env-var <VARIAVEL>`. Sem
+ele, tudo funciona do mesmo jeito, só que local.
 
 ### 2. Configure a casa, uma vez
 
@@ -214,7 +233,7 @@ Três coisas que fazem isso funcionar:
 3. **Se a derivada passou de trinta linhas, ela está fazendo o trabalho de outro
    arquivo.** Ou virou método, e sobe generalizada, ou virou contexto, e desce para o
    perfil. `templates/plugin-cliente/` é o esqueleto para copiar, e as convenções estão
-   em [CLAUDE.md](CLAUDE.md).
+   em [AGENTS.md](AGENTS.md).
 
 ## Onde ficam os clientes
 
@@ -245,7 +264,7 @@ plugins/rumbo-core/
   skills/          o fluxo de cada conversa, e os scripts que rodam
 templates/         esqueletos para copiar: método novo, skill nova, plugin de cliente
 docs/demo/         a fonte da demo publicada, toda fictícia
-CLAUDE.md          convenções de autoria, e como rodar cada script
+AGENTS.md          convenções de autoria, e como rodar cada script (CLAUDE.md o importa)
 ```
 
 Divisão de trabalho: `metodo/` é o que se lê, `scripts/` é o que roda, `SKILL.md` é o

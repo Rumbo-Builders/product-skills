@@ -11,6 +11,12 @@ description: >-
 
 # rumbo-escrita
 
+> **Onde estão os arquivos.** `${CLAUDE_PLUGIN_ROOT}` é a raiz do plugin rumbo-core:
+> a pasta que contém `metodo/`, `scripts/` e `skills/`, duas acima deste SKILL.md.
+> O Claude Code a define. Em outro agente (o Codex, por exemplo), troque pela raiz
+> real ao ler um caminho e ao rodar um comando, ou defina a variável no mesmo
+> comando: `CLAUDE_PLUGIN_ROOT=<raiz> node ...`.
+
 Skill de método. Cliente-agnóstica: não conhece ferramenta, ID nem destinatário
 nomeado. Quando roda a partir de uma derivada, o binding vem dela.
 

@@ -1,0 +1,20 @@
+{
+  "name": "rumbo",
+  "interface": {
+    "displayName": "Rumbo"
+  },
+  "plugins": [
+    {
+      "name": "rumbo-core",
+      "source": {
+        "source": "local",
+        "path": "./plugins/rumbo-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

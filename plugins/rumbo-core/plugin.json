@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "rumbo-core",
+  "version": "0.13.0",
+  "description": "Metodo Rumbo: skills genericas e cliente-agnosticas para times de produto (escrita, deck, release notes, one page, estrategia, apostas, okrs) e a regua de qualidade que elas aplicam. Funciona no Claude Code, no Codex e em outros agentes que leem SKILL.md.",
+  "author": {
+    "name": "Rumbo",
+    "email": "juliano@rumbo.builders"
+  },
+  "repository": "https://github.com/Rumbo-Builders/product-skills",
+  "keywords": [
+    "produto",
+    "estrategia",
+    "okr",
+    "apostas",
+    "one-page",
+    "roadmap",
+    "release-notes",
+    "deck",
+    "escrita",
+    "rumbo"
+  ]
+}

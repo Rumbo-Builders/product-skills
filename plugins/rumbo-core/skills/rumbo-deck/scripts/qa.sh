@@ -21,6 +21,7 @@ node "$GEN" || exit 1
 SK=""
 for d in \
   /mnt/skills/public/pptx/scripts/office \
+  "${CODEX_HOME:-$HOME/.codex}/skills/pptx/scripts/office" \
   "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/synced/pptx/scripts/office" \
   "$HOME/.claude/skills/pptx/scripts/office" \
   "$HOME/mnt/.claude/skills/pptx/scripts/office"

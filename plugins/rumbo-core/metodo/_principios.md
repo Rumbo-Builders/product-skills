@@ -4,7 +4,7 @@ Lido por **toda** skill de método, antes do arquivo de método específico. É 
 para qualquer artefato que saia em nome da Rumbo ou do cliente: documento, slide,
 e-mail, mensagem, relatório.
 
-**Escopo:** entregável. Documentação interna deste repo (README, CLAUDE.md, templates)
+**Escopo:** entregável. Documentação interna deste repo (README, AGENTS.md, templates)
 está fora: ela é ferramenta, não entregável.
 
 ## As três regras duras

@@ -12,7 +12,9 @@ description: >-
 
 Binding. Não contém método — o método está no `rumbo-core`.
 
-Antes de começar, leia `${CLAUDE_PLUGIN_ROOT}/contexto/perfil.md`.
+Antes de começar, leia `${CLAUDE_PLUGIN_ROOT}/contexto/perfil.md`. A raiz aqui é a
+deste plugin de cliente (a pasta com `contexto/`), duas acima deste SKILL.md; fora
+do Claude Code, troque pelo caminho real.
 
 ## ENTRADAS
 

@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "_comentario": "Os servidores MCP DESTE cliente, no formato portavel (Codex e outros). O do Claude Code e o .mcp.json, ao lado: mantenha os dois com os mesmos servidores. Nunca credencial aqui. No Codex, a chave entra por variavel de ambiente: codex mcp add <nome> --url <url> --bearer-token-env-var <VARIAVEL>.",
+  "mcpServers": {
+    "exemplo-http": {
+      "type": "streamable-http",
+      "url": "https://exemplo.cliente.com/mcp"
+    }
+  }
+}

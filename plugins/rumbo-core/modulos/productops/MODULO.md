@@ -26,6 +26,16 @@ Script não enxerga MCP, o modelo enxerga. A checagem é sua: desligado, você n
 menciona nada disto ao usuário.
 Ligado, chame `ciclo_ativo` primeiro: ele confirma a chave, a empresa e o ciclo.
 
+**Como ligar, em cada agente.** A chave fica numa variável de ambiente, nunca em
+arquivo de configuração versionado.
+
+- **Claude Code:** o `.mcp.json` do plugin do cliente, com
+  `"headers": { "Authorization": "Bearer ${VARIAVEL}" }`.
+- **Codex:**
+  `codex mcp add productops --url <base>/api/mcp --bearer-token-env-var <VARIAVEL>`.
+  O Codex lê a variável na hora de chamar, e a chave não vai para o
+  `config.toml`.
+
 **A empresa é a da chave.** Se a casa da conversa não é a que `ciclo_ativo`
 devolveu, pare e diga que é preciso a chave daquela casa.
 
